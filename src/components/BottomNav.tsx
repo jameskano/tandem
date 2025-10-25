@@ -1,0 +1,43 @@
+import React from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { Home, Search, Calendar, Target, Camera, Settings } from '../shared/icons'
+import { cn } from '../shared/utils/format'
+
+const navItems = [
+  { path: '/', icon: Home, label: 'Main' },
+  { path: '/dashboard', icon: Home, label: 'Dashboard' },
+  { path: '/discover', icon: Search, label: 'Discover' },
+  { path: '/planner', icon: Calendar, label: 'Planner' },
+  { path: '/goals', icon: Target, label: 'Goals' },
+  { path: '/moments', icon: Camera, label: 'Moments' },
+  { path: '/settings', icon: Settings, label: 'Settings' },
+]
+
+export const BottomNav: React.FC = () => {
+  const location = useLocation()
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 safe-bottom">
+      <div className="flex justify-around items-center h-16">
+        {navItems.map(({ path, icon: Icon, label }) => {
+          const isActive = location.pathname === path
+          return (
+            <Link
+              key={path}
+              to={path}
+              className={cn(
+                'flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 rounded-lg transition-colors',
+                isActive
+                  ? 'text-primary'
+                  : 'text-textMuted hover:text-text'
+              )}
+            >
+              <Icon size={20} />
+              <span className="text-xs mt-1 hidden sm:block">{label}</span>
+            </Link>
+          )
+        })}
+      </div>
+    </nav>
+  )
+}
