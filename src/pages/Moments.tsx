@@ -27,3 +27,5 @@ export const Moments: React.FC = () => {
     </div>
   )
 }
+
+export default Moments

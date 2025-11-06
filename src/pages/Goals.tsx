@@ -36,3 +36,5 @@ export const Goals: React.FC = () => {
     </div>
   )
 }
+
+export default Goals

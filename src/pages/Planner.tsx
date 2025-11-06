@@ -36,3 +36,5 @@ export const Planner: React.FC = () => {
     </div>
   )
 }
+
+export default Planner;

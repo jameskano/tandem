@@ -1,122 +1,74 @@
-import React from 'react'
-import { Card } from '../features/ui/Card'
-import { Button } from '../features/ui/Button'
-// import { DashboardSummary } from '../features/dashboard/DashboardSummary'
-import { usePlansStore } from '../state/usePlansStore'
-import { useGoalsStore } from '../state/useGoalsStore'
-import { useActivitiesStore } from '../state/useActivitiesStore'
-import { seedData } from '../shared/seed'
-import { useEffect } from 'react'
+import React from "react";
+import { CalendarDays, Compass, Clock, Check } from "lucide-react";
+import { colors } from "../shared/colors";
+import { Card } from "../features/ui/Card";
+import { Chip } from "../features/ui/Chip";
+import { GradientButton } from "../features/ui/GradientButton";
+import { OutlineButton } from "../features/ui/OutlineButton";
 
-export const Dashboard: React.FC = () => {
-  const { plans, addPlan } = usePlansStore()
-  const { goals, addGoal } = useGoalsStore()
-  const { activities, addActivity } = useActivitiesStore()
-
-  // Load seed data on first visit
-  useEffect(() => {
-    if (plans.length === 0) {
-      seedData.plans.forEach(addPlan)
-    }
-    if (goals.length === 0) {
-      seedData.goals.forEach(addGoal)
-    }
-    if (activities.length === 0) {
-      seedData.activities.forEach(addActivity)
-    }
-  }, [plans.length, goals.length, activities.length, addPlan, addGoal, addActivity])
-
-  const upcomingPlans = plans
-    .filter(plan => new Date(plan.start_ts) > new Date() && plan.status === 'planned')
-    .sort((a, b) => new Date(a.start_ts).getTime() - new Date(b.start_ts).getTime())
-    .slice(0, 3)
-
-  const activeGoals = goals.filter(goal => goal.progress < goal.target)
-  const completedPlans = plans.filter(plan => plan.status === 'completed')
-
-  return (
-    <div className="min-h-screen bg-bg">
-      <div className="px-4 py-6 max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-text mb-2">Dashboard</h1>
-          <p className="text-textMuted">Your relationship overview</p>
-        </div>
-
-        <div className="grid gap-6">
-          {/* Stats Cards */}
-          <div className="grid md:grid-cols-3 gap-4">
-            <Card>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-1">
-                  {upcomingPlans.length}
-                </div>
-                <div className="text-sm text-textMuted">Upcoming Plans</div>
-              </div>
-            </Card>
-            <Card>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-accent mb-1">
-                  {activeGoals.length}
-                </div>
-                <div className="text-sm text-textMuted">Active Goals</div>
-              </div>
-            </Card>
-            <Card>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-secondary mb-1">
-                  {completedPlans.length}
-                </div>
-                <div className="text-sm text-textMuted">Completed</div>
-              </div>
-            </Card>
-          </div>
-
-          {/* Next Plan */}
-          {upcomingPlans.length > 0 && (
-            <Card>
-              <h2 className="text-xl font-semibold text-text mb-4">Next Up</h2>
-              <div className="space-y-3">
-                {upcomingPlans.slice(0, 1).map(plan => (
-                  <div key={plan.id} className="p-4 bg-primary/5 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-medium text-text">{plan.title}</h3>
-                        <p className="text-sm text-textMuted">
-                          {new Date(plan.start_ts).toLocaleDateString()} at{' '}
-                          {new Date(plan.start_ts).toLocaleTimeString([], { 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                          })}
-                        </p>
-                      </div>
-                      <Button size="sm">View</Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {/* Quick Actions */}
-          <Card>
-            <h2 className="text-xl font-semibold text-text mb-4">Quick Actions</h2>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <Button variant="outline" className="justify-start">
-                📅 Plan Activity
-              </Button>
-              <Button variant="outline" className="justify-start">
-                🎯 Set Goal
-              </Button>
-              <Button variant="outline" className="justify-start">
-                📸 Add Photo
-              </Button>
-              <Button variant="outline" className="justify-start">
-                🔍 Discover
-              </Button>
-            </div>
-          </Card>
-        </div>
+const Stat = ({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) => (
+  <Card>
+    <div className="flex items-center gap-3">
+      <div className="p-3 rounded-2xl" style={{ backgroundColor: colors.bg }}>{icon}</div>
+      <div>
+        <div className="text-xl font-bold" style={{ color: colors.text }}>{value}</div>
+        <div className="text-xs" style={{ color: colors.textMuted }}>{label}</div>
       </div>
     </div>
-  )
-}
+  </Card>
+);
+
+const Dashboard = () => {
+  return (
+    <div className="px-4 py-6 space-y-4" style={{ backgroundColor: colors.bg }}>
+      <Card className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-base font-semibold" style={{ color: colors.text }}>Next up</h3>
+          <Chip>Sat 18:00</Chip>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: colors.secondary }}>
+            <CalendarDays className="opacity-80" />
+          </div>
+          <div>
+            <div className="font-semibold" style={{ color: colors.text }}>Homemade sushi night 🍣</div>
+            <div className="text-xs" style={{ color: colors.textMuted }}>Shopping list ready · 2h</div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <GradientButton className="w-full py-3 text-sm">Start</GradientButton>
+          <OutlineButton className="w-full py-3 text-sm">Reschedule</OutlineButton>
+        </div>
+      </Card>
+
+      <div className="grid grid-cols-3 gap-3">
+        <Stat label="Weekly" value={3} icon={<Compass />} />
+        <Stat label="Streak" value={"7d"} icon={<Clock />} />
+        <Stat label="Done" value={24} icon={<Check />} />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <Card>
+          <div className="text-sm font-semibold" style={{ color: colors.text }}>🌌 Stargazing</div>
+          <GradientButton className="mt-2 text-sm py-2">Schedule</GradientButton>
+        </Card>
+        <Card>
+          <div className="text-sm font-semibold" style={{ color: colors.text }}>🏛️ Museum</div>
+          <OutlineButton className="mt-2 text-sm py-2">Add</OutlineButton>
+        </Card>
+      </div>
+
+      <Card>
+        <h2 className="text-xl font-semibold" style={{ color: colors.text }}>Quick Actions</h2>
+        <div className="grid sm:grid-cols-2 gap-3">
+          <OutlineButton className="justify-start">📅 Plan Activity</OutlineButton>
+          <OutlineButton className="justify-start">🎯 Set Goal</OutlineButton>
+          <OutlineButton className="justify-start">📸 Add Photo</OutlineButton>
+          <OutlineButton className="justify-start">🔍 Discover</OutlineButton>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default Dashboard;

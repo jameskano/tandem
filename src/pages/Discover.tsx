@@ -30,3 +30,4 @@ export const Discover: React.FC = () => {
     </div>
   )
 }
+export default Discover;
