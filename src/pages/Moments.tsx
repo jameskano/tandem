@@ -1,10 +1,10 @@
 import React from 'react'
-import { Card } from '../features/ui/Card'
-import { Button } from '../features/ui/Button'
-import { MomentsGrid } from '../features/moments/MomentsGrid'
+import Card from '../ui/Card'
+import Button from '../ui/Button'
+import MomentsGrid from '../components/MomentsGrid/MomentsGrid'
 import { useMomentsStore } from '../state/useMomentsStore'
 
-export const Moments: React.FC = () => {
+const Moments: React.FC = () => {
   const { moments } = useMomentsStore()
 
   return (

@@ -13,7 +13,7 @@ const navItems = [
   { path: '/settings', icon: Settings, label: 'Settings' },
 ]
 
-export const BottomNav: React.FC = () => {
+const BottomNav: React.FC = () => {
   const location = useLocation()
 
   return (
@@ -41,3 +41,5 @@ export const BottomNav: React.FC = () => {
     </nav>
   )
 }
+
+export default BottomNav

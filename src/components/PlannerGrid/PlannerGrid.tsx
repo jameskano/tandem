@@ -1,9 +1,9 @@
 import React from 'react'
-import { Card } from '../ui/Card'
+import Card from '../../ui/Card'
 import { usePlansStore } from '../../state/usePlansStore'
 import { formatDate, formatTime } from '../../shared/utils/date'
 
-export const PlannerGrid: React.FC = () => {
+const PlannerGrid: React.FC = () => {
   const { plans } = usePlansStore()
 
   // Get current month
@@ -102,3 +102,5 @@ export const PlannerGrid: React.FC = () => {
     </Card>
   )
 }
+
+export default PlannerGrid

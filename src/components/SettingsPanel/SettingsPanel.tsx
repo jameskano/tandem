@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { Card } from '../ui/Card'
-import { Button } from '../ui/Button'
+import Card from '../../ui/Card'
+import Button from '../../ui/Button'
 import { registerPush, scheduleLocal } from '../../services/notifications'
 import { generateInviteCode } from '../../shared/utils/format'
 
-export const SettingsPanel: React.FC = () => {
+const SettingsPanel: React.FC = () => {
   const [inviteCode] = useState(generateInviteCode())
   const [isPushEnabled, setIsPushEnabled] = useState(false)
 
@@ -143,3 +143,5 @@ export const SettingsPanel: React.FC = () => {
     </div>
   )
 }
+
+export default SettingsPanel

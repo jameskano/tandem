@@ -1,28 +1,34 @@
 import React from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import { BottomNav } from '../components/BottomNav'
-import { TopNav } from '../components/TopNav'
+import BottomNav from '../components/BottomNav'
+import TopNav from '../components/TopNav'
 
-export const Layout: React.FC = () => {
+const Layout: React.FC = () => {
   const location = useLocation()
   const isMainPage = location.pathname === '/'
 
   return (
     <div className="min-h-screen bg-bg">
-      {/* Top Navigation - Desktop only */}
-      <div className="hidden md:block">
-        <TopNav />
-      </div>
+      {/* Top Navigation - Desktop only, hidden on Main page */}
+      {!isMainPage && (
+        <div className="hidden md:block">
+          <TopNav />
+        </div>
+      )}
 
       {/* Main Content */}
-      <main className="pb-20 md:pb-0">
+      <main className={isMainPage ? 'pb-0' : 'pb-20 md:pb-0'}>
         <Outlet />
       </main>
 
-      {/* Bottom Navigation - Mobile only */}
-      <div className="md:hidden">
-        <BottomNav />
-      </div>
+      {/* Bottom Navigation - Mobile only, hidden on Main page */}
+      {!isMainPage && (
+        <div className="md:hidden">
+          <BottomNav />
+        </div>
+      )}
     </div>
   )
 }
+
+export default Layout

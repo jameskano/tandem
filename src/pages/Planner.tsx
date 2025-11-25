@@ -1,12 +1,11 @@
-import React from 'react'
-import { Card } from '../features/ui/Card'
-import { Button } from '../features/ui/Button'
-import { PlannerGrid } from '../features/planner/PlannerGrid'
+import React, { useEffect } from 'react'
+import Card from '../ui/Card'
+import Button from '../ui/Button'
+import PlannerGrid from '../components/PlannerGrid/PlannerGrid'
 import { usePlansStore } from '../state/usePlansStore'
 import { seedData } from '../shared/seed'
-import { useEffect } from 'react'
 
-export const Planner: React.FC = () => {
+const Planner: React.FC = () => {
   const { plans, addPlan } = usePlansStore()
 
   // Load seed data on first visit
@@ -37,4 +36,4 @@ export const Planner: React.FC = () => {
   )
 }
 
-export default Planner;
+export default Planner

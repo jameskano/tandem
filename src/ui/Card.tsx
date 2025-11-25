@@ -1,5 +1,5 @@
 import React from 'react'
-import { cn } from '../../shared/utils/format'
+import { cn } from '../shared/utils/format'
 
 interface CardProps {
   children: React.ReactNode
@@ -8,22 +8,22 @@ interface CardProps {
   shadow?: 'sm' | 'md' | 'lg'
 }
 
-export const Card: React.FC<CardProps> = ({
+const Card: React.FC<CardProps> = ({
   children,
   className,
   padding = 'md',
-  shadow = 'md'
+  shadow = 'md',
 }) => {
   const paddingClasses = {
     sm: 'p-3',
     md: 'p-4',
-    lg: 'p-6'
+    lg: 'p-6',
   }
-  
+
   const shadowClasses = {
     sm: 'shadow-sm',
     md: 'shadow-md',
-    lg: 'shadow-lg'
+    lg: 'shadow-lg',
   }
 
   return (
@@ -39,3 +39,5 @@ export const Card: React.FC<CardProps> = ({
     </div>
   )
 }
+
+export default Card

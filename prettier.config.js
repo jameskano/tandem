@@ -6,4 +6,5 @@ export default {
   printWidth: 80,
   arrowParens: 'avoid',
   endOfLine: 'lf',
+  plugins: ['prettier-plugin-tailwindcss'],
 }

@@ -1,12 +1,12 @@
 import React from 'react'
-import { Card } from '../ui/Card'
-import { Button } from '../ui/Button'
+import Card from '../../ui/Card'
+import Button from '../../ui/Button'
 import { useMomentsStore } from '../../state/useMomentsStore'
 import { pickOrCapture } from '../../services/camera'
 import { uploadFromDataUrl } from '../../services/storage'
 import { generateId } from '../../shared/utils/format'
 
-export const MomentsGrid: React.FC = () => {
+const MomentsGrid: React.FC = () => {
   const { moments, addMoment } = useMomentsStore()
 
   const handleAddPhoto = async () => {
@@ -80,3 +80,5 @@ export const MomentsGrid: React.FC = () => {
     </div>
   )
 }
+
+export default MomentsGrid

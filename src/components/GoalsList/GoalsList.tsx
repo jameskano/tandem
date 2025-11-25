@@ -1,10 +1,10 @@
 import React from 'react'
-import { Card } from '../ui/Card'
-import { Button } from '../ui/Button'
+import Card from '../../ui/Card'
+import Button from '../../ui/Button'
 import { useGoalsStore } from '../../state/useGoalsStore'
 import { formatProgress } from '../../shared/utils/format'
 
-export const GoalsList: React.FC = () => {
+const GoalsList: React.FC = () => {
   const { goals, updateProgress } = useGoalsStore()
 
   const handleProgressUpdate = (goalId: string, increment: number) => {
@@ -100,3 +100,5 @@ export const GoalsList: React.FC = () => {
     </div>
   )
 }
+
+export default GoalsList
