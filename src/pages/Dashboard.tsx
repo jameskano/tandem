@@ -1,28 +1,44 @@
-import React from 'react'
-import { CalendarDays, Compass, Clock, Check } from 'lucide-react'
+import { useEffect } from 'react'
+import { CalendarDays } from 'lucide-react'
 import { COLORS } from '../shared/colors'
 import Card from '../ui/Card'
 import Chip from '../ui/Chip'
 import GradientButton from '../ui/GradientButton'
-import OutlineButton from '../ui/OutlineButton'
-
-const Stat = ({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) => (
-  <Card>
-    <div className="flex items-center gap-3">
-      <div className="p-3 rounded-2xl" style={{ backgroundColor: COLORS.bg }}>
-        {icon}
-      </div>
-      <div>
-        <div className="text-xl font-bold" style={{ color: COLORS.text }}>{value}</div>
-        <div className="text-xs" style={{ color: COLORS.muted }}>{label}</div>
-      </div>
-    </div>
-  </Card>
-);
+import Button from '../ui/Button'
+import { usePlansStore } from '../state/usePlansStore'
+import { useGoalsStore } from '../state/useGoalsStore'
+import { useActivitiesStore } from '../state/useActivitiesStore'
+import { seedData } from '../shared/seed'
 
 const Dashboard = () => {
+  const { plans, addPlan } = usePlansStore()
+  const { goals, addGoal } = useGoalsStore()
+  const { activities, addActivity } = useActivitiesStore()
+
+  // Load seed data on first visit
+  useEffect(() => {
+    if (plans.length === 0) {
+      seedData.plans.forEach(addPlan)
+    }
+    if (goals.length === 0) {
+      seedData.goals.forEach(addGoal)
+    }
+    if (activities.length === 0) {
+      seedData.activities.forEach(addActivity)
+    }
+  }, [plans.length, goals.length, activities.length, addPlan, addGoal, addActivity])
+
+  const upcomingPlans = plans
+    .filter(plan => new Date(plan.start_ts) > new Date() && plan.status === 'planned')
+    .sort((a, b) => new Date(a.start_ts).getTime() - new Date(b.start_ts).getTime())
+    .slice(0, 3)
+
+  const activeGoals = goals.filter(goal => goal.progress < goal.target)
+  const completedPlans = plans.filter(plan => plan.status === 'completed')
+
   return (
     <div className="px-4 py-6 space-y-4" style={{ backgroundColor: COLORS.bg }}>
+      <div className='flex flex-col gap-y-3'>
       <Card className="space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-semibold" style={{ color: COLORS.text }}>Next up</h3>
@@ -40,44 +56,41 @@ const Dashboard = () => {
               Homemade sushi night 🍣
             </div>
             <div className="text-xs" style={{ color: COLORS.muted }}>
-              Shopping list ready · 2h
+              Shopping list done, with jazz music playlist
             </div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <GradientButton className="w-full py-3 text-sm">Start</GradientButton>
-          <OutlineButton className="w-full py-3 text-sm">Reschedule</OutlineButton>
+          <GradientButton className="w-full py-3 text-sm">Completed</GradientButton>
+          <Button variant='primaryOutline' className="w-full py-3 text-sm">Reschedule</Button>
         </div>
       </Card>
 
-      <div className="grid grid-cols-3 gap-3">
-        <Stat label="Weekly" value={3} icon={<Compass />} />
-        <Stat label="Streak" value={"7d"} icon={<Clock />} />
-        <Stat label="Done" value={24} icon={<Check />} />
-      </div>
+      <Card>
+<div className="text-center">
+                <p className="text-2xl font-bold text-accent mb-1">
+                  {upcomingPlans.length}
+                </p>
+                <p className="text-sm text-textMuted">Upcoming Plans</p>
+              </div>
+      </Card>
 
-      <div className="grid grid-cols-2 gap-3">
-        <Card>
-          <div className="text-sm font-semibold" style={{ color: COLORS.text }}>
-            🌌 Stargazing
-          </div>
-          <GradientButton className="mt-2 text-sm py-2">Schedule</GradientButton>
-        </Card>
-        <Card>
-          <div className="text-sm font-semibold" style={{ color: COLORS.text }}>
-            🏛️ Museum
-          </div>
-          <OutlineButton className="mt-2 text-sm py-2">Add</OutlineButton>
-        </Card>
+      <Card>
+<div className="text-center">
+                <p className="text-2xl font-bold text-secondary mb-1">
+                  {completedPlans.length}
+                </p>
+                <p className="text-sm text-textMuted">Completed</p>
+              </div>
+      </Card>
       </div>
 
       <Card>
-        <h2 className="text-xl font-semibold" style={{ color: COLORS.text }}>Quick Actions</h2>
+        <h2 className="text-xl font-semibold mb-4" style={{ color: COLORS.text }}>Quick Actions</h2>
         <div className="grid sm:grid-cols-2 gap-3">
-          <OutlineButton className="justify-start">📅 Plan Activity</OutlineButton>
-          <OutlineButton className="justify-start">🎯 Set Goal</OutlineButton>
-          <OutlineButton className="justify-start">📸 Add Photo</OutlineButton>
-          <OutlineButton className="justify-start">🔍 Discover</OutlineButton>
+          <Button variant='outlineSoft' className="justify-start">📅 Check Activities</Button>
+          <Button variant='outlineSoft' className="justify-start">📸 Add Photo</Button>
+          <Button variant='outlineSoft' className="justify-start">🔍 Discover</Button>
         </div>
       </Card>
     </div>
