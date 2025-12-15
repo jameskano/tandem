@@ -17,14 +17,13 @@ const Main: React.FC = () => {
               Find time for us again.
             </h1>
             <p className="text-lg md:text-xl text-textMuted max-w-2xl mx-auto">
-              Plan meaningful activities together, track your progress, and create lasting memories as a couple.
+              Plan meaningful activities together and create lasting memories as a couple.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link to="/register">
               <GradientButton size="lg" className="w-full sm:w-auto">
-                <Sparkles className="mr-2" size={20} />
                 Register
               </GradientButton>
             </Link>

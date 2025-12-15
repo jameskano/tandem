@@ -7,50 +7,29 @@ const config: Config = {
   theme: {
   	extend: {
   		colors: {
-  			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
-  			},
-  			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
-  			},
-  			highlight: 'var(--color-highlight)',
-  			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
-  			},
-  			bg: 'var(--color-bg)',
-  			text: 'var(--color-text)',
-  			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
-  				foreground: 'hsl(var(--muted-foreground))'
-  			},
-  			background: 'hsl(var(--background))',
-  			foreground: 'hsl(var(--foreground))',
-  			card: {
-  				DEFAULT: 'hsl(var(--card))',
-  				foreground: 'hsl(var(--card-foreground))'
-  			},
-  			popover: {
-  				DEFAULT: 'hsl(var(--popover))',
-  				foreground: 'hsl(var(--popover-foreground))'
-  			},
-  			destructive: {
-  				DEFAULT: 'hsl(var(--destructive))',
-  				foreground: 'hsl(var(--destructive-foreground))'
-  			},
-  			border: 'hsl(var(--border))',
-  			input: 'hsl(var(--input))',
-  			ring: 'hsl(var(--ring))',
-  			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
-  			}
-  		},
+              primary: 'var(--color-primary)',
+              accent: 'var(--color-accent)',
+              highlight: 'var(--color-highlight)',
+              secondary: 'var(--color-secondary)',
+              bg: 'var(--color-bg)',
+              text: 'var(--color-text)',
+              muted: 'var(--color-muted)',
+              background: 'hsl(var(--background))',
+              foreground: 'hsl(var(--foreground))',
+              card: 'hsl(var(--card))',
+              popover: 'hsl(var(--popover))',
+              destructive: 'hsl(var(--destructive))',
+              border: 'hsl(var(--border))',
+              input: 'hsl(var(--input))',
+              ring: 'hsl(var(--ring))',
+              chart: {
+                  '1': 'hsl(var(--chart-1))',
+                  '2': 'hsl(var(--chart-2))',
+                  '3': 'hsl(var(--chart-3))',
+                  '4': 'hsl(var(--chart-4))',
+                  '5': 'hsl(var(--chart-5))'
+              }
+          },
   		spacing: {
   			'2xs': 'var(--space-2xs)',
   			xs: 'var(--space-xs)',
@@ -111,7 +90,7 @@ const config: Config = {
   			container: 'var(--container-max)'
   		},
   		borderRadius: {
-  			lg: 'var(--radius)',
+  			lg: 'var(--radius-lg)',
   			xl: 'var(--radius-xl)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'

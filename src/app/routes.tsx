@@ -5,7 +5,6 @@ import Main from '../pages/Main'
 import Dashboard from '../pages/Dashboard'
 import Discover from '../pages/Discover'
 import Planner from '../pages/Planner'
-import Goals from '../pages/Goals'
 import Moments from '../pages/Moments'
 import Settings from '../pages/Settings'
 import Login from '../pages/Login'
@@ -39,10 +38,6 @@ export const router = createBrowserRouter([
       {
         path: 'planner',
         element: <Planner />,
-      },
-      {
-        path: 'goals',
-        element: <Goals />,
       },
       {
         path: 'moments',
