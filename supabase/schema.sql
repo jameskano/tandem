@@ -57,20 +57,6 @@ CREATE TABLE plans (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create goals table
-CREATE TABLE goals (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  couple_id UUID REFERENCES couples(id) ON DELETE CASCADE,
-  title TEXT NOT NULL,
-  description TEXT,
-  target INTEGER NOT NULL CHECK (target > 0),
-  progress INTEGER NOT NULL DEFAULT 0 CHECK (progress >= 0),
-  unit TEXT NOT NULL,
-  deadline TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
 -- Create moments table
 CREATE TABLE moments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -93,7 +79,6 @@ CREATE TABLE user_devices (
 -- Create indexes for better performance
 CREATE INDEX idx_plans_couple_id ON plans(couple_id);
 CREATE INDEX idx_plans_start_ts ON plans(start_ts);
-CREATE INDEX idx_goals_couple_id ON goals(couple_id);
 CREATE INDEX idx_moments_couple_id ON moments(couple_id);
 CREATE INDEX idx_moments_created_at ON moments(created_at);
 CREATE INDEX idx_memberships_couple_id ON memberships(couple_id);
@@ -104,7 +89,6 @@ ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE couples ENABLE ROW LEVEL SECURITY;
 ALTER TABLE memberships ENABLE ROW LEVEL SECURITY;
 ALTER TABLE plans ENABLE ROW LEVEL SECURITY;
-ALTER TABLE goals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE moments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_devices ENABLE ROW LEVEL SECURITY;
 
@@ -146,24 +130,6 @@ CREATE POLICY "Plans writable by couple members" ON plans
     EXISTS (
       SELECT 1 FROM memberships 
       WHERE couple_id = plans.couple_id AND user_id = auth.uid()
-    )
-  );
-
--- Goals are readable by couple members
-CREATE POLICY "Goals readable by couple members" ON goals
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM memberships 
-      WHERE couple_id = goals.couple_id AND user_id = auth.uid()
-    )
-  );
-
--- Goals are writable by couple members
-CREATE POLICY "Goals writable by couple members" ON goals
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM memberships 
-      WHERE couple_id = goals.couple_id AND user_id = auth.uid()
     )
   );
 
