@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
-import { QueryProvider } from './app/providers/QueryProvider'
-import { ThemeProvider } from './app/providers/ThemeProvider'
+import QueryProvider from './shared/providers/QueryProvider'
+import ThemeProvider from './shared/providers/ThemeProvider'
 import { router } from './app/routes'
 import './styles/tailwind.css'
 

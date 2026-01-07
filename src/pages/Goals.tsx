@@ -1,12 +1,11 @@
-import React from 'react'
-import { Card } from '../features/ui/Card'
-import { Button } from '../features/ui/Button'
-import { GoalsList } from '../features/goals/GoalsList'
+import React, { useEffect } from 'react'
+import Card from '../ui/Card'
+import Button from '../ui/Button'
+import GoalsList from '../components/GoalsList/GoalsList'
 import { useGoalsStore } from '../state/useGoalsStore'
 import { seedData } from '../shared/seed'
-import { useEffect } from 'react'
 
-export const Goals: React.FC = () => {
+const Goals: React.FC = () => {
   const { goals, addGoal } = useGoalsStore()
 
   // Load seed data on first visit
@@ -36,3 +35,5 @@ export const Goals: React.FC = () => {
     </div>
   )
 }
+
+export default Goals

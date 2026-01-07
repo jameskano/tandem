@@ -1,15 +1,24 @@
 import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
-import { Layout } from './Layout'
-import { Main } from '../pages/Main'
-import { Dashboard } from '../pages/Dashboard'
-import { Discover } from '../pages/Discover'
-import { Planner } from '../pages/Planner'
-import { Goals } from '../pages/Goals'
-import { Moments } from '../pages/Moments'
-import { Settings } from '../pages/Settings'
+import Layout from './Layout'
+import Main from '../pages/Main'
+import Dashboard from '../pages/Dashboard'
+import Discover from '../pages/Discover'
+import Planner from '../pages/Planner'
+import Moments from '../pages/Moments'
+import Settings from '../pages/Settings'
+import Login from '../pages/Login'
+import Register from '../pages/Register'
 
 export const router = createBrowserRouter([
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/register',
+    element: <Register />,
+  },
   {
     path: '/',
     element: <Layout />,
@@ -29,10 +38,6 @@ export const router = createBrowserRouter([
       {
         path: 'planner',
         element: <Planner />,
-      },
-      {
-        path: 'goals',
-        element: <Goals />,
       },
       {
         path: 'moments',

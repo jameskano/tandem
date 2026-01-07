@@ -4,16 +4,14 @@ import { Home, Search, Calendar, Target, Camera, Settings } from '../shared/icon
 import { cn } from '../shared/utils/format'
 
 const navItems = [
-  { path: '/', icon: Home, label: 'Main' },
   { path: '/dashboard', icon: Home, label: 'Dashboard' },
   { path: '/discover', icon: Search, label: 'Discover' },
   { path: '/planner', icon: Calendar, label: 'Planner' },
-  { path: '/goals', icon: Target, label: 'Goals' },
   { path: '/moments', icon: Camera, label: 'Moments' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ]
 
-export const BottomNav: React.FC = () => {
+const BottomNav: React.FC = () => {
   const location = useLocation()
 
   return (
@@ -41,3 +39,5 @@ export const BottomNav: React.FC = () => {
     </nav>
   )
 }
+
+export default BottomNav

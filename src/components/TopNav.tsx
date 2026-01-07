@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Heart } from '../shared/icons'
 
-export const TopNav: React.FC = () => {
+const TopNav: React.FC = () => {
   const location = useLocation()
 
   return (
@@ -81,3 +81,5 @@ export const TopNav: React.FC = () => {
     </header>
   )
 }
+
+export default TopNav

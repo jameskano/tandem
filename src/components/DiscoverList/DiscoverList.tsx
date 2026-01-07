@@ -1,11 +1,11 @@
 import React from 'react'
-import { Card } from '../ui/Card'
-import { Button } from '../ui/Button'
-import { Chip } from '../ui/Chip'
+import Card from '../../ui/Card'
+import Button from '../../ui/Button'
+import Chip from '../../ui/Chip'
 import { useActivitiesStore } from '../../state/useActivitiesStore'
 import { formatDuration, formatCost, formatDifficulty } from '../../shared/utils/format'
 
-export const DiscoverList: React.FC = () => {
+const DiscoverList: React.FC = () => {
   const { 
     activities, 
     saveActivity, 
@@ -84,3 +84,5 @@ export const DiscoverList: React.FC = () => {
     </div>
   )
 }
+
+export default DiscoverList

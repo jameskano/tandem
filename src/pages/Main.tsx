@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Button } from '../features/ui/Button'
-import { GradientButton } from '../features/ui/GradientButton'
-import { Card } from '../features/ui/Card'
+import Button from '../ui/Button'
+import GradientButton from '../ui/GradientButton'
+import Card from '../ui/Card'
 import { Heart, Sparkles } from '../shared/icons'
 
-export const Main: React.FC = () => {
+const Main: React.FC = () => {
   return (
     <div className="min-h-screen bg-bg">
       {/* Hero Section */}
@@ -17,20 +17,19 @@ export const Main: React.FC = () => {
               Find time for us again.
             </h1>
             <p className="text-lg md:text-xl text-textMuted max-w-2xl mx-auto">
-              Plan meaningful activities together, track your progress, and create lasting memories as a couple.
+              Plan meaningful activities together and create lasting memories as a couple.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link to="/discover">
+            <Link to="/register">
               <GradientButton size="lg" className="w-full sm:w-auto">
-                <Sparkles className="mr-2" size={20} />
-                Discover Activities
+                Register
               </GradientButton>
             </Link>
-            <Link to="/settings">
+            <Link to="/login">
               <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                Sync with your partner
+                Login
               </Button>
             </Link>
           </div>
@@ -39,9 +38,9 @@ export const Main: React.FC = () => {
           <div className="grid md:grid-cols-3 gap-6 mt-16">
             <Card className="text-center">
               <div className="text-3xl mb-3">🎯</div>
-              <h3 className="text-xl font-semibold text-text mb-2">Set Goals</h3>
+              <h3 className="text-xl font-semibold text-text mb-2">Discover New Experiences</h3>
               <p className="text-textMuted">
-                Create shared goals and track your progress together
+                Find new activities to try together
               </p>
             </Card>
 
@@ -66,3 +65,5 @@ export const Main: React.FC = () => {
     </div>
   )
 }
+
+export default Main

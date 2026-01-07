@@ -1,13 +1,9 @@
-import React from 'react'
-import { Card } from '../features/ui/Card'
-import { Button } from '../features/ui/Button'
-import { Chip } from '../features/ui/Chip'
-import { DiscoverList } from '../features/discover/DiscoverList'
+import React, { useEffect } from 'react'
+import DiscoverList from '../components/DiscoverList/DiscoverList'
 import { useActivitiesStore } from '../state/useActivitiesStore'
 import { seedData } from '../shared/seed'
-import { useEffect } from 'react'
 
-export const Discover: React.FC = () => {
+const Discover: React.FC = () => {
   const { activities, addActivity } = useActivitiesStore()
 
   // Load seed data on first visit
@@ -30,3 +26,4 @@ export const Discover: React.FC = () => {
     </div>
   )
 }
+export default Discover

@@ -1,9 +1,7 @@
 import React from 'react'
-import { Card } from '../features/ui/Card'
-import { Button } from '../features/ui/Button'
-import { SettingsPanel } from '../features/settings/SettingsPanel'
+import SettingsPanel from '../components/SettingsPanel/SettingsPanel'
 
-export const Settings: React.FC = () => {
+const Settings: React.FC = () => {
   return (
     <div className="min-h-screen bg-bg">
       <div className="px-4 py-6 max-w-4xl mx-auto">
@@ -17,3 +15,5 @@ export const Settings: React.FC = () => {
     </div>
   )
 }
+
+export default Settings

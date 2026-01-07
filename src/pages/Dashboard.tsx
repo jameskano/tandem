@@ -1,14 +1,16 @@
-import React from 'react'
-import { Card } from '../features/ui/Card'
-import { Button } from '../features/ui/Button'
-// import { DashboardSummary } from '../features/dashboard/DashboardSummary'
+import { useEffect } from 'react'
+import { CalendarDays } from 'lucide-react'
+import { COLORS } from '../shared/colors'
+import Card from '../ui/Card'
+import Chip from '../ui/Chip'
+import GradientButton from '../ui/GradientButton'
+import Button from '../ui/Button'
 import { usePlansStore } from '../state/usePlansStore'
 import { useGoalsStore } from '../state/useGoalsStore'
 import { useActivitiesStore } from '../state/useActivitiesStore'
 import { seedData } from '../shared/seed'
-import { useEffect } from 'react'
 
-export const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const { plans, addPlan } = usePlansStore()
   const { goals, addGoal } = useGoalsStore()
   const { activities, addActivity } = useActivitiesStore()
@@ -35,88 +37,64 @@ export const Dashboard: React.FC = () => {
   const completedPlans = plans.filter(plan => plan.status === 'completed')
 
   return (
-    <div className="min-h-screen bg-bg">
-      <div className="px-4 py-6 max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-text mb-2">Dashboard</h1>
-          <p className="text-textMuted">Your relationship overview</p>
+    <div className="px-4 py-6 space-y-4" style={{ backgroundColor: COLORS.bg }}>
+      <div className='flex flex-col gap-y-3'>
+      <Card className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-base font-semibold" style={{ color: COLORS.text }}>Next up</h3>
+          <Chip>Sat 18:00</Chip>
         </div>
-
-        <div className="grid gap-6">
-          {/* Stats Cards */}
-          <div className="grid md:grid-cols-3 gap-4">
-            <Card>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-1">
-                  {upcomingPlans.length}
-                </div>
-                <div className="text-sm text-textMuted">Upcoming Plans</div>
-              </div>
-            </Card>
-            <Card>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-accent mb-1">
-                  {activeGoals.length}
-                </div>
-                <div className="text-sm text-textMuted">Active Goals</div>
-              </div>
-            </Card>
-            <Card>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-secondary mb-1">
-                  {completedPlans.length}
-                </div>
-                <div className="text-sm text-textMuted">Completed</div>
-              </div>
-            </Card>
+        <div className="flex items-center gap-3">
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center"
+            style={{ backgroundColor: COLORS.secondary }}
+          >
+            <CalendarDays className="opacity-80" />
           </div>
-
-          {/* Next Plan */}
-          {upcomingPlans.length > 0 && (
-            <Card>
-              <h2 className="text-xl font-semibold text-text mb-4">Next Up</h2>
-              <div className="space-y-3">
-                {upcomingPlans.slice(0, 1).map(plan => (
-                  <div key={plan.id} className="p-4 bg-primary/5 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-medium text-text">{plan.title}</h3>
-                        <p className="text-sm text-textMuted">
-                          {new Date(plan.start_ts).toLocaleDateString()} at{' '}
-                          {new Date(plan.start_ts).toLocaleTimeString([], { 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                          })}
-                        </p>
-                      </div>
-                      <Button size="sm">View</Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
-
-          {/* Quick Actions */}
-          <Card>
-            <h2 className="text-xl font-semibold text-text mb-4">Quick Actions</h2>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <Button variant="outline" className="justify-start">
-                📅 Plan Activity
-              </Button>
-              <Button variant="outline" className="justify-start">
-                🎯 Set Goal
-              </Button>
-              <Button variant="outline" className="justify-start">
-                📸 Add Photo
-              </Button>
-              <Button variant="outline" className="justify-start">
-                🔍 Discover
-              </Button>
+          <div>
+            <div className="font-semibold" style={{ color: COLORS.text }}>
+              Homemade sushi night 🍣
             </div>
-          </Card>
+            <div className="text-xs" style={{ color: COLORS.muted }}>
+              Shopping list done, with jazz music playlist
+            </div>
+          </div>
         </div>
+        <div className="grid grid-cols-2 gap-2">
+          <GradientButton className="w-full py-3 text-sm">Completed</GradientButton>
+          <Button variant='primaryOutline' className="w-full py-3 text-sm">Reschedule</Button>
+        </div>
+      </Card>
+
+      <Card>
+<div className="text-center">
+                <p className="text-2xl font-bold text-accent mb-1">
+                  {upcomingPlans.length}
+                </p>
+                <p className="text-sm text-textMuted">Upcoming Plans</p>
+              </div>
+      </Card>
+
+      <Card>
+<div className="text-center">
+                <p className="text-2xl font-bold text-secondary mb-1">
+                  {completedPlans.length}
+                </p>
+                <p className="text-sm text-textMuted">Completed</p>
+              </div>
+      </Card>
       </div>
+
+      <Card>
+        <h2 className="text-xl font-semibold mb-4" style={{ color: COLORS.text }}>Quick Actions</h2>
+        <div className="grid sm:grid-cols-2 gap-3">
+          <Button variant='outlineSoft' className="justify-start">📅 Check Activities</Button>
+          <Button variant='outlineSoft' className="justify-start">📸 Add Photo</Button>
+          <Button variant='outlineSoft' className="justify-start">🔍 Discover</Button>
+        </div>
+      </Card>
     </div>
-  )
-}
+  );
+};
+
+export default Dashboard;

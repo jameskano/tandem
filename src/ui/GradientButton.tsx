@@ -1,23 +1,24 @@
 import React from 'react'
-import { cn } from '../../shared/utils/format'
+import { cn } from '../shared/utils/format'
 
 interface GradientButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg'
   children: React.ReactNode
 }
 
-export const GradientButton: React.FC<GradientButtonProps> = ({
+const GradientButton: React.FC<GradientButtonProps> = ({
   size = 'md',
   className,
   children,
   ...props
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
-  
+  const baseClasses =
+    'inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
+
   const sizeClasses = {
     sm: 'h-8 px-3 text-sm min-w-[44px]',
     md: 'h-11 px-4 text-base min-w-[44px]',
-    lg: 'h-12 px-6 text-lg min-w-[44px]'
+    lg: 'h-12 px-6 text-lg min-w-[44px]',
   }
 
   return (
@@ -34,3 +35,5 @@ export const GradientButton: React.FC<GradientButtonProps> = ({
     </button>
   )
 }
+
+export default GradientButton
