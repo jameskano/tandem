@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Button from '../ui/Button'
 import GradientButton from '../ui/GradientButton'
 import Card from '../ui/Card'
-import { Heart, Sparkles } from '../shared/icons'
+import logo1 from '../assets/main-logo/logo1.png'
 
 const Main: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ const Main: React.FC = () => {
       <div className="px-4 py-8 md:py-16">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-8">
-            <Heart className="mx-auto text-primary mb-4" size={64} />
+            <img src={logo1} alt="Tandem Logo" className="w-20 mx-auto mb-4" />
             <h1 className="text-4xl md:text-6xl font-bold text-text mb-4">
               Find time for us again.
             </h1>

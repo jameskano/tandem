@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Heart } from 'lucide-react'
+import logo1 from '../assets/main-logo/logo1.png'
 import { COLORS } from '../shared/colors'
 import GradientButton from '../ui/GradientButton'
 import Button from '../ui/Button'
@@ -82,7 +82,7 @@ const Register: React.FC = () => {
       {/* Header */}
       <div className="px-4 py-6 text-center">
         <Link to="/" className="inline-block">
-          <Heart className="mx-auto mb-4 hover:opacity-80 transition-opacity" size={48} style={{ color: COLORS.primary }} />
+          <img src={logo1} alt="Tandem Logo" className="w-14 mx-auto mb-4" />
         </Link>
         <h1 className="text-2xl font-bold" style={{ color: COLORS.text }}>Create Account</h1>
         <p className="text-sm mt-1" style={{ color: COLORS.muted }}>Join us to start your journey</p>

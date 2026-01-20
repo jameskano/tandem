@@ -33,7 +33,6 @@ const Dashboard = () => {
     .sort((a, b) => new Date(a.start_ts).getTime() - new Date(b.start_ts).getTime())
     .slice(0, 3)
 
-  const activeGoals = goals.filter(goal => goal.progress < goal.target)
   const completedPlans = plans.filter(plan => plan.status === 'completed')
 
   return (
