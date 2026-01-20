@@ -1,8 +1,8 @@
 # Tandem - Couples Activity Planner
 
-A mobile-first web application for couples to plan activities, track goals, and capture memories together. Built with React, TypeScript, Tailwind CSS, and Capacitor for cross-platform deployment.
+A commercial, mobile-first web application for couples to plan activities, track goals, and capture memories together. Built with React, TypeScript, Tailwind CSS, and Capacitor for cross-platform deployment.
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Install dependencies
@@ -18,7 +18,7 @@ pnpm build
 pnpm preview
 ```
 
-## 📱 Mobile Development
+## Mobile Development
 
 ### Capacitor Setup
 
@@ -49,7 +49,7 @@ pnpm cap:sync
 pnpm cap:ios    # or pnpm cap:android
 ```
 
-## 🗄️ Database Setup
+## Database Setup
 
 ### Supabase Configuration
 
@@ -59,8 +59,7 @@ pnpm cap:ios    # or pnpm cap:android
 
 ```env
 VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_SENTRY_DSN=your_sentry_dsn (optional)
+VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_supabase_publishable_key
 VITE_APP_NAME=Tandem
 ```
 
@@ -70,7 +69,7 @@ VITE_APP_NAME=Tandem
 -- Execute the contents of supabase/schema.sql in your Supabase SQL editor
 ```
 
-## 🔧 Development
+## Development
 
 ### Available Scripts
 
@@ -89,7 +88,7 @@ VITE_APP_NAME=Tandem
 - **Husky** - Git hooks for pre-commit linting
 - **lint-staged** - Run linters on staged files
 
-## 🏗️ Architecture
+## Architecture
 
 ### Tech Stack
 
@@ -105,27 +104,27 @@ VITE_APP_NAME=Tandem
 
 ```
 src/
-├── app/                    # App shell and routing
-│   ├── providers/         # React Query, Theme providers
-│   ├── routes.tsx         # Route definitions
-│   └── Layout.tsx         # Main layout component
-├── components/            # Shared components
-├── features/             # Feature-specific components
-│   ├── ui/               # Reusable UI components
-│   ├── dashboard/        # Dashboard features
-│   ├── discover/         # Activity discovery
-│   ├── planner/          # Calendar/planning
-│   ├── goals/            # Goal tracking
-│   ├── moments/          # Photo gallery
-│   └── settings/         # App settings
-├── pages/                # Route components
-├── services/             # External service integrations
-├── shared/               # Shared utilities and types
-├── state/                # Zustand stores
-└── styles/               # Global styles
+app/                    # App shell and routing
+providers/              # React Query, Theme providers
+routes.tsx              # Route definitions
+Layout.tsx              # Main layout component
+components/             # Shared components
+features/               # Feature-specific components
+ui/                     # Reusable UI components
+dashboard/              # Dashboard features
+discover/               # Activity discovery
+planner/                # Calendar/planning
+goals/                  # Goal tracking
+moments/                # Photo gallery
+settings/               # App settings
+pages/                  # Route components
+services/               # External service integrations
+shared/                 # Shared utilities and types
+state/                  # Zustand stores
+styles/                 # Global styles
 ```
 
-## 🎨 Design System
+## Design System
 
 ### Brand Colors
 
@@ -144,7 +143,7 @@ src/
 - Responsive breakpoints: `sm:`, `md:`, `lg:`
 - Touch-friendly interactions
 
-## 📱 Features
+## Features
 
 ### Core Features
 
@@ -162,7 +161,7 @@ src/
 - **Haptic Feedback** - Touch responses
 - **Share Functionality** - Share activities and moments
 
-## 🔐 Authentication & Data
+## Authentication & Data
 
 ### User Management
 
@@ -181,7 +180,7 @@ src/
 - **Moments** - Photo memories
 - **Notifications** - Push notification tokens
 
-## 🚀 Deployment
+## Deployment
 
 ### Web Deployment
 
@@ -210,7 +209,7 @@ VITE_SUPABASE_ANON_KEY=your_production_anon_key
 VITE_SENTRY_DSN=your_sentry_dsn (optional)
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -225,19 +224,15 @@ VITE_SENTRY_DSN=your_sentry_dsn (optional)
 - Check Capacitor logs for mobile debugging
 - Verify Supabase RLS policies
 
-## 📄 License
+## Licensing
 
-MIT License - see LICENSE file for details.
+This software is proprietary and intended for commercial use. Redistribution, modification, or use outside authorized deployments is not permitted without a written agreement.
 
-## 🤝 Contributing
+## Contributions
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and linting
-5. Submit a pull request
+This repository is not open to public contributions. For business partnerships or authorized development access, contact the product owner.
 
-## 📞 Support
+## Support
 
 For issues and questions:
 - Check the troubleshooting section
