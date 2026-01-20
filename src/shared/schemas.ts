@@ -1,49 +1,35 @@
 import { z } from 'zod'
 
-export const userSchema = z.object({
-  id: z.string().uuid(),
-  email: z.string().email(),
-  name: z.string().optional(),
-  avatar_url: z.string().url().optional(),
-  created_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
-})
-
 export const coupleSchema = z.object({
   id: z.string().uuid(),
   created_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
+  created_by: z.string().uuid(),
 })
 
 export const membershipSchema = z.object({
-  user_id: z.string().uuid(),
+  id: z.string().uuid(),
   couple_id: z.string().uuid(),
-  role: z.enum(['owner', 'member']),
+  user_id: z.string().uuid(),
   created_at: z.string().datetime(),
 })
 
-export const activitySchema = z.object({
+export const savedActivitySchema = z.object({
   id: z.string().uuid(),
-  title: z.string().min(1),
-  emoji: z.string().min(1),
   tags: z.array(z.string()),
-  description: z.string().optional(),
-  difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
-  duration: z.number().positive().optional(),
-  cost: z.enum(['free', 'low', 'medium', 'high']).optional(),
-  location: z.enum(['home', 'outdoor', 'indoor', 'travel']).optional(),
+  couple_id: z.string().uuid(),
+  saved_by: z.string().uuid(),
+  created_at: z.string().datetime(),
 })
 
 export const planSchema = z.object({
   id: z.string().uuid(),
   couple_id: z.string().uuid(),
   title: z.string().min(1),
-  description: z.string().optional(),
-  start_ts: z.string().datetime(),
-  end_ts: z.string().datetime(),
-  notes: z.string().optional(),
-  activity_id: z.string().uuid().optional(),
-  status: z.enum(['planned', 'completed', 'cancelled']),
+  start_date_ts: z.string().datetime(),
+  tags: z.array(z.string()),
+  notes: z.string().nullable().optional(),
+  status: z.enum(['planned', 'completed']),
+  created_by: z.string().uuid(),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
 })
@@ -51,16 +37,18 @@ export const planSchema = z.object({
 export const momentSchema = z.object({
   id: z.string().uuid(),
   couple_id: z.string().uuid(),
-  url: z.string().url(),
-  caption: z.string().optional(),
+  image_path: z.array(z.string()),
+  caption: z.string().nullable().optional(),
+  created_by: z.string().uuid(),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
 })
 
-export const notificationTokenSchema = z.object({
+export const userDeviceSchema = z.object({
+  id: z.string().uuid(),
   user_id: z.string().uuid(),
-  fcm_token: z.string().min(1),
-  platform: z.enum(['ios', 'android', 'web']),
+  platform: z.enum(['ios', 'android']),
+  token: z.string().min(1),
   updated_at: z.string().datetime(),
 })
 
@@ -70,11 +58,10 @@ export const envSchema = z.object({
   VITE_APP_NAME: z.string().default('Tandem'),
 })
 
-export type User = z.infer<typeof userSchema>
 export type Couple = z.infer<typeof coupleSchema>
 export type Membership = z.infer<typeof membershipSchema>
-export type Activity = z.infer<typeof activitySchema>
+export type SavedActivity = z.infer<typeof savedActivitySchema>
 export type Plan = z.infer<typeof planSchema>
 export type Moment = z.infer<typeof momentSchema>
-export type NotificationToken = z.infer<typeof notificationTokenSchema>
+export type UserDevice = z.infer<typeof userDeviceSchema>
 export type Env = z.infer<typeof envSchema>

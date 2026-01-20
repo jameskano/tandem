@@ -1,95 +1,71 @@
-export interface User {
+export type User = {
   id: string
   email: string
-  name?: string
-  avatar_url?: string
+  user_metadata?: Record<string, any>
   created_at: string
   updated_at: string
 }
 
-export interface Couple {
+export type Couple = {
   id: string
   created_at: string
-  updated_at: string
+  created_by: string
 }
 
-export interface Membership {
-  user_id: string
+export type Membership = {
+  id: string
   couple_id: string
-  role: 'owner' | 'member'
+  user_id: string
   created_at: string
 }
 
-export interface Activity {
+export type SavedActivity = {
   id: string
-  title: string
-  emoji: string
   tags: string[]
-  description?: string
-  difficulty?: 'easy' | 'medium' | 'hard'
-  duration?: number // in minutes
-  cost?: 'free' | 'low' | 'medium' | 'high'
-  location?: 'home' | 'outdoor' | 'indoor' | 'travel'
+  couple_id: string
+  saved_by: string
+  created_at: string
 }
 
-export interface Plan {
+export type Plan = {
   id: string
   couple_id: string
   title: string
-  description?: string
-  start_ts: string
-  end_ts: string
-  notes?: string
-  activity_id?: string
-  status: 'planned' | 'completed' | 'cancelled'
+  start_date_ts: string
+  tags: string[]
+  notes?: string | null
+  status: 'planned' | 'completed'
+  created_by: string
   created_at: string
   updated_at: string
 }
 
-export interface Goal {
+export type Moment = {
   id: string
   couple_id: string
-  title: string
-  description?: string
-  target: number
-  progress: number
-  unit: string
-  deadline?: string
+  image_path: string[]
+  caption?: string | null
+  created_by: string
   created_at: string
   updated_at: string
 }
 
-export interface Moment {
+export type UserDevice = {
   id: string
-  couple_id: string
-  url: string
-  caption?: string
-  created_at: string
-  updated_at: string
-}
-
-export interface NotificationToken {
   user_id: string
-  fcm_token: string
-  platform: 'ios' | 'android' | 'web'
+  platform: 'ios' | 'android'
+  token: string
   updated_at: string
 }
 
-export interface AppState {
-  user: User | null
-  couple: Couple | null
+export type AppState = {
   isAuthenticated: boolean
   isLoading: boolean
 }
 
-export interface DashboardStats {
+export type DashboardStats = {
   weeklyActivities: number
   streak: number
   completed: number
   nextPlan?: Plan
-}
-
-export interface DiscoverActivity extends Activity {
-  isSaved: boolean
-  isSkipped: boolean
 }
