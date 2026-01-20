@@ -4,14 +4,13 @@ import { envSchema } from '../shared/schemas'
 // Validate environment variables
 const env = envSchema.parse({
   VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-  VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
-  VITE_SENTRY_DSN: import.meta.env.VITE_SENTRY_DSN,
-  VITE_APP_NAME: import.meta.env.VITE_APP_NAME || 'Tandem',
+  VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY: import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY,
+  VITE_APP_NAME: import.meta.env.VITE_APP_NAME,
 })
 
 // Create Supabase client only if credentials are available
-export const supabase = env.VITE_SUPABASE_URL && env.VITE_SUPABASE_ANON_KEY 
-  ? createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_ANON_KEY)
+export const supabase = env.VITE_SUPABASE_URL && env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY 
+  ? createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY)
   : null
 
 export { env }

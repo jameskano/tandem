@@ -48,19 +48,6 @@ export const planSchema = z.object({
   updated_at: z.string().datetime(),
 })
 
-export const goalSchema = z.object({
-  id: z.string().uuid(),
-  couple_id: z.string().uuid(),
-  title: z.string().min(1),
-  description: z.string().optional(),
-  target: z.number().positive(),
-  progress: z.number().min(0),
-  unit: z.string().min(1),
-  deadline: z.string().datetime().optional(),
-  created_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
-})
-
 export const momentSchema = z.object({
   id: z.string().uuid(),
   couple_id: z.string().uuid(),
@@ -79,8 +66,7 @@ export const notificationTokenSchema = z.object({
 
 export const envSchema = z.object({
   VITE_SUPABASE_URL: z.string().url().optional(),
-  VITE_SUPABASE_ANON_KEY: z.string().min(1).optional(),
-  VITE_SENTRY_DSN: z.string().url().optional(),
+  VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY: z.string().min(1).optional(),
   VITE_APP_NAME: z.string().default('Tandem'),
 })
 
@@ -89,7 +75,6 @@ export type Couple = z.infer<typeof coupleSchema>
 export type Membership = z.infer<typeof membershipSchema>
 export type Activity = z.infer<typeof activitySchema>
 export type Plan = z.infer<typeof planSchema>
-export type Goal = z.infer<typeof goalSchema>
 export type Moment = z.infer<typeof momentSchema>
 export type NotificationToken = z.infer<typeof notificationTokenSchema>
 export type Env = z.infer<typeof envSchema>
