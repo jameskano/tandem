@@ -6,13 +6,11 @@ import Chip from '../ui/Chip'
 import GradientButton from '../ui/GradientButton'
 import Button from '../ui/Button'
 import { usePlansStore } from '../state/usePlansStore'
-import { useGoalsStore } from '../state/useGoalsStore'
 import { useActivitiesStore } from '../state/useActivitiesStore'
 import { seedData } from '../shared/seed'
 
 const Dashboard = () => {
   const { plans, addPlan } = usePlansStore()
-  const { goals, addGoal } = useGoalsStore()
   const { activities, addActivity } = useActivitiesStore()
 
   // Load seed data on first visit
@@ -20,17 +18,14 @@ const Dashboard = () => {
     if (plans.length === 0) {
       seedData.plans.forEach(addPlan)
     }
-    if (goals.length === 0) {
-      seedData.goals.forEach(addGoal)
-    }
     if (activities.length === 0) {
       seedData.activities.forEach(addActivity)
     }
-  }, [plans.length, goals.length, activities.length, addPlan, addGoal, addActivity])
+  }, [plans.length, activities.length, addPlan, addActivity])
 
   const upcomingPlans = plans
-    .filter(plan => new Date(plan.start_ts) > new Date() && plan.status === 'planned')
-    .sort((a, b) => new Date(a.start_ts).getTime() - new Date(b.start_ts).getTime())
+    .filter(plan => new Date(plan.start_date_ts) > new Date() && plan.status === 'planned')
+    .sort((a, b) => new Date(a.start_date_ts).getTime() - new Date(b.start_date_ts).getTime())
     .slice(0, 3)
 
   const completedPlans = plans.filter(plan => plan.status === 'completed')
