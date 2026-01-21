@@ -1,7 +1,7 @@
 import React from 'react'
 import Card from '../../ui/Card'
 import Button from '../../ui/Button'
-import { useMomentsStore } from '../../state/useMomentsStore'
+import { useMomentsStore } from '../../hooks/useMomentsStore'
 import { pickOrCapture } from '../../services/camera'
 import { uploadFromDataUrl } from '../../services/storage'
 import { generateId } from '../../shared/utils/format'

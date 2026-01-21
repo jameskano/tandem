@@ -1,8 +1,7 @@
 import React from 'react'
-import Card from '../ui/Card'
-import Button from '../ui/Button'
 import MomentsGrid from '../components/MomentsGrid/MomentsGrid'
-import { useMomentsStore } from '../state/useMomentsStore'
+import { useMomentsStore } from '../hooks/useMomentsStore'
+import Button from '../shared/ui/Button'
 
 const Moments: React.FC = () => {
   const { moments } = useMomentsStore()

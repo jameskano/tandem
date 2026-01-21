@@ -35,7 +35,6 @@
     "react-hook-form": "^7.66.1",
     "react-router-dom": "^6.28.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

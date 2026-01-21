@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import logo1 from '../assets/main-logo/logo1.png'
 import { COLORS } from '../shared/colors'
-import GradientButton from '../ui/GradientButton'
-import Button from '../ui/Button'
-import Input from '../ui/Input'
-import Card from '../ui/Card'
+import Button from '../shared/ui/Button'
+import Card from '../shared/ui/Card'
+import GradientButton from '../shared/ui/GradientButton'
+import Input from '../shared/ui/Input'
 
 const Register: React.FC = () => {
   const navigate = useNavigate()

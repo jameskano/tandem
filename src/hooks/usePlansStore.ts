@@ -37,14 +37,14 @@ export const usePlansStore = create<PlansState>()(
       getPlansByDate: (date) => {
         const targetDate = new Date(date).toDateString()
         return get().plans.filter(plan => 
-          new Date(plan.start_ts).toDateString() === targetDate
+          new Date(plan.start_date_ts).toDateString() === targetDate
         )
       },
       getUpcomingPlans: (limit = 5) => {
         const now = new Date()
         return get().plans
-          .filter(plan => new Date(plan.start_ts) > now && plan.status === 'planned')
-          .sort((a, b) => new Date(a.start_ts).getTime() - new Date(b.start_ts).getTime())
+          .filter(plan => new Date(plan.start_date_ts) > now && plan.status === 'planned')
+          .sort((a, b) => new Date(a.start_date_ts).getTime() - new Date(b.start_date_ts).getTime())
           .slice(0, limit)
       },
       getCompletedPlans: () => 

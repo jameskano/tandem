@@ -1,27 +1,25 @@
 import { useEffect } from 'react'
 import { CalendarDays } from 'lucide-react'
 import { COLORS } from '../shared/colors'
-import Card from '../ui/Card'
-import Chip from '../ui/Chip'
-import GradientButton from '../ui/GradientButton'
-import Button from '../ui/Button'
-import { usePlansStore } from '../state/usePlansStore'
-import { useActivitiesStore } from '../state/useActivitiesStore'
+import { usePlansStore } from '../hooks/usePlansStore'
 import { seedData } from '../shared/seed'
+import Button from '../shared/ui/Button'
+import Card from '../shared/ui/Card'
+import Chip from '../shared/ui/Chip'
+import GradientButton from '../shared/ui/GradientButton'
 
 const Dashboard = () => {
   const { plans, addPlan } = usePlansStore()
-  const { activities, addActivity } = useActivitiesStore()
 
   // Load seed data on first visit
   useEffect(() => {
     if (plans.length === 0) {
       seedData.plans.forEach(addPlan)
     }
-    if (activities.length === 0) {
-      seedData.activities.forEach(addActivity)
-    }
-  }, [plans.length, activities.length, addPlan, addActivity])
+    // if (activities.length === 0) {
+    //   seedData.activities.forEach(addActivity)
+    // }
+  }, [plans.length, addPlan])
 
   const upcomingPlans = plans
     .filter(plan => new Date(plan.start_date_ts) > new Date() && plan.status === 'planned')

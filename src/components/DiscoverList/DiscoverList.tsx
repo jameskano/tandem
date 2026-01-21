@@ -2,7 +2,7 @@ import React from 'react'
 import Card from '../../ui/Card'
 import Button from '../../ui/Button'
 import Chip from '../../ui/Chip'
-import { useActivitiesStore } from '../../state/useActivitiesStore'
+import { useActivitiesStore } from '../../hooks/useActivitiesStore'
 import { formatDuration, formatCost, formatDifficulty } from '../../shared/utils/format'
 
 const DiscoverList: React.FC = () => {

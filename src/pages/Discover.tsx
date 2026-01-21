@@ -1,18 +1,8 @@
 import React, { useEffect } from 'react'
 import DiscoverList from '../components/DiscoverList/DiscoverList'
-import { useActivitiesStore } from '../state/useActivitiesStore'
 import { seedData } from '../shared/seed'
 
 const Discover: React.FC = () => {
-  const { activities, addActivity } = useActivitiesStore()
-
-  // Load seed data on first visit
-  useEffect(() => {
-    if (activities.length === 0) {
-      seedData.activities.forEach(addActivity)
-    }
-  }, [activities.length, addActivity])
-
   return (
     <div className="min-h-screen bg-bg">
       <div className="px-4 py-6 max-w-4xl mx-auto">

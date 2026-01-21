@@ -1,6 +1,5 @@
-import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
-import Layout from './Layout'
+import Layout from '../components/Layout/Layout'
 import Main from '../pages/Main'
 import Dashboard from '../pages/Dashboard'
 import Discover from '../pages/Discover'

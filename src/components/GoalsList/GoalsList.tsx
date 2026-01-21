@@ -1,7 +1,7 @@
 import React from 'react'
 import Card from '../../ui/Card'
 import Button from '../../ui/Button'
-import { useGoalsStore } from '../../state/useGoalsStore'
+import { useGoalsStore } from '../../hooks/useGoalsStore'
 import { formatProgress } from '../../shared/utils/format'
 
 const GoalsList: React.FC = () => {

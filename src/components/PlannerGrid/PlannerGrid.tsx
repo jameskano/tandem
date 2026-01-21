@@ -1,6 +1,6 @@
 import React from 'react'
 import Card from '../../ui/Card'
-import { usePlansStore } from '../../state/usePlansStore'
+import { usePlansStore } from '../../hooks/usePlansStore'
 import { formatDate, formatTime } from '../../shared/utils/date'
 
 const PlannerGrid: React.FC = () => {

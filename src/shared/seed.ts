@@ -1,4 +1,4 @@
-import { Activity, Plan, Goal } from '../shared/types'
+import { Plan } from '../shared/types'
 import { getNextSaturday, addHours } from './utils/date'
 
 export const seedActivities: Activity[] = [

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Search, Calendar, Target, Camera, Settings } from '../shared/icons'
-import { cn } from '../shared/utils/format'
+import { Home, Search, Calendar, Target, Camera, Settings } from '../../shared/icons'
+import { cn } from '../../shared/utils/format'
 
 const navItems = [
   { path: '/dashboard', icon: Home, label: 'Dashboard' },

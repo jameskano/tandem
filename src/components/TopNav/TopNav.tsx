@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Heart } from '../shared/icons'
+import { Heart } from '../../shared/icons'
 
 const TopNav: React.FC = () => {
   const location = useLocation()

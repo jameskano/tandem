@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Button from '../ui/Button'
-import GradientButton from '../ui/GradientButton'
-import Card from '../ui/Card'
 import logo1 from '../assets/main-logo/logo1.png'
+import Button from '../shared/ui/Button'
+import Card from '../shared/ui/Card'
+import GradientButton from '../shared/ui/GradientButton'
 
 const Main: React.FC = () => {
   return (

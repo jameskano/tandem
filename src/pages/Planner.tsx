@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
-import Card from '../ui/Card'
-import Button from '../ui/Button'
 import PlannerGrid from '../components/PlannerGrid/PlannerGrid'
-import { usePlansStore } from '../state/usePlansStore'
+import { usePlansStore } from '../hooks/usePlansStore'
 import { seedData } from '../shared/seed'
+import Button from '../shared/ui/Button'
 
 const Planner: React.FC = () => {
   const { plans, addPlan } = usePlansStore()
