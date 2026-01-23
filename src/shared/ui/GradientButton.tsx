@@ -1,5 +1,5 @@
 import React from 'react'
-import { cn } from '../shared/utils/format'
+import { cn } from '../utils/format'
 
 interface GradientButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg'

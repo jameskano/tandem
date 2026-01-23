@@ -1,5 +1,5 @@
 import React from 'react'
-import Card from '../../ui/Card'
+import Card from '../../shared/ui/Card'
 import { usePlansStore } from '../../hooks/usePlansStore'
 import { formatDate, formatTime } from '../../shared/utils/date'
 
@@ -30,13 +30,13 @@ const PlannerGrid: React.FC = () => {
 
   // Get plans for current month
   const monthPlans = plans.filter(plan => {
-    const planDate = new Date(plan.start_ts)
+    const planDate = new Date(plan.start_date_ts)
     return planDate.getMonth() === currentMonth && planDate.getFullYear() === currentYear
   })
 
   const getPlansForDay = (day: number) => {
     return monthPlans.filter(plan => {
-      const planDate = new Date(plan.start_ts)
+      const planDate = new Date(plan.start_date_ts)
       return planDate.getDate() === day
     })
   }
@@ -67,7 +67,7 @@ const PlannerGrid: React.FC = () => {
             key={index}
             className={`min-h-[80px] p-2 border border-gray-100 ${
               day ? 'bg-white' : 'bg-gray-50'
-            } ${isToday(day) ? 'bg-primary/10 border-primary' : ''}`}
+            } ${isToday(day!) ? 'bg-primary/10 border-primary' : ''}`}
           >
             {day && (
               <>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Card from '../../ui/Card'
-import Button from '../../ui/Button'
+import Card from '../../shared/ui/Card'
+import Button from '../../shared/ui/Button'
 import { registerPush, scheduleLocal } from '../../services/notifications'
 import { generateInviteCode } from '../../shared/utils/format'
 

@@ -1,10 +1,11 @@
 import React from 'react'
-import Card from '../../ui/Card'
-import Button from '../../ui/Button'
+import Card from '../../shared/ui/Card'
+import Button from '../../shared/ui/Button'
 import { useMomentsStore } from '../../hooks/useMomentsStore'
 import { pickOrCapture } from '../../services/camera'
 import { uploadFromDataUrl } from '../../services/storage'
 import { generateId } from '../../shared/utils/format'
+import { Moment } from '../../shared/types'
 
 const MomentsGrid: React.FC = () => {
   const { moments, addMoment } = useMomentsStore()
@@ -17,11 +18,12 @@ const MomentsGrid: React.FC = () => {
         const uploadResult = await uploadFromDataUrl(photo.dataUrl, filename)
         
         if (uploadResult) {
-          const newMoment = {
+          const newMoment: Moment = {
             id: generateId(),
             couple_id: 'demo',
-            url: uploadResult.url,
             caption: '',
+            image_path: [],
+            created_by: 'demo-user',
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
           }
@@ -59,7 +61,7 @@ const MomentsGrid: React.FC = () => {
           <Card key={moment.id} className="p-0 overflow-hidden">
             <div className="aspect-square relative">
               <img
-                src={moment.url}
+                src={moment.image_path[0]}
                 alt={moment.caption || 'Moment'}
                 className="w-full h-full object-cover"
               />
