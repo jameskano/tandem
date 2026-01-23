@@ -1,5 +1,5 @@
 import React from 'react'
-import { cn } from '../shared/utils/format'
+import { cn } from '../utils/format'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'primaryOutline' | 'outlineSoft'

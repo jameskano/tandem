@@ -69,3 +69,9 @@ export type DashboardStats = {
   completed: number
   nextPlan?: Plan
 }
+
+export type envSchema = {
+  VITE_SUPABASE_URL: string,
+  VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY: string,
+  VITE_APP_NAME: string,
+}

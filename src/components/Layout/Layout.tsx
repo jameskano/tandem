@@ -1,6 +1,7 @@
 import React from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import BottomNav from '../BottomNav/BottomNav'
+import DesktopNav from '../DesktopNav/DesktopNav'
 import TopNav from '../TopNav/TopNav'
 
 const Layout: React.FC = () => {
@@ -9,24 +10,13 @@ const Layout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-bg">
-      {/* Top Navigation - Desktop only, hidden on Main page */}
-      {!isMainPage && (
-        <div className="hidden md:block">
-          <TopNav />
-        </div>
-      )}
+      {!isMainPage && <DesktopNav />}
 
-      {/* Main Content */}
       <main className={isMainPage ? 'pb-0' : 'pb-20 md:pb-0'}>
         <Outlet />
       </main>
 
-      {/* Bottom Navigation - Mobile only, hidden on Main page */}
-      {!isMainPage && (
-        <div className="md:hidden">
-          <BottomNav />
-        </div>
-      )}
+      {!isMainPage && <BottomNav />}
     </div>
   )
 }

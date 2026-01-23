@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Search, Calendar, Target, Camera, Settings } from '../../shared/icons'
+import { Home, Search, Calendar, Camera, Settings } from '../../shared/icons'
 import { cn } from '../../shared/utils/format'
 
 const navItems = [
@@ -15,8 +15,8 @@ const BottomNav: React.FC = () => {
   const location = useLocation()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 safe-bottom">
-      <div className="flex justify-around items-center h-16">
+    <nav className="safe-bottom fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-white md:hidden">
+      <div className="flex h-16 items-center justify-around">
         {navItems.map(({ path, icon: Icon, label }) => {
           const isActive = location.pathname === path
           return (
@@ -24,14 +24,12 @@ const BottomNav: React.FC = () => {
               key={path}
               to={path}
               className={cn(
-                'flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 rounded-lg transition-colors',
-                isActive
-                  ? 'text-primary'
-                  : 'text-textMuted hover:text-text'
+                'flex min-h-[44px] min-w-[44px] flex-col items-center justify-center rounded-lg px-2 py-1 transition-colors',
+                isActive ? 'text-primary' : 'text-textMuted hover:text-text'
               )}
             >
               <Icon size={20} />
-              <span className="text-xs mt-1 hidden sm:block">{label}</span>
+              <span className="mt-1 hidden text-xs sm:block">{label}</span>
             </Link>
           )
         })}

@@ -1,6 +1,6 @@
 import React from 'react'
-import { cn } from '../shared/utils/format'
-import { COLORS } from '../shared/colors'
+import { COLORS } from '../colors'
+import { cn } from '../utils/format'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string

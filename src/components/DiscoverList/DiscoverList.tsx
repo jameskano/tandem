@@ -1,7 +1,7 @@
 import React from 'react'
-import Card from '../../ui/Card'
-import Button from '../../ui/Button'
-import Chip from '../../ui/Chip'
+import Card from '../../shared/ui/Card'
+import Button from '../../shared/ui/Button'
+import Chip from '../../shared/ui/Chip'
 import { useActivitiesStore } from '../../hooks/useActivitiesStore'
 import { formatDuration, formatCost, formatDifficulty } from '../../shared/utils/format'
 
