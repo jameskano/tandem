@@ -85,7 +85,6 @@ VITE_APP_NAME=Tandem
 
 - **ESLint** - Code linting with TypeScript support
 - **Prettier** - Code formatting
-- **Husky** - Git hooks for pre-commit linting
 - **lint-staged** - Run linters on staged files
 
 ## Architecture
@@ -235,6 +234,7 @@ This repository is not open to public contributions. For business partnerships o
 ## Support
 
 For issues and questions:
+
 - Check the troubleshooting section
 - Review Supabase documentation
 - Check Capacitor documentation for mobile issues
