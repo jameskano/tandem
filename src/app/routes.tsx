@@ -10,6 +10,8 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
+import ErrorPage from '../pages/ErrorPage';
+import NotFound from '../pages/NotFound';
 import {
   ProtectedRoute,
   PublicRoute,
@@ -51,6 +53,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -95,6 +98,10 @@ export const router = createBrowserRouter([
             <Settings />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: '*',
+        element: <NotFound />,
       },
     ],
   },
