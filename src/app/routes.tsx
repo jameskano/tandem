@@ -1,22 +1,52 @@
-import { createBrowserRouter } from 'react-router-dom'
-import Layout from '../components/Layout/Layout'
-import Main from '../pages/Main'
-import Dashboard from '../pages/Dashboard'
-import Discover from '../pages/Discover'
-import Planner from '../pages/Planner'
-import Moments from '../pages/Moments'
-import Settings from '../pages/Settings'
-import Login from '../pages/Login'
-import Register from '../pages/Register'
+import { createBrowserRouter } from 'react-router-dom';
+import Layout from '../components/Layout/Layout';
+import Main from '../pages/Main';
+import Dashboard from '../pages/Dashboard';
+import Discover from '../pages/Discover';
+import Planner from '../pages/Planner';
+import Moments from '../pages/Moments';
+import Settings from '../pages/Settings';
+import Login from '../pages/Login';
+import Register from '../pages/Register';
+import ForgotPassword from '../pages/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword';
+import {
+  ProtectedRoute,
+  PublicRoute,
+} from '../components/ProtectedRoute/ProtectedRoute';
 
 export const router = createBrowserRouter([
   {
     path: '/login',
-    element: <Login />,
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
   },
   {
     path: '/register',
-    element: <Register />,
+    element: (
+      <PublicRoute>
+        <Register />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: '/forgot-password',
+    element: (
+      <PublicRoute>
+        <ForgotPassword />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: '/reset-password',
+    element: (
+      <PublicRoute>
+        <ResetPassword />
+      </PublicRoute>
+    ),
   },
   {
     path: '/',
@@ -28,24 +58,44 @@ export const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <Dashboard />,
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'discover',
-        element: <Discover />,
+        element: (
+          <ProtectedRoute>
+            <Discover />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'planner',
-        element: <Planner />,
+        element: (
+          <ProtectedRoute>
+            <Planner />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'moments',
-        element: <Moments />,
+        element: (
+          <ProtectedRoute>
+            <Moments />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'settings',
-        element: <Settings />,
+        element: (
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
-])
+]);

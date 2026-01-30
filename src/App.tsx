@@ -1,17 +1,20 @@
- './App.css'
-import { RouterProvider } from 'react-router-dom'
-import QueryProvider from './shared/providers/QueryProvider'
-import ThemeProvider from './shared/providers/ThemeProvider'
-import { router } from './app/routes'
+'./App.css';
+import { RouterProvider } from 'react-router-dom';
+import QueryProvider from './shared/providers/QueryProvider';
+import ThemeProvider from './shared/providers/ThemeProvider';
+import { router } from './app/routes';
+import { AuthProvider } from './store/context/AuthProvider';
 
 function App() {
   return (
     <QueryProvider>
       <ThemeProvider>
-        <RouterProvider router={router} />
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
       </ThemeProvider>
     </QueryProvider>
-  )
+  );
 }
 
-export default App
+export default App;
