@@ -1,12 +1,11 @@
-import React from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
-import BottomNav from '../BottomNav/BottomNav'
-import DesktopNav from '../DesktopNav/DesktopNav'
-import TopNav from '../TopNav/TopNav'
+import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import BottomNav from '../BottomNav/BottomNav';
+import DesktopNav from '../DesktopNav/DesktopNav';
 
 const Layout: React.FC = () => {
-  const location = useLocation()
-  const isMainPage = location.pathname === '/'
+  const location = useLocation();
+  const isMainPage = location.pathname === '/';
 
   return (
     <div className="min-h-screen bg-bg">
@@ -18,7 +17,7 @@ const Layout: React.FC = () => {
 
       {!isMainPage && <BottomNav />}
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

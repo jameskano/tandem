@@ -74,14 +74,14 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      {
-        path: 'discover',
-        element: (
-          <ProtectedRoute>
-            <Discover />
-          </ProtectedRoute>
-        ),
-      },
+      // {
+      //   path: 'discover',
+      //   element: (
+      //     <ProtectedRoute>
+      //       <Discover />
+      //     </ProtectedRoute>
+      //   ),
+      // },
       {
         path: 'planner',
         element: (
@@ -90,14 +90,14 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      {
-        path: 'moments',
-        element: (
-          <ProtectedRoute>
-            <Moments />
-          </ProtectedRoute>
-        ),
-      },
+      // {
+      //   path: 'moments',
+      //   element: (
+      //     <ProtectedRoute>
+      //       <Moments />
+      //     </ProtectedRoute>
+      //   ),
+      // },
       {
         path: 'settings',
         element: (
