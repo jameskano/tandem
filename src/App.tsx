@@ -5,7 +5,7 @@ import ThemeProvider from './shared/providers/ThemeProvider';
 import { router } from './app/routes';
 import { AuthProvider } from './store/context/AuthProvider';
 
-function App() {
+const App = () => {
   return (
     <QueryProvider>
       <ThemeProvider>
@@ -15,6 +15,6 @@ function App() {
       </ThemeProvider>
     </QueryProvider>
   );
-}
+};
 
 export default App;

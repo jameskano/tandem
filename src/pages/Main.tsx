@@ -1,27 +1,28 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import logo1 from '../assets/main-logo/logo1.png'
-import Button from '../shared/ui/Button'
-import Card from '../shared/ui/Card'
-import GradientButton from '../shared/ui/GradientButton'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import logo1 from '../assets/main-logo/logo1.png';
+import Button from '../shared/ui/Button';
+import Card from '../shared/ui/Card';
+import GradientButton from '../shared/ui/GradientButton';
 
 const Main: React.FC = () => {
   return (
     <div className="min-h-screen bg-bg">
       {/* Hero Section */}
       <div className="px-4 py-8 md:py-16">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="mx-auto max-w-4xl text-center">
           <div className="mb-8">
-            <img src={logo1} alt="Tandem Logo" className="w-20 mx-auto mb-4" />
-            <h1 className="text-4xl md:text-6xl font-bold text-text mb-4">
+            <img src={logo1} alt="Tandem Logo" className="mx-auto mb-4 w-20" />
+            <h1 className="mb-4 text-4xl font-bold text-text md:text-6xl">
               Find time for us again.
             </h1>
-            <p className="text-lg md:text-xl text-textMuted max-w-2xl mx-auto">
-              Plan meaningful activities together and create lasting memories as a couple.
+            <p className="text-textMuted mx-auto max-w-2xl text-lg md:text-xl">
+              Plan meaningful activities together and create lasting memories as
+              a couple.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="mb-12 flex flex-col justify-center gap-4 sm:flex-row">
             <Link to="/register">
               <GradientButton size="lg" className="w-full sm:w-auto">
                 Register
@@ -35,26 +36,32 @@ const Main: React.FC = () => {
           </div>
 
           {/* Features Grid */}
-          <div className="grid md:grid-cols-3 gap-6 mt-16">
+          <div className="mt-16 grid gap-6 md:grid-cols-3">
             <Card className="text-center">
-              <div className="text-3xl mb-3">🎯</div>
-              <h3 className="text-xl font-semibold text-text mb-2">Discover New Experiences</h3>
+              <div className="mb-3 text-3xl">🎯</div>
+              <h3 className="mb-2 text-xl font-semibold text-text">
+                Discover New Experiences
+              </h3>
               <p className="text-textMuted">
                 Find new activities to try together
               </p>
             </Card>
 
             <Card className="text-center">
-              <div className="text-3xl mb-3">📅</div>
-              <h3 className="text-xl font-semibold text-text mb-2">Plan Activities</h3>
+              <div className="mb-3 text-3xl">📅</div>
+              <h3 className="mb-2 text-xl font-semibold text-text">
+                Plan Activities
+              </h3>
               <p className="text-textMuted">
                 Schedule date nights and special moments in advance
               </p>
             </Card>
 
             <Card className="text-center">
-              <div className="text-3xl mb-3">📸</div>
-              <h3 className="text-xl font-semibold text-text mb-2">Capture Moments</h3>
+              <div className="mb-3 text-3xl">📸</div>
+              <h3 className="mb-2 text-xl font-semibold text-text">
+                Capture Moments
+              </h3>
               <p className="text-textMuted">
                 Save photos and memories from your time together
               </p>
@@ -63,7 +70,7 @@ const Main: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Main
+export default Main;
