@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import Main from '../pages/Main';
 import Dashboard from '../pages/Dashboard';
@@ -19,37 +19,44 @@ import {
 
 export const router = createBrowserRouter([
   {
-    path: '/login',
-    element: (
-      <PublicRoute>
-        <Login />
-      </PublicRoute>
-    ),
+    element: <Outlet />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: 'login',
+        element: (
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        ),
+      },
+      {
+        path: 'register',
+        element: (
+          <PublicRoute>
+            <Register />
+          </PublicRoute>
+        ),
+      },
+      {
+        path: 'forgot-password',
+        element: (
+          <PublicRoute>
+            <ForgotPassword />
+          </PublicRoute>
+        ),
+      },
+      {
+        path: 'reset-password',
+        element: (
+          <PublicRoute>
+            <ResetPassword />
+          </PublicRoute>
+        ),
+      },
+    ],
   },
-  {
-    path: '/register',
-    element: (
-      <PublicRoute>
-        <Register />
-      </PublicRoute>
-    ),
-  },
-  {
-    path: '/forgot-password',
-    element: (
-      <PublicRoute>
-        <ForgotPassword />
-      </PublicRoute>
-    ),
-  },
-  {
-    path: '/reset-password',
-    element: (
-      <PublicRoute>
-        <ResetPassword />
-      </PublicRoute>
-    ),
-  },
+
   {
     path: '/',
     element: <Layout />,

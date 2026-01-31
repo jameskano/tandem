@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logo1 from '../assets/main-logo/logo1.png';
 import { COLORS } from '../shared/colors';
 import Button from '../shared/ui/Button';
@@ -10,7 +10,6 @@ import { signUpWithEmail, signInWithGoogle } from '../shared/utils/auth';
 import ConfirmEmail from './ConfirmEmail';
 
 const Register: React.FC = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',

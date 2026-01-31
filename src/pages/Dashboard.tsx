@@ -1,25 +1,25 @@
-import { useEffect } from 'react'
-import { CalendarDays } from 'lucide-react'
-import { COLORS } from '../shared/colors'
-import { usePlansStore } from '../hooks/usePlansStore'
-import { seedData } from '../shared/seed'
-import Button from '../shared/ui/Button'
-import Card from '../shared/ui/Card'
-import Chip from '../shared/ui/Chip'
-import GradientButton from '../shared/ui/GradientButton'
+import { useEffect } from 'react';
+import { CalendarDays } from 'lucide-react';
+import { COLORS } from '../shared/colors';
+import { usePlansStore } from '../hooks/usePlansStore';
+import { seedData } from '../shared/seed';
+import Button from '../shared/ui/Button';
+import Card from '../shared/ui/Card';
+import Chip from '../shared/ui/Chip';
+import GradientButton from '../shared/ui/GradientButton';
 
 const Dashboard = () => {
-  const { plans, addPlan } = usePlansStore()
+  const { plans, addPlan } = usePlansStore();
 
   // Load seed data on first visit
   useEffect(() => {
     if (plans.length === 0) {
-      seedData.plans.forEach(addPlan)
+      seedData.plans.forEach(addPlan);
     }
     // if (activities.length === 0) {
     //   seedData.activities.forEach(addActivity)
     // }
-  }, [plans.length, addPlan])
+  }, [plans.length, addPlan]);
 
   const upcomingPlans = plans
     .filter(
@@ -31,9 +31,9 @@ const Dashboard = () => {
         new Date(a.start_date_ts).getTime() -
         new Date(b.start_date_ts).getTime()
     )
-    .slice(0, 3)
+    .slice(0, 3);
 
-  const completedPlans = plans.filter(plan => plan.status === 'completed')
+  const completedPlans = plans.filter(plan => plan.status === 'completed');
 
   return (
     <div className="space-y-4 px-4 py-6" style={{ backgroundColor: COLORS.bg }}>
@@ -113,7 +113,7 @@ const Dashboard = () => {
         </div>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
