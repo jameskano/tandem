@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CalendarDays } from 'lucide-react';
 import { COLORS } from '../shared/colors';
 import { usePlansStore } from '../hooks/usePlansStore';
@@ -7,38 +7,66 @@ import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
 import Chip from '../shared/ui/Chip';
 import GradientButton from '../shared/ui/GradientButton';
+import Textarea from '../shared/ui/Textarea';
+import useUtils from '../hooks/useUtils';
+import { Link } from 'react-router-dom';
+import { supabase } from '../services/supabase';
 
 const Dashboard = () => {
-  const { plans, addPlan } = usePlansStore();
+  const [prompt, setPrompt] = useState('');
+  const { getDiscoverLabelText, getDiscoverPlaceholderText } = useUtils();
+  const discoverLabel = useMemo(
+    () => getDiscoverLabelText(),
+    [getDiscoverLabelText]
+  );
+  const discoverPlaceholder = useMemo(
+    () => getDiscoverPlaceholderText(),
+    [getDiscoverPlaceholderText]
+  );
 
-  // Load seed data on first visit
-  useEffect(() => {
-    if (plans.length === 0) {
-      seedData.plans.forEach(addPlan);
-    }
-    // if (activities.length === 0) {
-    //   seedData.activities.forEach(addActivity)
-    // }
-  }, [plans.length, addPlan]);
-
-  const upcomingPlans = plans
-    .filter(
-      plan =>
-        new Date(plan.start_date_ts) > new Date() && plan.status === 'planned'
-    )
-    .sort(
-      (a, b) =>
-        new Date(a.start_date_ts).getTime() -
-        new Date(b.start_date_ts).getTime()
-    )
-    .slice(0, 3);
-
-  const completedPlans = plans.filter(plan => plan.status === 'completed');
+  const canGenerate = prompt.trim().length > 0;
 
   return (
-    <div className="space-y-4 px-4 py-6" style={{ backgroundColor: COLORS.bg }}>
-      <div className="flex flex-col gap-y-3">
-        <Card className="space-y-3">
+    <div
+      className="flex flex-1 flex-col space-y-4 px-4 py-6"
+      style={{ backgroundColor: COLORS.bg }}
+    >
+      <h1
+        className="text-2xl font-bold text-text"
+        style={{ color: COLORS.text }}
+      >
+        Discover
+      </h1>
+      <Card className="space-y-4">
+        <Textarea
+          label={discoverLabel}
+          placeholder={discoverPlaceholder}
+          autoResize
+          value={prompt}
+          onChange={event => setPrompt(event.target.value)}
+        />
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <Button size="md" disabled={!canGenerate}>
+            Generate ideas
+          </Button>
+        </div>
+        <div>
+          <Link
+            to="/discover"
+            state={{ prompt }}
+            className="py-4 text-sm font-medium"
+            style={{ color: COLORS.primary }}
+          >
+            More options
+          </Link>
+        </div>
+      </Card>
+
+      <div className="flex flex-1 flex-col gap-y-3">
+        <div className="flex h-full w-full items-center justify-center">
+          No upcoming Plans
+        </div>
+        {/* <Card className="space-y-3">
           <div className="flex items-center justify-between">
             <h3
               className="text-base font-semibold"
@@ -57,7 +85,7 @@ const Dashboard = () => {
             </div>
             <div>
               <div className="font-semibold" style={{ color: COLORS.text }}>
-                Homemade sushi night 🍣
+                Homemade sushi night
               </div>
               <div className="text-xs" style={{ color: COLORS.muted }}>
                 Shopping list done, with jazz music playlist
@@ -72,9 +100,9 @@ const Dashboard = () => {
               Reschedule
             </Button>
           </div>
-        </Card>
+        </Card> */}
 
-        <Card>
+        {/* <Card>
           <div className="text-center">
             <p className="mb-1 text-2xl font-bold text-accent">
               {upcomingPlans.length}
@@ -90,28 +118,8 @@ const Dashboard = () => {
             </p>
             <p className="text-textMuted text-sm">Completed</p>
           </div>
-        </Card>
+        </Card> */}
       </div>
-
-      <Card>
-        <h2
-          className="mb-4 text-xl font-semibold"
-          style={{ color: COLORS.text }}
-        >
-          Quick Actions
-        </h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Button variant="outlineSoft" className="justify-start">
-            📅 Check Activities
-          </Button>
-          <Button variant="outlineSoft" className="justify-start">
-            📸 Add Photo
-          </Button>
-          <Button variant="outlineSoft" className="justify-start">
-            🔍 Discover
-          </Button>
-        </div>
-      </Card>
     </div>
   );
 };

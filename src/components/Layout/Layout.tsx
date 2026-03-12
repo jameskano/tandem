@@ -8,10 +8,14 @@ const Layout: React.FC = () => {
   const isMainPage = location.pathname === '/';
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="flex min-h-screen flex-col bg-bg">
       {!isMainPage && <DesktopNav />}
 
-      <main className={isMainPage ? 'pb-0' : 'pb-20 md:pb-0'}>
+      <main
+        className={
+          isMainPage ? 'flex flex-1 pb-0' : 'flex flex-1 pb-20 md:pb-0'
+        }
+      >
         <Outlet />
       </main>
 

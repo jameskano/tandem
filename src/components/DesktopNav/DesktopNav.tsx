@@ -1,9 +1,9 @@
-import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import logo1 from '../../assets/main-logo/logo1.png'
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import logo1 from '../../assets/main-logo/logo1.png';
 
 const DesktopNav: React.FC = () => {
-  const location = useLocation()
+  const location = useLocation();
 
   return (
     <header className="sticky top-0 z-50 hidden border-b border-gray-200 bg-white md:block">
@@ -26,16 +26,6 @@ const DesktopNav: React.FC = () => {
               Dashboard
             </Link>
             <Link
-              to="/discover"
-              className={`rounded-lg px-3 py-2 transition-colors ${
-                location.pathname === '/discover'
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-textMuted hover:text-text'
-              }`}
-            >
-              Discover
-            </Link>
-            <Link
               to="/planner"
               className={`rounded-lg px-3 py-2 transition-colors ${
                 location.pathname === '/planner'
@@ -44,26 +34,6 @@ const DesktopNav: React.FC = () => {
               }`}
             >
               Planner
-            </Link>
-            <Link
-              to="/goals"
-              className={`rounded-lg px-3 py-2 transition-colors ${
-                location.pathname === '/goals'
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-textMuted hover:text-text'
-              }`}
-            >
-              Goals
-            </Link>
-            <Link
-              to="/moments"
-              className={`rounded-lg px-3 py-2 transition-colors ${
-                location.pathname === '/moments'
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-textMuted hover:text-text'
-              }`}
-            >
-              Moments
             </Link>
             <Link
               to="/settings"
@@ -79,7 +49,7 @@ const DesktopNav: React.FC = () => {
         </div>
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default DesktopNav
+export default DesktopNav;

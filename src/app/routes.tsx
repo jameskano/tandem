@@ -1,10 +1,7 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import Main from '../pages/Main';
-import Dashboard from '../pages/Dashboard';
 import Discover from '../pages/Discover';
-import Planner from '../pages/Planner';
-import Moments from '../pages/Moments';
 import Settings from '../pages/Settings';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -16,6 +13,7 @@ import {
   ProtectedRoute,
   PublicRoute,
 } from '../components/ProtectedRoute/ProtectedRoute';
+import SavedActivities from '../pages/SavedActivities';
 
 export const router = createBrowserRouter([
   {
@@ -74,7 +72,7 @@ export const router = createBrowserRouter([
         path: 'dashboard',
         element: (
           <ProtectedRoute>
-            <Dashboard />
+            <Discover />
           </ProtectedRoute>
         ),
       },
@@ -87,18 +85,18 @@ export const router = createBrowserRouter([
       //   ),
       // },
       {
-        path: 'planner',
+        path: 'saved-activities',
         element: (
           <ProtectedRoute>
-            <Planner />
+            <SavedActivities />
           </ProtectedRoute>
         ),
       },
       // {
-      //   path: 'moments',
+      //   path: 'planner',
       //   element: (
       //     <ProtectedRoute>
-      //       <Moments />
+      //       <Planner />
       //     </ProtectedRoute>
       //   ),
       // },

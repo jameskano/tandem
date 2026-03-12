@@ -71,6 +71,21 @@ create table if not exists public.user_devices (
   unique (user_id, platform, token)
 );
 
+-- Create user_settings table for personalization and localization
+create table if not exists public.user_settings (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  currency text not null default 'EUR', -- 'EUR' | 'USD'
+  locale text not null default 'en-US',
+  country text,
+  city text,
+  onboarding_completed boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  -- notifications / reminders
+  push_enabled boolean not null default false,
+  reminder_enabled boolean not null default false,
+);
+
 create index if not exists user_devices_user_idx on public.user_devices(user_id);
 
 -- Helper function
@@ -94,6 +109,7 @@ alter table public.saved_activities enable row level security;
 alter table public.plans enable row level security;
 alter table public.moments enable row level security;
 alter table public.user_devices enable row level security;
+alter table public.user_settings enable row level security;
 
 -- RLS Policies
 
@@ -201,4 +217,26 @@ with check (user_id = auth.uid());
 
 create policy "devices_delete_own"
 on public.user_devices for delete
+using (user_id = auth.uid());
+
+-- User settings
+create policy "user_settings_select_own"
+on public.user_settings
+for select
+using (user_id = auth.uid());
+
+create policy "user_settings_insert_own"
+on public.user_settings
+for insert
+with check (user_id = auth.uid());
+
+create policy "user_settings_update_own"
+on public.user_settings
+for update
+using (user_id = auth.uid())
+with check (user_id = auth.uid());
+
+create policy "user_settings_delete_own"
+on public.user_settings
+for delete
 using (user_id = auth.uid());
