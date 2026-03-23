@@ -7,7 +7,7 @@ import Card from '../shared/ui/Card';
 import GradientButton from '../shared/ui/GradientButton';
 import Input from '../shared/ui/Input';
 import { signInWithEmail, signInWithGoogle } from '../shared/utils/auth';
-import ResendEmail from '../components/ResendEmail/ResendEmail';
+import ResendEmail from '../components/ResendEmail';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();

@@ -5,7 +5,7 @@ import logo1 from '../assets/main-logo/logo1.png';
 import { COLORS } from '../shared/colors';
 import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
-import ResendEmail from '../components/ResendEmail/ResendEmail';
+import ResendEmail from '../components/ResendEmail';
 
 interface ConfirmEmailProps {
   email?: string;

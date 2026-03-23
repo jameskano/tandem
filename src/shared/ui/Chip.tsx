@@ -1,11 +1,11 @@
-import React from 'react'
-import { cn } from '../utils/format'
+import React from 'react';
+import { cn } from '../utils/format';
 
 interface ChipProps {
-  children: React.ReactNode
-  variant?: 'default' | 'primary' | 'secondary' | 'accent'
-  size?: 'sm' | 'md'
-  className?: string
+  children: React.ReactNode;
+  variant?: 'default' | 'primary' | 'secondary' | 'accent';
+  size?: 'sm' | 'md';
+  className?: string;
 }
 
 const Chip: React.FC<ChipProps> = ({
@@ -14,19 +14,20 @@ const Chip: React.FC<ChipProps> = ({
   size = 'md',
   className,
 }) => {
-  const baseClasses = 'inline-flex items-center rounded-full font-medium'
+  const baseClasses =
+    'inline-flex items-center rounded-full font-medium outline-none';
 
   const variantClasses = {
     default: 'bg-gray-100 text-gray-700',
     primary: 'bg-primary/10 text-primary',
     secondary: 'bg-secondary/10 text-secondary',
     accent: 'bg-accent/10 text-accent',
-  }
+  };
 
   const sizeClasses = {
     sm: 'px-2 py-1 text-xs',
     md: 'px-3 py-1.5 text-sm',
-  }
+  };
 
   return (
     <span
@@ -39,7 +40,7 @@ const Chip: React.FC<ChipProps> = ({
     >
       {children}
     </span>
-  )
-}
+  );
+};
 
-export default Chip
+export default Chip;

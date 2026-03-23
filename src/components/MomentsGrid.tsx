@@ -1,11 +1,11 @@
 import React from 'react'
-import Card from '../../shared/ui/Card'
-import Button from '../../shared/ui/Button'
-import { useMomentsStore } from '../../hooks/useMomentsStore'
-import { pickOrCapture } from '../../services/camera'
-import { uploadFromDataUrl } from '../../services/storage'
-import { generateId } from '../../shared/utils/format'
-import { Moment } from '../../shared/types'
+import Card from '../shared/ui/Card'
+import Button from '../shared/ui/Button'
+import { useMomentsStore } from '../hooks/useMomentsStore'
+import { pickOrCapture } from '../services/camera'
+import { uploadFromDataUrl } from '../services/storage'
+import { generateId } from '../shared/utils/format'
+import { Moment } from '../shared/types'
 
 const MomentsGrid: React.FC = () => {
   const { moments, addMoment } = useMomentsStore()

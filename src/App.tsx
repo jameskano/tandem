@@ -4,13 +4,17 @@ import QueryProvider from './shared/providers/QueryProvider';
 import ThemeProvider from './shared/providers/ThemeProvider';
 import { router } from './app/routes';
 import { AuthProvider } from './store/context/AuthProvider';
+import { Settings } from 'lucide-react';
+import { SettingsProvider } from './store/context/SettingsProvider';
 
 const App = () => {
   return (
     <QueryProvider>
       <ThemeProvider>
         <AuthProvider>
-          <RouterProvider router={router} />
+          <SettingsProvider>
+            <RouterProvider router={router} />
+          </SettingsProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryProvider>

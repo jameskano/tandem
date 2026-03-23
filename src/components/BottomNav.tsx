@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Search, Calendar, Camera, Settings } from '../../shared/icons';
-import { cn } from '../../shared/utils/format';
+import { Home, Settings } from '../shared/icons';
+import { cn } from '../shared/utils/format';
+import { FileHeart } from 'lucide-react';
 
 const navItems = [
   { path: '/dashboard', icon: Home, label: 'Dashboard' },
   // { path: '/discover', icon: Search, label: 'Discover' },
-  { path: '/planner', icon: Calendar, label: 'Planner' },
+  { path: '/saved-activities', icon: FileHeart, label: 'Saved Activities' },
+  // { path: '/planner', icon: Calendar, label: 'Planner' },
   // { path: '/moments', icon: Camera, label: 'Moments' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
