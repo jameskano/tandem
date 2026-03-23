@@ -15,7 +15,6 @@ const DiscoverResults: React.FC<DiscoverResultsProps> = ({
   isSelected = false,
   onSave,
 }) => {
-  console.log(isSelected);
   return (
     <Card className="space-y-3">
       <div className="flex items-start justify-between">
