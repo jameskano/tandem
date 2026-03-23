@@ -1,5 +1,5 @@
-import useResendEmail from '../../hooks/useResendEmail';
-import { COLORS } from '../../shared/colors';
+import useResendEmail from '../hooks/useResendEmail';
+import { COLORS } from '../shared/colors';
 
 type ResendEmailProps = {
   email: string;

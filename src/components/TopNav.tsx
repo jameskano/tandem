@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
-import logo1 from '../../assets/main-logo/logo1.png'
-import { Settings } from '../../shared/icons'
-import { cn } from '../../shared/utils/format'
+import logo1 from '../assets/main-logo/logo1.png'
+import { Settings } from '../shared/icons'
+import { cn } from '../shared/utils/format'
 
 const TopNav = () => {
   const location = useLocation()

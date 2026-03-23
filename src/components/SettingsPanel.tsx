@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import Card from '../../shared/ui/Card'
-import Button from '../../shared/ui/Button'
-import { registerPush, scheduleLocal } from '../../services/notifications'
-import { generateInviteCode } from '../../shared/utils/format'
+import Card from '../shared/ui/Card'
+import Button from '../shared/ui/Button'
+import { registerPush, scheduleLocal } from '../services/notifications'
+import { generateInviteCode } from '../shared/utils/format'
 
 const SettingsPanel: React.FC = () => {
   const [inviteCode] = useState(generateInviteCode())

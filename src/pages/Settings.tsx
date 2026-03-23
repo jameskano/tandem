@@ -1,5 +1,5 @@
 import React from 'react';
-import SettingsPanel from '../components/SettingsPanel/SettingsPanel';
+import SettingsPanel from '../components/SettingsPanel';
 
 const Settings: React.FC = () => {
   return (

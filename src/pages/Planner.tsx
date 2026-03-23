@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import PlannerGrid from '../components/PlannerGrid/PlannerGrid';
+import PlannerGrid from '../components/PlannerGrid';
 import { usePlansStore } from '../hooks/usePlansStore';
 import { seedData } from '../shared/seed';
 import Button from '../shared/ui/Button';

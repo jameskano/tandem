@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import logo1 from '../../assets/main-logo/logo1.png';
+import logo1 from '../assets/main-logo/logo1.png';
 
 const DesktopNav: React.FC = () => {
   const location = useLocation();

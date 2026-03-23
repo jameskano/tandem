@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import BottomNav from '../BottomNav/BottomNav';
-import DesktopNav from '../DesktopNav/DesktopNav';
+import BottomNav from './BottomNav';
+import DesktopNav from './DesktopNav';
 
 const Layout: React.FC = () => {
   const location = useLocation();

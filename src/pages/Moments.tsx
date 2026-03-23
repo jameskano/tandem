@@ -1,5 +1,5 @@
 import React from 'react';
-import MomentsGrid from '../components/MomentsGrid/MomentsGrid';
+import MomentsGrid from '../components/MomentsGrid';
 import { useMomentsStore } from '../hooks/useMomentsStore';
 import Button from '../shared/ui/Button';
 

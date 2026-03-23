@@ -1,5 +1,5 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
-import Layout from '../components/Layout/Layout';
+import Layout from '../components/Layout';
 import Main from '../pages/Main';
 import Discover from '../pages/Discover';
 import Settings from '../pages/Settings';
@@ -12,7 +12,7 @@ import NotFound from '../pages/NotFound';
 import {
   ProtectedRoute,
   PublicRoute,
-} from '../components/ProtectedRoute/ProtectedRoute';
+} from '../components/ProtectedRoute';
 import SavedActivities from '../pages/SavedActivities';
 
 export const router = createBrowserRouter([

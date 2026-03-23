@@ -2,8 +2,11 @@ import React, { useMemo, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import DiscoverResults from '../components/DiscoverResults';
+import OnboardingModal from '../components/OnboardingModal';
+import { useDiscoverSuggestions } from '../hooks/useDiscoverSuggestions';
 import useUtils from '../hooks/useUtils';
-import { generateDiscoverSuggestions } from '../services/AI/generateDiscoverSuggestions';
+import { supabase } from '../services/supabase';
+import { seedSuggestions } from '../shared/seed';
 import {
   discoverBudgetOptions,
   discoverConstraintsOptions,
@@ -26,9 +29,13 @@ import Card from '../shared/ui/Card';
 import Chip from '../shared/ui/Chip';
 import Dropdown from '../shared/ui/Dropdown';
 import Textarea from '../shared/ui/Textarea';
+import { useAuthContext } from '../store/context/AuthProvider';
+import { useSettingsContext } from '../store/context/SettingsProvider';
 
 const Discover: React.FC = () => {
   const location = useLocation();
+  const { user } = useAuthContext();
+  const { onboardingCompleted, setOnboardingCompleted } = useSettingsContext();
   const initialPrompt = location.state?.prompt;
   const [prompt, setPrompt] = useState(initialPrompt || '');
   const [expanded, setExpanded] = useState(false);
@@ -42,8 +49,13 @@ const Discover: React.FC = () => {
   >([]);
   const [generationRound, setGenerationRound] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isCompletingOnboarding, setIsCompletingOnboarding] = useState(false);
+  const [selectedSuggestionIds, setSelectedSuggestionIds] = useState<string[]>(
+    []
+  );
   const [error, setError] = useState<string | null>(null);
   const { getDiscoverLabelText, getDiscoverPlaceholderText } = useUtils();
+  const { generateDiscoverSuggestions } = useDiscoverSuggestions();
 
   const discoverLabel = useMemo(
     () => getDiscoverLabelText(),
@@ -121,10 +133,95 @@ const Discover: React.FC = () => {
     filters.constraints.length > 0;
 
   const canGenerate = prompt.trim().length > 0 || hasFilters;
-  const hasGeneratedResults = currentBatch.length > 0;
+  // const hasGeneratedResults = currentBatch.length > 0;
+  const hasGeneratedResults = seedSuggestions.length > 0;
+
+  const visibleResults =
+    currentBatch.length > 0 ? currentBatch : seedSuggestions;
+
+  const handleCompleteOnboarding = async () => {
+    if (isCompletingOnboarding) {
+      return;
+    }
+
+    setIsCompletingOnboarding(true);
+
+    try {
+      if (user && supabase) {
+        await supabase
+          .from('user_settings')
+          .update({ onboarding_completed: true })
+          .eq('user_id', user.id);
+      }
+
+      setOnboardingCompleted(true);
+    } catch (error) {
+      console.error('Unable to persist onboarding completion.', error);
+    } finally {
+      setIsCompletingOnboarding(false);
+    }
+  };
+
+  const handleSaveSuggestion = async (result: DiscoverResult) => {
+    if (!user || !supabase) {
+      return;
+    }
+
+    setSelectedSuggestionIds(previous =>
+      previous.includes(result.id)
+        ? previous.filter(id => id !== result.id)
+        : [...previous, result.id]
+    );
+
+    // try {
+    //   const { data: membership, error: membershipError } = await supabase
+    //     .from('memberships')
+    //     .select('couple_id')
+    //     .eq('user_id', user.id)
+    //     .limit(1)
+    //     .maybeSingle();
+
+    //   if (membershipError) {
+    //     throw membershipError;
+    //   }
+
+    //   if (!membership?.couple_id) {
+    //     throw new Error('No couple membership found for this user.');
+    //   }
+
+    //   // TODO: Expand the saved_activities schema to persist full suggestion data
+    //   // like title and description, and remove the unique(couple_id) constraint if
+    //   // you want to store multiple saved activities per couple.
+    //   const { error: saveError } = await supabase
+    //     .from('saved_activities')
+    //     .upsert(
+    //       {
+    //         couple_id: membership.couple_id,
+    //         saved_by: user.id,
+    //         tags: [result.title, ...result.tags],
+    //       },
+    //       { onConflict: 'couple_id' }
+    //     );
+
+    //   if (saveError) {
+    //     throw saveError;
+    //   }
+    // } catch (saveError) {
+    //   setSelectedSuggestionIds(previous =>
+    //     previous.filter(savedId => savedId !== result.id)
+    //   );
+    //   console.error('Unable to save suggestion.', saveError);
+    // }
+  };
 
   return (
-    <div className="bg-bg">
+    <div className="min-h-screen w-full bg-bg">
+      <OnboardingModal
+        isOpen={Boolean(user) && !onboardingCompleted}
+        isSubmitting={isCompletingOnboarding}
+        onComplete={() => void handleCompleteOnboarding()}
+      />
+
       <div className="mx-auto max-w-4xl space-y-5 px-4 py-6">
         <div>
           <h1 className="text-2xl font-bold text-text">Discover</h1>
@@ -342,12 +439,19 @@ const Discover: React.FC = () => {
           {hasGeneratedResults ? (
             <>
               <div className="space-y-3">
-                {currentBatch.map(result => (
-                  <DiscoverResults key={result.id} result={result} />
+                {visibleResults.map(result => (
+                  <DiscoverResults
+                    key={result.id}
+                    result={result}
+                    isSelected={selectedSuggestionIds.includes(result.id)}
+                    onSave={savedResult =>
+                      void handleSaveSuggestion(savedResult)
+                    }
+                  />
                 ))}
               </div>
 
-              <div className="pt-2">
+              <div className="flex flex-col items-center pt-2">
                 <Button
                   size="md"
                   variant="primaryOutline"

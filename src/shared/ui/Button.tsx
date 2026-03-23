@@ -11,6 +11,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     | 'outlineSoft';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -18,6 +19,7 @@ const Button: React.FC<ButtonProps> = ({
   size = 'md',
   className,
   children,
+  ref,
   ...props
 }) => {
   const baseClasses =
@@ -43,6 +45,7 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
+      ref={ref}
       className={cn(
         baseClasses,
         variantClasses[variant],

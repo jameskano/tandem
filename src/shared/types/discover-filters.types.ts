@@ -65,8 +65,8 @@ export type DiscoverSuggestion = {
   description: string;
   duration?: string;
   estimated_cost?: string;
-  // setting?: Setting;
-  // vibe?: Vibe[];
+  setting?: Setting;
+  vibe?: Vibe[];
   // materials?: string[];
   // steps?: string[];
   // tags?: string[];
