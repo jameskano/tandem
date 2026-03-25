@@ -18,7 +18,15 @@ const BottomNav: React.FC = () => {
 
   return (
     <nav className="safe-bottom fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-white md:hidden">
-      <div className="flex h-16 items-center justify-around">
+      <div className="relative grid h-16 grid-cols-3 items-center">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/3 top-1/2 h-8 -translate-x-1/2 -translate-y-1/2 border-l border-gray-200"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute left-2/3 top-1/2 h-8 -translate-x-1/2 -translate-y-1/2 border-l border-gray-200"
+        />
         {navItems.map(({ path, icon: Icon, label }) => {
           const isActive = location.pathname === path;
           return (
@@ -26,7 +34,7 @@ const BottomNav: React.FC = () => {
               key={path}
               to={path}
               className={cn(
-                'flex min-h-[44px] min-w-[44px] flex-col items-center justify-center rounded-lg px-2 py-1 transition-colors',
+                'flex h-full min-h-[44px] w-full min-w-[44px] flex-col items-center justify-center rounded-lg px-2 py-1 text-center transition-colors',
                 isActive ? 'text-primary' : 'text-textMuted hover:text-text'
               )}
             >
