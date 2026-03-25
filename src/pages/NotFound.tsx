@@ -10,7 +10,7 @@ const NotFound: React.FC = () => {
 
   return (
     <div
-      className="flex min-h-screen flex-col"
+      className="flex min-h-screen min-w-full flex-col"
       style={{ backgroundColor: COLORS.bg }}
     >
       <div className="px-4 py-6 text-center">

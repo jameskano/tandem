@@ -133,11 +133,7 @@ const Discover: React.FC = () => {
     filters.constraints.length > 0;
 
   const canGenerate = prompt.trim().length > 0 || hasFilters;
-  // const hasGeneratedResults = currentBatch.length > 0;
-  const hasGeneratedResults = seedSuggestions.length > 0;
-
-  const visibleResults =
-    currentBatch.length > 0 ? currentBatch : seedSuggestions;
+  const hasGeneratedResults = currentBatch.length > 0;
 
   const handleCompleteOnboarding = async () => {
     if (isCompletingOnboarding) {
@@ -439,7 +435,7 @@ const Discover: React.FC = () => {
           {hasGeneratedResults ? (
             <>
               <div className="space-y-3">
-                {visibleResults.map(result => (
+                {currentBatch.map(result => (
                   <DiscoverResults
                     key={result.id}
                     result={result}

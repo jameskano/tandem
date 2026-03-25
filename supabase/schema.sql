@@ -23,14 +23,25 @@ create index if not exists memberships_couple_id_idx on public.memberships(coupl
 -- Saved activities: couple-level “favorites”
 create table if not exists public.saved_activities (
   id uuid primary key default gen_random_uuid(),
+  title text,
+  description text,
   tags text[] not null default '{}',
   couple_id uuid not null references public.couples(id) on delete cascade,
   saved_by uuid not null references auth.users(id) on delete cascade,
-  created_at timestamptz not null default now(),
-  unique (couple_id)
+  created_at timestamptz not null default now()
 );
 
 create index if not exists saved_activities_couple_idx on public.saved_activities(couple_id);
+create index if not exists saved_activities_couple_created_idx on public.saved_activities(couple_id, created_at desc);
+
+alter table public.saved_activities
+  add column if not exists title text;
+
+alter table public.saved_activities
+  add column if not exists description text;
+
+alter table public.saved_activities
+  drop constraint if exists saved_activities_couple_id_key;
 
 -- Create plans table
 create table if not exists public.plans (
@@ -162,6 +173,12 @@ drop policy if exists "saved_delete_members" on public.saved_activities;
 create policy "saved_delete_members"
 on public.saved_activities for delete
 using (public.is_member_of_couple(couple_id));
+
+drop policy if exists "saved_update_members" on public.saved_activities;
+create policy "saved_update_members"
+on public.saved_activities for update
+using (public.is_member_of_couple(couple_id))
+with check (public.is_member_of_couple(couple_id));
 
 -- Plans
 drop policy if exists "plans_select_members" on public.plans;
