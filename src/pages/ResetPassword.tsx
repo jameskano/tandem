@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { COLORS } from '../shared/colors';
 import logo1 from '../assets/main-logo/logo1.png';
+import { useI18n } from '../shared/i18n/useI18n';
 import Card from '../shared/ui/Card';
 import GradientButton from '../shared/ui/GradientButton';
 import Input from '../shared/ui/Input';
 import { updatePassword } from '../shared/utils/auth';
 
 const ResetPassword: React.FC = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,10 +20,10 @@ const ResetPassword: React.FC = () => {
     e.preventDefault();
     const newErrors: typeof errors = {};
 
-    if (!password) newErrors.password = 'Password is required';
-    if (!confirmPassword) newErrors.confirm = 'Confirm password is required';
+    if (!password) newErrors.password = t('auth.passwordRequired');
+    if (!confirmPassword) newErrors.confirm = t('auth.confirmPasswordMissing');
     if (password && confirmPassword && password !== confirmPassword) {
-      newErrors.confirm = 'Passwords do not match';
+      newErrors.confirm = t('auth.passwordsDoNotMatch');
     }
 
     setErrors(newErrors);
@@ -30,9 +32,9 @@ const ResetPassword: React.FC = () => {
     setIsLoading(true);
     try {
       await updatePassword(password);
-      navigate('/login', { state: { message: 'Password updated successfully' } });
+      navigate('/login', { state: { message: t('auth.passwordUpdated') } });
     } catch (err: any) {
-      setErrors({ password: err.message || 'Failed to update password' });
+      setErrors({ password: err.message || t('auth.updatePasswordFailed') });
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +50,7 @@ const ResetPassword: React.FC = () => {
           <img src={logo1} alt="Tandem Logo" className="mx-auto mb-4 w-14" />
         </Link>
         <h1 className="text-2xl font-bold" style={{ color: COLORS.text }}>
-          Create New Password
+          {t('resetPassword.title')}
         </h1>
       </div>
 
@@ -56,9 +58,9 @@ const ResetPassword: React.FC = () => {
         <Card className="w-full max-w-md space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label="New Password"
+              label={t('resetPassword.newPassword')}
               type="password"
-              placeholder="••••••••"
+              placeholder={t('resetPassword.passwordPlaceholder')}
               value={password}
               onChange={e => {
                 setPassword(e.target.value);
@@ -69,9 +71,9 @@ const ResetPassword: React.FC = () => {
             />
 
             <Input
-              label="Confirm Password"
+              label={t('common.confirmPassword')}
               type="password"
-              placeholder="••••••••"
+              placeholder={t('resetPassword.passwordPlaceholder')}
               value={confirmPassword}
               onChange={e => {
                 setConfirmPassword(e.target.value);
@@ -82,7 +84,7 @@ const ResetPassword: React.FC = () => {
             />
 
             <GradientButton type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Updating...' : 'Update Password'}
+              {isLoading ? t('resetPassword.submitting') : t('resetPassword.submit')}
             </GradientButton>
           </form>
         </Card>

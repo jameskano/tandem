@@ -7,6 +7,7 @@ import {
   getSavedActivitiesPage,
   updateSavedActivity,
 } from '../services/API/savedActivities';
+import { useI18n } from '../shared/i18n/useI18n';
 import { ChevronLeft, ChevronRight } from '../shared/icons';
 import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
@@ -18,6 +19,7 @@ import { seedActivities } from '../shared/seed';
 const PAGE_SIZE = 10;
 
 const SavedActivities = () => {
+  const { t } = useI18n();
   const { user } = useAuthContext();
   const [activities, setActivities] = useState<SavedActivity[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +35,6 @@ const SavedActivities = () => {
     useState<SavedActivity | null>(null);
 
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
-  const hasActivities = activities.length > 0;
 
   const loadSavedActivities = async (page: number, coupleId: string) => {
     setIsLoading(true);
@@ -50,7 +51,7 @@ const SavedActivities = () => {
       setTotalCount(data.totalCount);
     } catch (loadError) {
       console.error('Unable to fetch saved activities.', loadError);
-      setError('Saved activities could not be loaded right now.');
+      setError(t('savedActivities.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +90,7 @@ const SavedActivities = () => {
         }
 
         console.error('Unable to fetch saved activities.', loadError);
-        setError('Saved activities could not be loaded right now.');
+        setError(t('savedActivities.loadError'));
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -102,7 +103,7 @@ const SavedActivities = () => {
     return () => {
       isMounted = false;
     };
-  }, [currentPage, user]);
+  }, [currentPage, t, user]);
 
   const handleDelete = async () => {
     if (!activityToDelete) {
@@ -129,7 +130,7 @@ const SavedActivities = () => {
       await loadSavedActivities(currentPage, user.id);
     } catch (deleteError) {
       console.error('Unable to delete saved activity.', deleteError);
-      setError('The activity could not be removed. Please try again.');
+      setError(t('savedActivities.removeError'));
     } finally {
       setIsDeleting(false);
     }
@@ -158,7 +159,7 @@ const SavedActivities = () => {
       setActivityToEdit(null);
     } catch (editError) {
       console.error('Unable to update saved activity.', editError);
-      setError('The activity could not be updated. Please try again.');
+      setError(t('savedActivities.updateError'));
     } finally {
       setIsEditing(false);
     }
@@ -187,20 +188,22 @@ const SavedActivities = () => {
       <div className="mx-auto max-w-4xl space-y-5 px-4 py-6">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-text">Saved Activities</h1>
+            <h1 className="text-2xl font-bold text-text">
+              {t('savedActivities.title')}
+            </h1>
             <p className="text-textMuted text-sm">
-              Keep track of the ideas you want to revisit later.
+              {t('savedActivities.subtitle')}
             </p>
           </div>
           <Chip variant="secondary" size="sm">
-            {totalCount} saved
+            {t('savedActivities.savedCount', { count: totalCount })}
           </Chip>
         </div>
 
         {error ? (
           <Card className="space-y-2">
             <p className="font-medium text-text">
-              Saved activities unavailable
+              {t('savedActivities.unavailable')}
             </p>
             <p className="text-textMuted text-sm">{error}</p>
           </Card>
@@ -209,7 +212,7 @@ const SavedActivities = () => {
         {isLoading ? (
           <Card>
             <p className="text-textMuted text-sm">
-              Loading saved activities...
+              {t('savedActivities.loading')}
             </p>
           </Card>
         ) : true ? (
@@ -231,7 +234,10 @@ const SavedActivities = () => {
 
             <div className="flex flex-col gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-md sm:flex-row sm:items-center sm:justify-between">
               <p className="text-textMuted text-sm">
-                Page {currentPage} of {totalPages}
+                {t('savedActivities.page', {
+                  current: currentPage,
+                  total: totalPages,
+                })}
               </p>
 
               <div className="flex items-center gap-2 self-end sm:self-auto">
@@ -243,7 +249,7 @@ const SavedActivities = () => {
                   onClick={() => setCurrentPage(previous => previous - 1)}
                 >
                   <ChevronLeft size={16} aria-hidden="true" />
-                  <span className="ml-1">Previous</span>
+                  <span className="ml-1">{t('common.previous')}</span>
                 </Button>
                 <Button
                   type="button"
@@ -252,7 +258,7 @@ const SavedActivities = () => {
                   disabled={currentPage >= totalPages || isLoading}
                   onClick={() => setCurrentPage(previous => previous + 1)}
                 >
-                  <span className="mr-1">Next</span>
+                  <span className="mr-1">{t('common.next')}</span>
                   <ChevronRight size={16} aria-hidden="true" />
                 </Button>
               </div>
@@ -260,9 +266,9 @@ const SavedActivities = () => {
           </>
         ) : (
           <Card className="space-y-2">
-            <p className="font-medium text-text">No saved activities yet</p>
+            <p className="font-medium text-text">{t('savedActivities.emptyTitle')}</p>
             <p className="text-textMuted text-sm">
-              Save ideas from Discover and they will appear here.
+              {t('savedActivities.emptyDescription')}
             </p>
           </Card>
         )}

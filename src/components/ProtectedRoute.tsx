@@ -1,11 +1,13 @@
 import { Navigate } from 'react-router-dom';
+import { useI18n } from '../shared/i18n/useI18n';
 import { useAuthContext } from '../store/context/AuthProvider';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n();
   const { user, loading } = useAuthContext();
 
   if (loading) {
-    return <div>Loading...</div>; // Or your loading component
+    return <div>{t('common.loading')}</div>;
   }
 
   if (!user) {
@@ -16,10 +18,11 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 export function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n();
   const { user, loading } = useAuthContext();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>{t('common.loading')}</div>;
   }
 
   if (user) {

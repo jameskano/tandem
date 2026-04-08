@@ -1,20 +1,23 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Settings } from '../shared/icons';
+import { useI18n } from '../shared/i18n/useI18n';
 import { cn } from '../shared/utils/format';
 import { FileHeart } from 'lucide-react';
 
-const navItems = [
-  { path: '/dashboard', icon: Home, label: 'Dashboard' },
-  // { path: '/discover', icon: Search, label: 'Discover' },
-  { path: '/saved-activities', icon: FileHeart, label: 'Saved Activities' },
-  // { path: '/planner', icon: Calendar, label: 'Planner' },
-  // { path: '/moments', icon: Camera, label: 'Moments' },
-  { path: '/settings', icon: Settings, label: 'Settings' },
-];
-
 const BottomNav: React.FC = () => {
   const location = useLocation();
+  const { t } = useI18n();
+
+  const navItems = [
+    { path: '/dashboard', icon: Home, label: t('nav.dashboard') },
+    {
+      path: '/saved-activities',
+      icon: FileHeart,
+      label: t('nav.savedActivities'),
+    },
+    { path: '/settings', icon: Settings, label: t('nav.settings') },
+  ];
 
   return (
     <nav className="safe-bottom fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-white md:hidden">

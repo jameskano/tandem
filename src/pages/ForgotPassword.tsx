@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { COLORS } from '../shared/colors';
 import logo1 from '../assets/main-logo/logo1.png';
+import { useI18n } from '../shared/i18n/useI18n';
 import Card from '../shared/ui/Card';
 import GradientButton from '../shared/ui/GradientButton';
 import Input from '../shared/ui/Input';
 import { resetPassword } from '../shared/utils/auth';
 
 const ForgotPassword: React.FC = () => {
+  const { t } = useI18n();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -19,7 +21,7 @@ const ForgotPassword: React.FC = () => {
     setSuccess(false);
 
     if (!email) {
-      setError('Email is required');
+      setError(t('auth.emailRequired'));
       return;
     }
 
@@ -29,7 +31,7 @@ const ForgotPassword: React.FC = () => {
       setSuccess(true);
       setEmail('');
     } catch (err: any) {
-      setError(err.message || 'Failed to send reset email');
+      setError(err.message || t('auth.resetEmailFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -45,10 +47,10 @@ const ForgotPassword: React.FC = () => {
           <img src={logo1} alt="Tandem Logo" className="mx-auto mb-4 w-14" />
         </Link>
         <h1 className="text-2xl font-bold" style={{ color: COLORS.text }}>
-          Reset Password
+          {t('forgotPassword.title')}
         </h1>
         <p className="mt-1 text-sm" style={{ color: COLORS.muted }}>
-          Enter your email to receive reset instructions
+          {t('forgotPassword.subtitle')}
         </p>
       </div>
 
@@ -59,16 +61,16 @@ const ForgotPassword: React.FC = () => {
               className="rounded p-4 text-sm"
               style={{ backgroundColor: '#d4edda', color: '#155724' }}
             >
-              Check your email for password reset instructions.
+              {t('forgotPassword.success')}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label="Email"
-              aria-label="email"
+              label={t('common.email')}
+              aria-label={t('common.email')}
               type="email"
-              placeholder="you@example.com"
+              placeholder={t('forgotPassword.emailPlaceholder')}
               value={email}
               onChange={e => {
                 setEmail(e.target.value);
@@ -83,7 +85,7 @@ const ForgotPassword: React.FC = () => {
               className="w-full"
               disabled={isLoading}
             >
-              {isLoading ? 'Sending...' : 'Send Reset Email'}
+              {isLoading ? t('forgotPassword.submitting') : t('forgotPassword.submit')}
             </GradientButton>
           </form>
 
@@ -93,7 +95,7 @@ const ForgotPassword: React.FC = () => {
               className="text-sm font-semibold transition-opacity hover:opacity-80"
               style={{ color: COLORS.primary }}
             >
-              Back to Sign In
+              {t('forgotPassword.backToLogin')}
             </Link>
           </div>
         </Card>

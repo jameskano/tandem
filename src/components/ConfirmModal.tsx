@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useI18n } from '../shared/i18n/useI18n';
 import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
 
@@ -15,6 +16,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const { t } = useI18n();
+
   useEffect(() => {
     if (!isOpen) {
       return;
@@ -46,10 +49,10 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
       >
         <div className="space-y-2">
           <h2 id="confirm-modal-title" className="text-xl font-bold text-text">
-            Remove saved activity?
+            {t('confirmModal.title')}
           </h2>
           <p className="text-textMuted text-sm leading-6">
-            This will remove the activity from the saved list.
+            {t('confirmModal.description')}
           </p>
         </div>
 
@@ -59,14 +62,14 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             onClick={onCancel}
             disabled={isSubmitting}
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             className="sm:min-w-[140px]"
             onClick={onConfirm}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Removing...' : 'Confirm'}
+            {isSubmitting ? t('confirmModal.submitting') : t('confirmModal.submit')}
           </Button>
         </div>
       </Card>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useI18n } from '../shared/i18n/useI18n';
 import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
 import Input from '../shared/ui/Input';
@@ -18,6 +19,7 @@ const EditSavedActivityModal: React.FC<EditSavedActivityModalProps> = ({
   onCancel,
   onSave,
 }) => {
+  const { t } = useI18n();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [titleError, setTitleError] = useState<string | undefined>();
@@ -57,7 +59,7 @@ const EditSavedActivityModal: React.FC<EditSavedActivityModalProps> = ({
     const trimmedDescription = description.trim();
 
     if (!trimmedTitle) {
-      setTitleError('Title is required.');
+      setTitleError(t('editSavedActivity.titleRequired'));
       return;
     }
 
@@ -85,26 +87,26 @@ const EditSavedActivityModal: React.FC<EditSavedActivityModalProps> = ({
             id="edit-saved-activity-title"
             className="text-xl font-bold text-text"
           >
-            Edit saved activity
+            {t('editSavedActivity.title')}
           </h2>
         </div>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <Input
-            label="Title"
+            label={t('common.title')}
             value={title}
             onChange={event => setTitle(event.target.value)}
             error={titleError}
-            placeholder="Add a title"
+            placeholder={t('editSavedActivity.titlePlaceholder')}
             maxLength={120}
             disabled={isSubmitting}
           />
 
           <Textarea
-            label="Description"
+            label={t('common.description')}
             value={description}
             onChange={event => setDescription(event.target.value)}
-            placeholder="Add a description"
+            placeholder={t('editSavedActivity.descriptionPlaceholder')}
             autoResize
             height={140}
             disabled={isSubmitting}
@@ -117,14 +119,16 @@ const EditSavedActivityModal: React.FC<EditSavedActivityModalProps> = ({
               onClick={onCancel}
               disabled={isSubmitting}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               type="submit"
               className="sm:min-w-[140px]"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Saving...' : 'Save changes'}
+              {isSubmitting
+                ? t('editSavedActivity.submitting')
+                : t('editSavedActivity.submit')}
             </Button>
           </div>
         </form>

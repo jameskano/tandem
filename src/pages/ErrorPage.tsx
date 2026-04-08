@@ -2,11 +2,13 @@ import React from 'react';
 import { useNavigate, useRouteError } from 'react-router-dom';
 import { COLORS } from '../shared/colors';
 import logo1 from '../assets/main-logo/logo1.png';
+import { useI18n } from '../shared/i18n/useI18n';
 import Card from '../shared/ui/Card';
 import Button from '../shared/ui/Button';
 import NotFound from './NotFound';
 
 const ErrorPage: React.FC = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const error = useRouteError() as any;
 
@@ -25,10 +27,10 @@ const ErrorPage: React.FC = () => {
       <div className="px-4 py-6 text-center">
         <img src={logo1} alt="Tandem Logo" className="mx-auto mb-4 w-14" />
         <h1 className="text-2xl font-bold" style={{ color: COLORS.text }}>
-          Oops, an error occurred
+          {t('errorPage.title')}
         </h1>
         <p className="mt-1 text-sm" style={{ color: COLORS.muted }}>
-          We ran into a problem. You can try reloading or go back home.
+          {t('errorPage.subtitle')}
         </p>
       </div>
 
@@ -36,7 +38,7 @@ const ErrorPage: React.FC = () => {
         <Card className="w-full max-w-md space-y-6">
           <div>
             <p className="mb-4 text-sm" style={{ color: COLORS.muted }}>
-              {error?.message ?? 'Unknown error'}
+              {error?.message ?? t('common.unknownError')}
             </p>
             <div className="flex gap-3">
               <Button
@@ -45,7 +47,7 @@ const ErrorPage: React.FC = () => {
                 className="flex-1"
                 onClick={() => window.location.reload()}
               >
-                Reload
+                {t('errorPage.reload')}
               </Button>
 
               <Button
@@ -54,13 +56,13 @@ const ErrorPage: React.FC = () => {
                 className="flex-1"
                 onClick={() => navigate('/')}
               >
-                Home
+                {t('common.home')}
               </Button>
             </div>
           </div>
 
           <div className="text-xs" style={{ color: COLORS.muted }}>
-            If this keeps happening, please contact support.
+            {t('errorPage.support')}
           </div>
         </Card>
       </div>

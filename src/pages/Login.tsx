@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { COLORS } from '../shared/colors';
 import logo1 from '../assets/main-logo/logo1.png';
+import { useI18n } from '../shared/i18n/useI18n';
 import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
 import GradientButton from '../shared/ui/GradientButton';
@@ -10,6 +11,7 @@ import { signInWithEmail, signInWithGoogle } from '../shared/utils/auth';
 import ResendEmail from '../components/ResendEmail';
 
 const Login: React.FC = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,9 +29,9 @@ const Login: React.FC = () => {
   const validateForm = () => {
     const newErrors: typeof errors = {};
 
-    if (!email) newErrors.email = 'Email is required';
+    if (!email) newErrors.email = t('auth.emailRequired');
 
-    if (!password) newErrors.password = 'Password is required';
+    if (!password) newErrors.password = t('auth.passwordRequired');
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -53,7 +55,7 @@ const Login: React.FC = () => {
         setErrors({ email: error.message });
       else if (error.message === 'Invalid login credentials')
         setErrors({ password: error.message, email: error.message });
-      else setErrors({ email: 'Login failed. Please try again.' });
+      else setErrors({ email: t('auth.loginFailed') });
     } finally {
       setIsLoading(false);
     }
@@ -81,10 +83,10 @@ const Login: React.FC = () => {
           <img src={logo1} alt="Tandem Logo" className="mx-auto mb-4 w-14" />
         </Link>
         <h1 className="text-2xl font-bold" style={{ color: COLORS.text }}>
-          Welcome Back
+          {t('login.title')}
         </h1>
         <p className="mt-1 text-sm" style={{ color: COLORS.muted }}>
-          Sign in to continue
+          {t('login.subtitle')}
         </p>
       </div>
 
@@ -93,9 +95,9 @@ const Login: React.FC = () => {
         <Card className="w-full max-w-md space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label="Email"
+              label={t('common.email')}
               type="email"
-              placeholder="you@example.com"
+              placeholder={t('login.emailPlaceholder')}
               value={email}
               onChange={e => {
                 setEmail(e.target.value);
@@ -106,9 +108,9 @@ const Login: React.FC = () => {
             />
 
             <Input
-              label="Password"
+              label={t('common.password')}
               type="password"
-              placeholder="••••••••"
+              placeholder={t('login.passwordPlaceholder')}
               value={password}
               onChange={e => {
                 setPassword(e.target.value);
@@ -123,7 +125,7 @@ const Login: React.FC = () => {
               className="w-full"
               disabled={isLoading}
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? t('login.submitting') : t('login.submit')}
             </GradientButton>
 
             {isResendEmailVisible && <ResendEmail email={email} />}
@@ -142,7 +144,7 @@ const Login: React.FC = () => {
               style={{ color: COLORS.muted }}
             >
               <span className="px-2" style={{ backgroundColor: COLORS.bg }}>
-                Or continue with
+                {t('login.divider')}
               </span>
             </div>
           </div>
@@ -154,20 +156,19 @@ const Login: React.FC = () => {
             onClick={handleGoogleLogin}
             disabled={isLoading}
           >
-            <span className="mr-2">🔵</span>
-            Google
+            {t('common.google')}
           </Button>
 
           {/* Footer */}
           <div className="text-center">
             <span className="text-sm" style={{ color: COLORS.muted }}>
-              Don't have an account?{' '}
+              {t('login.noAccount')}{' '}
               <Link
                 to="/register"
                 className="font-semibold transition-opacity hover:opacity-80"
                 style={{ color: COLORS.primary }}
               >
-                Sign up
+                {t('login.signUp')}
               </Link>
             </span>
           </div>
@@ -177,7 +178,7 @@ const Login: React.FC = () => {
               className="text-sm font-semibold transition-opacity hover:opacity-80"
               style={{ color: COLORS.primary }}
             >
-              Forgot password?
+              {t('login.forgotPassword')}
             </Link>
           </div>
         </Card>
@@ -189,7 +190,7 @@ const Login: React.FC = () => {
         style={{ color: COLORS.muted }}
       >
         <Link to="/" className="mr-4 hover:underline">
-          Home
+          {t('common.home')}
         </Link>
       </div>
     </div>
