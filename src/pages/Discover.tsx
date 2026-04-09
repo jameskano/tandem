@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronDown } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import DiscoverResults from '../components/DiscoverResults';
@@ -6,7 +7,7 @@ import OnboardingModal from '../components/OnboardingModal';
 import { useDiscoverSuggestions } from '../hooks/useDiscoverSuggestions';
 import useUtils from '../hooks/useUtils';
 import { supabase } from '../services/supabase';
-import { seedSuggestions } from '../shared/seed';
+import { useI18n } from '../shared/i18n/useI18n';
 import {
   discoverBudgetOptions,
   discoverConstraintsOptions,
@@ -31,11 +32,21 @@ import Dropdown from '../shared/ui/Dropdown';
 import Textarea from '../shared/ui/Textarea';
 import { useAuthContext } from '../store/context/AuthProvider';
 import { useSettingsContext } from '../store/context/SettingsProvider';
+import {
+  updateUserSettings,
+  userSettingsQueryKey,
+} from '../services/API/userSettings';
 
 const Discover: React.FC = () => {
+  const { t } = useI18n();
+  const queryClient = useQueryClient();
   const location = useLocation();
   const { user } = useAuthContext();
-  const { onboardingCompleted, setOnboardingCompleted } = useSettingsContext();
+  const {
+    onboardingCompleted,
+    isSettingsLoading,
+    setOnboardingCompleted,
+  } = useSettingsContext();
   const initialPrompt = location.state?.prompt;
   const [prompt, setPrompt] = useState(initialPrompt || '');
   const [expanded, setExpanded] = useState(false);
@@ -49,13 +60,46 @@ const Discover: React.FC = () => {
   >([]);
   const [generationRound, setGenerationRound] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isCompletingOnboarding, setIsCompletingOnboarding] = useState(false);
   const [selectedSuggestionIds, setSelectedSuggestionIds] = useState<string[]>(
     []
   );
   const [error, setError] = useState<string | null>(null);
   const { getDiscoverLabelText, getDiscoverPlaceholderText } = useUtils();
   const { generateDiscoverSuggestions } = useDiscoverSuggestions();
+
+  const translatedDiscoverBudgetOptions = useMemo(
+    () => discoverBudgetOptions.map(item => ({ ...item, label: t(item.label) })),
+    [t]
+  );
+  const translatedDiscoverTimeOptions = useMemo(
+    () => discoverTimeOptions.map(item => ({ ...item, label: t(item.label) })),
+    [t]
+  );
+  const translatedDiscoverSettingOptions = useMemo(
+    () => discoverSettingOptions.map(item => ({ ...item, label: t(item.label) })),
+    [t]
+  );
+  const translatedDiscoverVibeOptions = useMemo(
+    () => discoverVibeOptions.map(item => ({ ...item, label: t(item.label) })),
+    [t]
+  );
+  const translatedDiscoverEnergyOptions = useMemo(
+    () => discoverEnergyOptions.map(item => ({ ...item, label: t(item.label) })),
+    [t]
+  );
+  const translatedDiscoverConstraintsOptions = useMemo(
+    () =>
+      discoverConstraintsOptions.map(item => ({ ...item, label: t(item.label) })),
+    [t]
+  );
+  const translatedDiscoverManualWeatherOptions = useMemo(
+    () =>
+      discoverManualWeatherOptions.map(item => ({
+        ...item,
+        label: t(item.label),
+      })),
+    [t]
+  );
 
   const discoverLabel = useMemo(
     () => getDiscoverLabelText(),
@@ -110,7 +154,7 @@ const Discover: React.FC = () => {
       setError(
         generationError instanceof Error
           ? generationError.message
-          : 'Discover generation failed.'
+          : t('discover.generationFailed')
       );
     } finally {
       setIsGenerating(false);
@@ -135,26 +179,35 @@ const Discover: React.FC = () => {
   const canGenerate = prompt.trim().length > 0 || hasFilters;
   const hasGeneratedResults = currentBatch.length > 0;
 
+  const completeOnboardingMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) {
+        throw new Error('User is required to complete onboarding.');
+      }
+
+      return updateUserSettings({
+        userId: user.id,
+        patch: { onboarding_completed: true },
+      });
+    },
+    onSuccess: updatedSettings => {
+      setOnboardingCompleted(updatedSettings.onboarding_completed);
+      queryClient.setQueryData(
+        userSettingsQueryKey(user?.id),
+        updatedSettings
+      );
+    },
+  });
+
   const handleCompleteOnboarding = async () => {
-    if (isCompletingOnboarding) {
+    if (completeOnboardingMutation.isPending) {
       return;
     }
 
-    setIsCompletingOnboarding(true);
-
     try {
-      if (user && supabase) {
-        await supabase
-          .from('user_settings')
-          .update({ onboarding_completed: true })
-          .eq('user_id', user.id);
-      }
-
-      setOnboardingCompleted(true);
+      await completeOnboardingMutation.mutateAsync();
     } catch (error) {
       console.error('Unable to persist onboarding completion.', error);
-    } finally {
-      setIsCompletingOnboarding(false);
     }
   };
 
@@ -168,59 +221,19 @@ const Discover: React.FC = () => {
         ? previous.filter(id => id !== result.id)
         : [...previous, result.id]
     );
-
-    // try {
-    //   const { data: membership, error: membershipError } = await supabase
-    //     .from('memberships')
-    //     .select('couple_id')
-    //     .eq('user_id', user.id)
-    //     .limit(1)
-    //     .maybeSingle();
-
-    //   if (membershipError) {
-    //     throw membershipError;
-    //   }
-
-    //   if (!membership?.couple_id) {
-    //     throw new Error('No couple membership found for this user.');
-    //   }
-
-    //   // TODO: Expand the saved_activities schema to persist full suggestion data
-    //   // like title and description, and remove the unique(couple_id) constraint if
-    //   // you want to store multiple saved activities per couple.
-    //   const { error: saveError } = await supabase
-    //     .from('saved_activities')
-    //     .upsert(
-    //       {
-    //         couple_id: membership.couple_id,
-    //         saved_by: user.id,
-    //         tags: [result.title, ...result.tags],
-    //       },
-    //       { onConflict: 'couple_id' }
-    //     );
-
-    //   if (saveError) {
-    //     throw saveError;
-    //   }
-    // } catch (saveError) {
-    //   setSelectedSuggestionIds(previous =>
-    //     previous.filter(savedId => savedId !== result.id)
-    //   );
-    //   console.error('Unable to save suggestion.', saveError);
-    // }
   };
 
   return (
     <div className="min-h-screen w-full bg-bg">
       <OnboardingModal
-        isOpen={Boolean(user) && !onboardingCompleted}
-        isSubmitting={isCompletingOnboarding}
+        isOpen={Boolean(user) && !isSettingsLoading && !onboardingCompleted}
+        isSubmitting={completeOnboardingMutation.isPending}
         onComplete={() => void handleCompleteOnboarding()}
       />
 
       <div className="mx-auto max-w-4xl space-y-5 px-4 py-6">
         <div>
-          <h1 className="text-2xl font-bold text-text">Discover</h1>
+          <h1 className="text-2xl font-bold text-text">{t('discover.title')}</h1>
         </div>
 
         <Card className="space-y-4">
@@ -241,8 +254,8 @@ const Discover: React.FC = () => {
               onClick={() => void handleGenerate(false)}
             >
               {isGenerating && generationRound === 0
-                ? 'Generating...'
-                : 'Generate ideas'}
+                ? t('discover.generating')
+                : t('discover.generateIdeas')}
             </Button>
           </div>
 
@@ -251,16 +264,16 @@ const Discover: React.FC = () => {
               className="flex cursor-pointer list-none flex-row items-center justify-between text-sm font-semibold text-text"
               onClick={expandHadler}
             >
-              Refine
+              {t('discover.refine')}
               <ChevronDown
                 className={`transition-transform ${expanded ? 'rotate-180' : ''}`}
               />
             </summary>
             <div className="mt-4 space-y-4">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">Budget</p>
+                <p className="text-sm font-medium text-text">{t('discover.budget')}</p>
                 <div className="flex flex-wrap gap-2">
-                  {discoverBudgetOptions.map(item => (
+                  {translatedDiscoverBudgetOptions.map(item => (
                     <Button
                       key={item.value}
                       type="button"
@@ -286,9 +299,11 @@ const Discover: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">Time available</p>
+                <p className="text-sm font-medium text-text">
+                  {t('discover.timeAvailable')}
+                </p>
                 <div className="flex flex-wrap gap-2">
-                  {discoverTimeOptions.map(item => (
+                  {translatedDiscoverTimeOptions.map(item => (
                     <Button
                       key={item.value}
                       type="button"
@@ -312,9 +327,9 @@ const Discover: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">Setting</p>
+                <p className="text-sm font-medium text-text">{t('discover.setting')}</p>
                 <div className="flex flex-wrap gap-2">
-                  {discoverSettingOptions.map(item => (
+                  {translatedDiscoverSettingOptions.map(item => (
                     <Button
                       key={item.value}
                       type="button"
@@ -340,12 +355,12 @@ const Discover: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">Vibe</p>
+                <p className="text-sm font-medium text-text">{t('discover.vibe')}</p>
                 <Dropdown
-                  options={discoverVibeOptions}
+                  options={translatedDiscoverVibeOptions}
                   value={filters.vibe}
                   multiple
-                  placeholder="Select vibe"
+                  placeholder={t('discover.selectVibe')}
                   onChange={value =>
                     setFilter(
                       'vibe',
@@ -356,9 +371,9 @@ const Discover: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">Energy</p>
+                <p className="text-sm font-medium text-text">{t('discover.energy')}</p>
                 <div className="flex flex-wrap gap-2">
-                  {discoverEnergyOptions.map(item => (
+                  {translatedDiscoverEnergyOptions.map(item => (
                     <Button
                       key={item.value}
                       type="button"
@@ -384,12 +399,14 @@ const Discover: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">Constraints</p>
+                <p className="text-sm font-medium text-text">
+                  {t('discover.constraints')}
+                </p>
                 <Dropdown
-                  options={discoverConstraintsOptions}
+                  options={translatedDiscoverConstraintsOptions}
                   value={filters.constraints}
                   multiple
-                  placeholder="Select constraints"
+                  placeholder={t('discover.selectConstraints')}
                   onChange={value =>
                     setFilter(
                       'constraints',
@@ -400,11 +417,11 @@ const Discover: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">Weather</p>
+                <p className="text-sm font-medium text-text">{t('discover.weather')}</p>
                 <Dropdown
-                  options={discoverManualWeatherOptions}
+                  options={translatedDiscoverManualWeatherOptions}
                   value={filters.weather}
-                  placeholder="Select weather"
+                  placeholder={t('discover.selectWeather')}
                   onChange={value =>
                     setFilter(
                       'weather',
@@ -419,15 +436,15 @@ const Discover: React.FC = () => {
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-text">Results</h2>
+            <h2 className="text-lg font-semibold text-text">{t('discover.results')}</h2>
             <Chip variant="secondary" size="sm">
-              {currentBatch.length} ideas
+              {t('discover.ideasCount', { count: currentBatch.length })}
             </Chip>
           </div>
 
           {error ? (
             <Card className="space-y-2">
-              <p className="font-medium text-text">Generation unavailable</p>
+              <p className="font-medium text-text">{t('discover.generationUnavailable')}</p>
               <p className="text-textMuted text-sm">{error}</p>
             </Card>
           ) : null}
@@ -455,16 +472,16 @@ const Discover: React.FC = () => {
                   onClick={() => void handleGenerate(true)}
                 >
                   {isGenerating && generationRound > 0
-                    ? 'Generating 10 more...'
-                    : 'Generate 10 more'}
+                    ? t('discover.generatingMore')
+                    : t('discover.generateMore')}
                 </Button>
               </div>
             </>
           ) : (
             <Card className="space-y-2">
-              <p className="font-medium text-text">No ideas yet</p>
+              <p className="font-medium text-text">{t('discover.noIdeas')}</p>
               <p className="text-textMuted text-sm">
-                Generate a first batch to see 10 suggestions here.
+                {t('discover.noIdeasDescription')}
               </p>
             </Card>
           )}

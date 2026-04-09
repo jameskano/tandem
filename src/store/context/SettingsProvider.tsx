@@ -3,15 +3,19 @@ import {
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
 import { Currency } from '../../shared/types/user';
+import { useUserSettingsQuery } from '../../hooks/useUserSettingsQuery';
+import { useAuthContext } from './AuthProvider';
 
 type SettingsContextType = {
   currency: Currency;
   locale: string;
   onboardingCompleted: boolean;
+  isSettingsLoading: boolean;
   setCurrency: Dispatch<SetStateAction<Currency>>;
   setLocale: Dispatch<SetStateAction<string>>;
   setOnboardingCompleted: Dispatch<SetStateAction<boolean>>;
@@ -24,20 +28,40 @@ export const SettingsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { user } = useAuthContext();
+  const { data: userSettings, isLoading, isFetching } = useUserSettingsQuery();
   const [currency, setCurrency] = useState<Currency>('USD');
   const [locale, setLocale] = useState('en-US');
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      setCurrency('USD');
+      setLocale('en-US');
+      setOnboardingCompleted(false);
+      return;
+    }
+
+    if (!userSettings) {
+      return;
+    }
+
+    setCurrency(userSettings.currency);
+    setLocale(userSettings.locale);
+    setOnboardingCompleted(userSettings.onboarding_completed);
+  }, [user, userSettings]);
 
   const value = useMemo(
     () => ({
       currency,
       locale,
       onboardingCompleted,
+      isSettingsLoading: Boolean(user) && (isLoading || isFetching),
       setCurrency,
       setLocale,
       setOnboardingCompleted,
     }),
-    [currency, locale, onboardingCompleted]
+    [currency, isFetching, isLoading, locale, onboardingCompleted, user]
   );
 
   return (

@@ -11,8 +11,10 @@ import Textarea from '../shared/ui/Textarea';
 import useUtils from '../hooks/useUtils';
 import { Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
+import { useI18n } from '../shared/i18n/useI18n';
 
 const Dashboard = () => {
+  const { t } = useI18n();
   const [prompt, setPrompt] = useState('');
   const { getDiscoverLabelText, getDiscoverPlaceholderText } = useUtils();
   const discoverLabel = useMemo(
@@ -35,7 +37,7 @@ const Dashboard = () => {
         className="text-2xl font-bold text-text"
         style={{ color: COLORS.text }}
       >
-        Discover
+        {t('dashboard.title')}
       </h1>
       <Card className="space-y-4">
         <Textarea
@@ -47,7 +49,7 @@ const Dashboard = () => {
         />
         <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
           <Button size="md" disabled={!canGenerate}>
-            Generate ideas
+            {t('dashboard.generateIdeas')}
           </Button>
         </div>
         <div>
@@ -57,14 +59,14 @@ const Dashboard = () => {
             className="py-4 text-sm font-medium"
             style={{ color: COLORS.primary }}
           >
-            More options
+            {t('dashboard.moreOptions')}
           </Link>
         </div>
       </Card>
 
       <div className="flex flex-1 flex-col gap-y-3">
         <div className="flex h-full w-full items-center justify-center">
-          No upcoming Plans
+          {t('dashboard.noUpcomingPlans')}
         </div>
         {/* <Card className="space-y-3">
           <div className="flex items-center justify-between">

@@ -1,4 +1,9 @@
 import React from 'react';
+import {
+  DEFAULT_LANGUAGE,
+  resolveAppLanguage,
+  translations,
+} from '../shared/i18n';
 
 type Props = {
   children: React.ReactNode;
@@ -34,16 +39,18 @@ class ErrorBoundary extends React.Component<Props, State> {
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) return <>{this.props.fallback}</>;
+      const language = resolveAppLanguage();
+      const dictionary = translations[language] ?? translations[DEFAULT_LANGUAGE];
+
       return (
         <div
           className="flex min-h-screen items-center justify-center p-6"
           style={{ backgroundColor: '#f8fafc' }}
         >
           <div className="w-full max-w-md rounded bg-white p-6 shadow">
-            <h2 className="mb-2 text-lg font-bold">Something went wrong</h2>
+            <h2 className="mb-2 text-lg font-bold">{dictionary.errorPage.title}</h2>
             <p className="mb-4 text-sm text-gray-600">
-              An unexpected error occurred. You can try reloading the page or go
-              back home.
+              {dictionary.errorPage.subtitle}
             </p>
             <div className="flex gap-2">
               <button
@@ -51,10 +58,10 @@ class ErrorBoundary extends React.Component<Props, State> {
                 onClick={this.handleReload}
                 className="rounded bg-blue-600 px-3 py-2 text-white"
               >
-                Reload
+                {dictionary.errorPage.reload}
               </button>
               <a href="/" className="rounded border px-3 py-2 text-sm">
-                Home
+                {dictionary.common.home}
               </a>
             </div>
           </div>

@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useI18n } from '../shared/i18n/useI18n';
 
 const useResendEmail = () => {
+  const { t } = useI18n();
   const [resendLoading, setResendLoading] = useState(false);
   const [resendMessage, setResendMessage] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
@@ -8,7 +10,7 @@ const useResendEmail = () => {
   const resendEmail = async (email: string) => {
     if (resendLoading || resendCooldown > 0) return;
     if (!email) {
-      setResendMessage('Enter your email above to resend confirmation.');
+      setResendMessage(t('resendEmail.missingEmail'));
       return;
     }
 
@@ -17,9 +19,7 @@ const useResendEmail = () => {
     try {
       const res = await fetch('/api/resend-confirmation');
 
-      setResendMessage(
-        'Confirmation email resent. Check your inbox (and spam).'
-      );
+      setResendMessage(t('resendEmail.success'));
       setResendCooldown(30);
       const timer = setInterval(() => {
         setResendCooldown(prev => {
@@ -31,7 +31,7 @@ const useResendEmail = () => {
         });
       }, 1000);
     } catch (error) {
-      setResendMessage('Could not resend confirmation. Try again later.');
+      setResendMessage(t('resendEmail.error'));
     } finally {
       setResendLoading(false);
       return { resendCooldown, resendLoading, resendMessage };

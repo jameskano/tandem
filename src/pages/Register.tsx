@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo1 from '../assets/main-logo/logo1.png';
 import { COLORS } from '../shared/colors';
+import { useI18n } from '../shared/i18n/useI18n';
 import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
 import GradientButton from '../shared/ui/GradientButton';
@@ -10,6 +11,7 @@ import { signUpWithEmail, signInWithGoogle } from '../shared/utils/auth';
 import ConfirmEmail from './ConfirmEmail';
 
 const Register: React.FC = () => {
+  const { t } = useI18n();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -28,21 +30,21 @@ const Register: React.FC = () => {
     const newErrors: typeof errors = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('auth.emailRequired');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email address';
+      newErrors.email = t('auth.invalidEmail');
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = t('auth.passwordRequired');
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+      newErrors.password = t('auth.passwordMinLength');
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = t('auth.confirmPasswordRequired');
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = t('auth.passwordsDoNotMatch');
     }
 
     setErrors(newErrors);
@@ -101,10 +103,10 @@ const Register: React.FC = () => {
           <img src={logo1} alt="Tandem Logo" className="mx-auto mb-4 w-14" />
         </Link>
         <h1 className="text-2xl font-bold" style={{ color: COLORS.text }}>
-          Create Account
+          {t('register.title')}
         </h1>
         <p className="mt-1 text-sm" style={{ color: COLORS.muted }}>
-          Join us to start your journey
+          {t('register.subtitle')}
         </p>
       </div>
 
@@ -113,10 +115,10 @@ const Register: React.FC = () => {
         <Card className="w-full max-w-md space-y-6">
           <form onSubmit={handleEmailRegister} className="space-y-4">
             <Input
-              label="Email"
+              label={t('common.email')}
               type="email"
               name="email"
-              placeholder="you@example.com"
+              placeholder={t('register.emailPlaceholder')}
               value={formData.email}
               onChange={handleChange}
               error={errors.email}
@@ -124,24 +126,24 @@ const Register: React.FC = () => {
             />
 
             <Input
-              label="Password"
+              label={t('common.password')}
               type="password"
               name="password"
-              placeholder="••••••••"
+              placeholder={t('register.passwordPlaceholder')}
               value={formData.password}
               onChange={handleChange}
               error={errors.password}
               helperText={
-                formData.password ? undefined : 'At least 8 characters'
+                formData.password ? undefined : t('register.passwordHelper')
               }
               disabled={isLoading}
             />
 
             <Input
-              label="Confirm Password"
+              label={t('common.confirmPassword')}
               type="password"
               name="confirmPassword"
-              placeholder="••••••••"
+              placeholder={t('register.passwordPlaceholder')}
               value={formData.confirmPassword}
               onChange={handleChange}
               error={errors.confirmPassword}
@@ -153,7 +155,7 @@ const Register: React.FC = () => {
               className="w-full"
               disabled={isLoading}
             >
-              {isLoading ? 'Creating account...' : 'Create Account'}
+              {isLoading ? t('register.submitting') : t('register.submit')}
             </GradientButton>
           </form>
 
@@ -170,7 +172,7 @@ const Register: React.FC = () => {
               style={{ color: COLORS.muted }}
             >
               <span className="px-2" style={{ backgroundColor: COLORS.bg }}>
-                Or sign up with
+                {t('register.divider')}
               </span>
             </div>
           </div>
@@ -182,20 +184,19 @@ const Register: React.FC = () => {
             onClick={handleGoogleRegister}
             disabled={isLoading}
           >
-            <span className="mr-2">🔵</span>
-            Google
+            {t('common.google')}
           </Button>
 
           {/* Footer */}
           <div className="text-center">
             <span className="text-sm" style={{ color: COLORS.muted }}>
-              Already have an account?{' '}
+              {t('register.alreadyHaveAccount')}{' '}
               <Link
                 to="/login"
                 className="font-semibold transition-opacity hover:opacity-80"
                 style={{ color: COLORS.primary }}
               >
-                Sign in
+                {t('register.signIn')}
               </Link>
             </span>
           </div>
@@ -208,7 +209,7 @@ const Register: React.FC = () => {
         style={{ color: COLORS.muted }}
       >
         <Link to="/" className="mr-4 hover:underline">
-          Home
+          {t('common.home')}
         </Link>
       </div>
     </div>

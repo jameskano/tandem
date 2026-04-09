@@ -1,4 +1,5 @@
 import { supabase } from '../../services/supabase';
+import { updateUserSettings } from '../../services/API/userSettings';
 
 export const detectCurrency = () => {
   const locale = navigator.language;
@@ -12,11 +13,11 @@ export const syncSettings = async () => {
 
   if (!user) return;
 
-  await supabase
-    ?.from('user_settings')
-    .update({
+  await updateUserSettings({
+    userId: user.id,
+    patch: {
       currency: detectCurrency(),
       locale: navigator.language,
-    })
-    .eq('user_id', user.id);
+    },
+  });
 };

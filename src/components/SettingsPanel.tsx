@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import Card from '../shared/ui/Card'
 import Button from '../shared/ui/Button'
+import { useI18n } from '../shared/i18n/useI18n'
 import { registerPush, scheduleLocal } from '../services/notifications'
 import { generateInviteCode } from '../shared/utils/format'
 
 const SettingsPanel: React.FC = () => {
+  const { t } = useI18n()
   const [inviteCode] = useState(generateInviteCode())
   const [isPushEnabled, setIsPushEnabled] = useState(false)
 
@@ -27,8 +29,8 @@ const SettingsPanel: React.FC = () => {
       tomorrow.setHours(10, 0, 0, 0) // 10 AM tomorrow
       
       await scheduleLocal(
-        'Tandem Reminder',
-        'Don\'t forget your planned activity!',
+        t('settings.reminderTitle'),
+        t('settings.reminderBody'),
         tomorrow
       )
     } catch (error) {
@@ -40,11 +42,11 @@ const SettingsPanel: React.FC = () => {
     <div className="space-y-6">
       {/* Partner Link */}
       <Card className="p-6">
-        <h2 className="text-lg font-semibold text-text mb-4">Partner Link</h2>
+        <h2 className="text-lg font-semibold text-text mb-4">{t('settings.partnerLink')}</h2>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-text mb-2">
-              Invite Code
+              {t('settings.inviteCode')}
             </label>
             <div className="flex items-center space-x-2">
               <input
@@ -54,11 +56,11 @@ const SettingsPanel: React.FC = () => {
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-text"
               />
               <Button size="sm" variant="outline">
-                Copy
+                {t('common.copy')}
               </Button>
             </div>
             <p className="text-sm text-textMuted mt-2">
-              Share this code with your partner to connect your accounts
+              {t('settings.inviteDescription')}
             </p>
           </div>
         </div>
@@ -66,13 +68,13 @@ const SettingsPanel: React.FC = () => {
 
       {/* Notifications */}
       <Card className="p-6">
-        <h2 className="text-lg font-semibold text-text mb-4">Notifications</h2>
+        <h2 className="text-lg font-semibold text-text mb-4">{t('settings.notifications')}</h2>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-medium text-text">Push Notifications</h3>
+              <h3 className="font-medium text-text">{t('settings.pushNotifications')}</h3>
               <p className="text-sm text-textMuted">
-                Get reminders about your planned activities
+                {t('settings.pushDescription')}
               </p>
             </div>
             <Button
@@ -80,15 +82,15 @@ const SettingsPanel: React.FC = () => {
               size="sm"
               onClick={handleEnablePush}
             >
-              {isPushEnabled ? 'Enabled' : 'Enable'}
+              {isPushEnabled ? t('settings.enabled') : t('settings.enable')}
             </Button>
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-medium text-text">Test Notification</h3>
+              <h3 className="font-medium text-text">{t('settings.testNotification')}</h3>
               <p className="text-sm text-textMuted">
-                Schedule a test notification for tomorrow
+                {t('settings.testDescription')}
               </p>
             </div>
             <Button
@@ -96,7 +98,7 @@ const SettingsPanel: React.FC = () => {
               size="sm"
               onClick={handleTestNotification}
             >
-              Test
+              {t('settings.test')}
             </Button>
           </div>
         </div>
@@ -104,29 +106,29 @@ const SettingsPanel: React.FC = () => {
 
       {/* App Settings */}
       <Card className="p-6">
-        <h2 className="text-lg font-semibold text-text mb-4">App Settings</h2>
+        <h2 className="text-lg font-semibold text-text mb-4">{t('settings.appSettings')}</h2>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-medium text-text">Dark Mode</h3>
+              <h3 className="font-medium text-text">{t('settings.darkMode')}</h3>
               <p className="text-sm text-textMuted">
-                Switch between light and dark themes
+                {t('settings.darkModeDescription')}
               </p>
             </div>
             <Button variant="outline" size="sm">
-              Toggle
+              {t('settings.toggle')}
             </Button>
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-medium text-text">Data Export</h3>
+              <h3 className="font-medium text-text">{t('settings.dataExport')}</h3>
               <p className="text-sm text-textMuted">
-                Export your data and memories
+                {t('settings.dataExportDescription')}
               </p>
             </div>
             <Button variant="outline" size="sm">
-              Export
+              {t('settings.export')}
             </Button>
           </div>
         </div>
@@ -134,10 +136,10 @@ const SettingsPanel: React.FC = () => {
 
       {/* About */}
       <Card className="p-6">
-        <h2 className="text-lg font-semibold text-text mb-4">About</h2>
+        <h2 className="text-lg font-semibold text-text mb-4">{t('settings.about')}</h2>
         <div className="space-y-2 text-sm text-textMuted">
-          <p>Version 1.0.0</p>
-          <p>Built with ❤️ for couples</p>
+          <p>{t('settings.version')}</p>
+          <p>{t('settings.builtForCouples')}</p>
         </div>
       </Card>
     </div>

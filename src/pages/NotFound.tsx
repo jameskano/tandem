@@ -2,10 +2,12 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { COLORS } from '../shared/colors';
 import logo1 from '../assets/main-logo/logo1.png';
+import { useI18n } from '../shared/i18n/useI18n';
 import Card from '../shared/ui/Card';
 import Button from '../shared/ui/Button';
 
 const NotFound: React.FC = () => {
+  const { t } = useI18n();
   const navigate = useNavigate();
 
   return (
@@ -18,22 +20,22 @@ const NotFound: React.FC = () => {
           <img src={logo1} alt="Tandem Logo" className="mx-auto mb-4 w-14" />
         </Link>
         <h1 className="text-2xl font-bold" style={{ color: COLORS.text }}>
-          Page not found
+          {t('notFound.title')}
         </h1>
         <p className="mt-1 text-sm" style={{ color: COLORS.muted }}>
-          The page you requested does not exist.
+          {t('notFound.subtitle')}
         </p>
       </div>
 
       <div className="flex flex-1 items-center justify-center px-4">
         <Card className="w-full max-w-md text-center">
-          <p className="mb-4">Try returning to the home page.</p>
+          <p className="mb-4">{t('notFound.body')}</p>
           <Button
             variant="primary"
             onClick={() => navigate('/')}
             className="mx-auto"
           >
-            Go Home
+            {t('notFound.goHome')}
           </Button>
         </Card>
       </div>

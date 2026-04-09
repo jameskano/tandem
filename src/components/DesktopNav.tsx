@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo1 from '../assets/main-logo/logo1.png';
+import { useI18n } from '../shared/i18n/useI18n';
 
 const DesktopNav: React.FC = () => {
   const location = useLocation();
+  const { t } = useI18n();
 
   return (
     <header className="sticky top-0 z-50 hidden border-b border-gray-200 bg-white md:block">
@@ -11,7 +13,9 @@ const DesktopNav: React.FC = () => {
         <div className="flex items-center justify-between">
           <Link to="/dashboard" className="flex items-center space-x-2">
             <img src={logo1} alt="Tandem Logo" className="w-8" />
-            <span className="text-xl font-bold text-text">Tandem</span>
+            <span className="text-xl font-bold text-text">
+              {t('common.appName')}
+            </span>
           </Link>
 
           <nav className="hidden items-center space-x-6 md:flex">
@@ -23,7 +27,7 @@ const DesktopNav: React.FC = () => {
                   : 'text-textMuted hover:text-text'
               }`}
             >
-              Dashboard
+              {t('nav.dashboard')}
             </Link>
             <Link
               to="/planner"
@@ -33,7 +37,7 @@ const DesktopNav: React.FC = () => {
                   : 'text-textMuted hover:text-text'
               }`}
             >
-              Planner
+              {t('nav.planner')}
             </Link>
             <Link
               to="/settings"
@@ -43,7 +47,7 @@ const DesktopNav: React.FC = () => {
                   : 'text-textMuted hover:text-text'
               }`}
             >
-              Settings
+              {t('nav.settings')}
             </Link>
           </nav>
         </div>

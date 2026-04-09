@@ -1,11 +1,13 @@
 import useResendEmail from '../hooks/useResendEmail';
 import { COLORS } from '../shared/colors';
+import { useI18n } from '../shared/i18n/useI18n';
 
 type ResendEmailProps = {
   email: string;
 };
 
 const ResendEmail = ({ email }: ResendEmailProps) => {
+  const { t } = useI18n();
   const { resendEmail, resendLoading, resendMessage, resendCooldown } =
     useResendEmail();
   return (
@@ -18,10 +20,10 @@ const ResendEmail = ({ email }: ResendEmailProps) => {
         style={{ color: COLORS.primary }}
       >
         {resendLoading
-          ? 'Resending...'
+          ? t('resendEmail.resending')
           : resendCooldown > 0
-            ? `Resend available in ${resendCooldown}s`
-            : 'Resend confirmation email'}
+            ? t('resendEmail.availableIn', { seconds: resendCooldown })
+            : t('resendEmail.resend')}
       </button>
       {resendMessage && (
         <p className="mt-2 text-xs" style={{ color: COLORS.muted }}>
