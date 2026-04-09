@@ -127,8 +127,7 @@ const es = {
     stepOne: 'Abre tu bandeja de entrada',
     stepTwo: 'Busca el correo de Tandem (revisa la carpeta de spam)',
     stepThree: 'Haz clic en el enlace para confirmar',
-    spamNotice:
-      'Si no ves el correo, revisa la carpeta de spam o promociones.',
+    spamNotice: 'Si no ves el correo, revisa la carpeta de spam o promociones.',
     goToMain: 'Ir al inicio',
   },
   discover: {
@@ -239,8 +238,7 @@ const es = {
     title: 'Bienvenido a Tandem',
     subtitle:
       'Una forma sencilla de descubrir, guardar y planificar tiempo de calidad juntos.',
-    itemOne:
-      'Recibe ideas que encajen con vuestro ánimo, tiempo y presupuesto',
+    itemOne: 'Recibe ideas que encajen con vuestro ánimo, tiempo y presupuesto',
     itemTwo: 'Guarda tus favoritas para mas tarde',
     itemThree: 'Planificad momentos juntos',
     submit: 'Empezar',
@@ -293,12 +291,21 @@ const es = {
     testDescription: 'Programa una notificación de prueba para mañana',
     test: 'Probar',
     appSettings: 'Ajustes de la app',
+    language: 'Idioma',
+    currencyPreference: 'Moneda',
+    languageEnglish: 'Ingles',
+    languageSpanish: 'Espanol',
+    currencyEuro: 'EUR',
+    currencyDollar: 'USD',
+    saving: 'Guardando...',
     darkMode: 'Modo oscuro',
     darkModeDescription: 'Cambia entre tema claro y oscuro',
     toggle: 'Cambiar',
     dataExport: 'Exportar datos',
-    dataExportDescription: 'Exporta tus datos y recuerdos',
+    dataExportDescription:
+      'Descarga tus actividades guardadas en un archivo JSON',
     export: 'Exportar',
+    exporting: 'Exportando...',
     about: 'Acerca de',
     version: 'Version 1.0.0',
     builtForCouples: 'Hecho con cariño para parejas',
@@ -306,8 +313,7 @@ const es = {
     reminderBody: 'No olvides vuestra actividad planificada.',
   },
   resendEmail: {
-    missingEmail:
-      'Introduce tu correo arriba para reenviar la confirmación.',
+    missingEmail: 'Introduce tu correo arriba para reenviar la confirmación.',
     success:
       'Correo de confirmación reenviado. Revisa tu bandeja de entrada y el spam.',
     error: 'No se pudo reenviar la confirmación. Inténtalo más tarde.',

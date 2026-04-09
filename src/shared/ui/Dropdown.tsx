@@ -8,6 +8,7 @@ type Props = {
   onChange?: (value: string | string[]) => void;
   multiple?: boolean;
   placeholder?: string;
+  disabled?: boolean;
   className?: string;
   menuClassName?: string;
 };
@@ -18,6 +19,7 @@ const Dropdown: React.FC<Props> = ({
   onChange,
   multiple = false,
   placeholder = 'Select',
+  disabled = false,
   className = '',
   menuClassName = '',
 }) => {
@@ -46,6 +48,7 @@ const Dropdown: React.FC<Props> = ({
       else current.push(opt.value);
       onChange?.(current);
     } else {
+      if (disabled) return;
       onChange?.(opt.value);
       setOpen(false);
     }
@@ -68,10 +71,16 @@ const Dropdown: React.FC<Props> = ({
     <div className={`relative inline-block ${className}`} ref={ref}>
       <button
         type="button"
-        className="flex w-48 items-center justify-between rounded-md border bg-white px-3 py-2 text-sm"
-        onClick={() => setOpen(s => !s)}
+        className={`flex w-48 items-center justify-between rounded-md border bg-white px-3 py-2 text-sm ${
+          disabled ? 'cursor-not-allowed opacity-60' : ''
+        }`}
+        onClick={() => {
+          if (disabled) return;
+          setOpen(s => !s);
+        }}
         aria-haspopup="listbox"
         aria-expanded={open}
+        disabled={disabled}
       >
         <span className="truncate">{selectedLabel()}</span>
         <svg
@@ -100,10 +109,11 @@ const Dropdown: React.FC<Props> = ({
               key={opt.value}
               role="option"
               aria-selected={isSelected(opt)}
+              aria-disabled={disabled}
               onClick={() => toggleOption(opt)}
               className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100 ${
                 isSelected(opt) ? 'font-semibold' : ''
-              }`}
+              } ${disabled ? 'pointer-events-none opacity-60' : ''}`}
             >
               {multiple && (
                 <span

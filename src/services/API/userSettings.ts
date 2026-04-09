@@ -1,4 +1,8 @@
-import type { Currency, UserSettings } from '../../shared/types/user';
+import type {
+  AppLocale,
+  Currency,
+  UserSettings,
+} from '../../shared/types/user';
 import { supabase } from '../supabase';
 
 export const userSettingsQueryKey = (userId?: string) =>
@@ -14,10 +18,20 @@ const detectDefaultCurrency = (): Currency => {
   return 'EUR';
 };
 
+export const detectDefaultLocale = (): AppLocale => {
+  const locale = navigator.language.toLowerCase();
+
+  if (locale.startsWith('es')) {
+    return 'es-ES';
+  }
+
+  return 'en-US';
+};
+
 export const getDefaultUserSettings = (userId: string): UserSettings => ({
   user_id: userId,
   currency: detectDefaultCurrency(),
-  locale: navigator.language || 'en-US',
+  locale: detectDefaultLocale(),
   country: null,
   city: null,
   onboarding_completed: false,

@@ -44,6 +44,28 @@ export const getSavedActivitiesPage = async ({
   };
 };
 
+export const getAllSavedActivities = async (coupleId: string) => {
+  if (!supabase) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  if (!coupleId) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('saved_activities')
+    .select('id, title, description, tags, couple_id, saved_by, created_at')
+    .eq('couple_id', coupleId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return (data as SavedActivity[] | null) ?? [];
+};
+
 export const deleteSavedActivity = async (activityId: string) => {
   if (!supabase) {
     throw new Error('Supabase is not configured.');

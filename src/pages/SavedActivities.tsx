@@ -186,18 +186,20 @@ const SavedActivities = () => {
       />
 
       <div className="mx-auto max-w-4xl space-y-5 px-4 py-6">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold text-text">
+        <div className="flex flex-col items-center justify-between gap-3">
+          <div className="block w-full">
+            <h1 className="mb-2 text-2xl font-bold text-text">
               {t('savedActivities.title')}
             </h1>
+          </div>
+          <div className="flex">
             <p className="text-textMuted text-sm">
               {t('savedActivities.subtitle')}
             </p>
+            <Chip variant="secondary" size="sm">
+              {t('savedActivities.savedCount', { count: totalCount })}
+            </Chip>
           </div>
-          <Chip variant="secondary" size="sm">
-            {t('savedActivities.savedCount', { count: totalCount })}
-          </Chip>
         </div>
 
         {error ? (
@@ -266,7 +268,9 @@ const SavedActivities = () => {
           </>
         ) : (
           <Card className="space-y-2">
-            <p className="font-medium text-text">{t('savedActivities.emptyTitle')}</p>
+            <p className="font-medium text-text">
+              {t('savedActivities.emptyTitle')}
+            </p>
             <p className="text-textMuted text-sm">
               {t('savedActivities.emptyDescription')}
             </p>

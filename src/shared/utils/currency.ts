@@ -1,7 +1,9 @@
-import { supabase } from '../../services/supabase';
 import { updateUserSettings } from '../../services/API/userSettings';
+import { detectDefaultLocale } from '../../services/API/userSettings';
+import { supabase } from '../../services/supabase';
+import type { Currency } from '../types/user';
 
-export const detectCurrency = () => {
+export const detectCurrency = (): Currency => {
   const locale = navigator.language;
 
   if (locale.startsWith('en-US')) return 'USD';
@@ -17,7 +19,7 @@ export const syncSettings = async () => {
     userId: user.id,
     patch: {
       currency: detectCurrency(),
-      locale: navigator.language,
+      locale: detectDefaultLocale(),
     },
   });
 };

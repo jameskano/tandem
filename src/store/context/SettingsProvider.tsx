@@ -2,22 +2,26 @@ import {
   createContext,
   Dispatch,
   SetStateAction,
+  useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
 } from 'react';
-import { Currency } from '../../shared/types/user';
+import { useQueryClient } from '@tanstack/react-query';
+import type { AppLocale, Currency, UserSettings } from '../../shared/types/user';
 import { useUserSettingsQuery } from '../../hooks/useUserSettingsQuery';
+import {
+  getDefaultUserSettings,
+  userSettingsQueryKey,
+} from '../../services/API/userSettings';
 import { useAuthContext } from './AuthProvider';
 
 type SettingsContextType = {
   currency: Currency;
-  locale: string;
+  locale: AppLocale;
   onboardingCompleted: boolean;
   isSettingsLoading: boolean;
   setCurrency: Dispatch<SetStateAction<Currency>>;
-  setLocale: Dispatch<SetStateAction<string>>;
+  setLocale: Dispatch<SetStateAction<AppLocale>>;
   setOnboardingCompleted: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -29,39 +33,110 @@ export const SettingsProvider = ({
   children: React.ReactNode;
 }) => {
   const { user } = useAuthContext();
+  const queryClient = useQueryClient();
   const { data: userSettings, isLoading, isFetching } = useUserSettingsQuery();
-  const [currency, setCurrency] = useState<Currency>('USD');
-  const [locale, setLocale] = useState('en-US');
-  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
+  const defaultSettings = user
+    ? getDefaultUserSettings(user.id)
+    : getDefaultUserSettings('anonymous');
 
-  useEffect(() => {
-    if (!user) {
-      setCurrency('USD');
-      setLocale('en-US');
-      setOnboardingCompleted(false);
-      return;
-    }
+  const settings = userSettings ?? defaultSettings;
 
-    if (!userSettings) {
-      return;
-    }
+  const setCurrency = useCallback<Dispatch<SetStateAction<Currency>>>(
+    value => {
+      if (!user) {
+        return;
+      }
 
-    setCurrency(userSettings.currency);
-    setLocale(userSettings.locale);
-    setOnboardingCompleted(userSettings.onboarding_completed);
-  }, [user, userSettings]);
+      queryClient.setQueryData(
+        userSettingsQueryKey(user.id),
+        (current?: UserSettings) => {
+        const previousSettings = current ?? getDefaultUserSettings(user.id);
+        const nextCurrency =
+          typeof value === 'function'
+            ? value(previousSettings.currency)
+            : value;
+
+        return {
+          ...previousSettings,
+          currency: nextCurrency,
+        };
+        }
+      );
+    },
+    [queryClient, user]
+  );
+
+  const setLocale = useCallback<Dispatch<SetStateAction<AppLocale>>>(
+    value => {
+      if (!user) {
+        return;
+      }
+
+      queryClient.setQueryData(
+        userSettingsQueryKey(user.id),
+        (current?: UserSettings) => {
+        const previousSettings = current ?? getDefaultUserSettings(user.id);
+        const nextLocale =
+          typeof value === 'function' ? value(previousSettings.locale) : value;
+
+        return {
+          ...previousSettings,
+          locale: nextLocale,
+        };
+        }
+      );
+    },
+    [queryClient, user]
+  );
+
+  const setOnboardingCompleted = useCallback<
+    Dispatch<SetStateAction<boolean>>
+  >(
+    value => {
+      if (!user) {
+        return;
+      }
+
+      queryClient.setQueryData(
+        userSettingsQueryKey(user.id),
+        (current?: UserSettings) => {
+        const previousSettings = current ?? getDefaultUserSettings(user.id);
+        const nextOnboardingCompleted =
+          typeof value === 'function'
+            ? value(previousSettings.onboarding_completed)
+            : value;
+
+        return {
+          ...previousSettings,
+          onboarding_completed: nextOnboardingCompleted,
+        };
+        }
+      );
+    },
+    [queryClient, user]
+  );
 
   const value = useMemo(
     () => ({
-      currency,
-      locale,
-      onboardingCompleted,
+      currency: settings.currency,
+      locale: settings.locale,
+      onboardingCompleted: settings.onboarding_completed,
       isSettingsLoading: Boolean(user) && (isLoading || isFetching),
       setCurrency,
       setLocale,
       setOnboardingCompleted,
     }),
-    [currency, isFetching, isLoading, locale, onboardingCompleted, user]
+    [
+      isFetching,
+      isLoading,
+      setCurrency,
+      setLocale,
+      setOnboardingCompleted,
+      settings.currency,
+      settings.locale,
+      settings.onboarding_completed,
+      user,
+    ]
   );
 
   return (
