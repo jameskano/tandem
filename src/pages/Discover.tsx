@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChevronDown } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import DiscoverResults from '../components/DiscoverResults';
@@ -31,12 +32,21 @@ import Dropdown from '../shared/ui/Dropdown';
 import Textarea from '../shared/ui/Textarea';
 import { useAuthContext } from '../store/context/AuthProvider';
 import { useSettingsContext } from '../store/context/SettingsProvider';
+import {
+  updateUserSettings,
+  userSettingsQueryKey,
+} from '../services/API/userSettings';
 
 const Discover: React.FC = () => {
   const { t } = useI18n();
+  const queryClient = useQueryClient();
   const location = useLocation();
   const { user } = useAuthContext();
-  const { onboardingCompleted, setOnboardingCompleted } = useSettingsContext();
+  const {
+    onboardingCompleted,
+    isSettingsLoading,
+    setOnboardingCompleted,
+  } = useSettingsContext();
   const initialPrompt = location.state?.prompt;
   const [prompt, setPrompt] = useState(initialPrompt || '');
   const [expanded, setExpanded] = useState(false);
@@ -50,7 +60,6 @@ const Discover: React.FC = () => {
   >([]);
   const [generationRound, setGenerationRound] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isCompletingOnboarding, setIsCompletingOnboarding] = useState(false);
   const [selectedSuggestionIds, setSelectedSuggestionIds] = useState<string[]>(
     []
   );
@@ -170,26 +179,35 @@ const Discover: React.FC = () => {
   const canGenerate = prompt.trim().length > 0 || hasFilters;
   const hasGeneratedResults = currentBatch.length > 0;
 
+  const completeOnboardingMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) {
+        throw new Error('User is required to complete onboarding.');
+      }
+
+      return updateUserSettings({
+        userId: user.id,
+        patch: { onboarding_completed: true },
+      });
+    },
+    onSuccess: updatedSettings => {
+      setOnboardingCompleted(updatedSettings.onboarding_completed);
+      queryClient.setQueryData(
+        userSettingsQueryKey(user?.id),
+        updatedSettings
+      );
+    },
+  });
+
   const handleCompleteOnboarding = async () => {
-    if (isCompletingOnboarding) {
+    if (completeOnboardingMutation.isPending) {
       return;
     }
 
-    setIsCompletingOnboarding(true);
-
     try {
-      if (user && supabase) {
-        await supabase
-          .from('user_settings')
-          .update({ onboarding_completed: true })
-          .eq('user_id', user.id);
-      }
-
-      setOnboardingCompleted(true);
+      await completeOnboardingMutation.mutateAsync();
     } catch (error) {
       console.error('Unable to persist onboarding completion.', error);
-    } finally {
-      setIsCompletingOnboarding(false);
     }
   };
 
@@ -208,8 +226,8 @@ const Discover: React.FC = () => {
   return (
     <div className="min-h-screen w-full bg-bg">
       <OnboardingModal
-        isOpen={Boolean(user) && !onboardingCompleted}
-        isSubmitting={isCompletingOnboarding}
+        isOpen={Boolean(user) && !isSettingsLoading && !onboardingCompleted}
+        isSubmitting={completeOnboardingMutation.isPending}
         onComplete={() => void handleCompleteOnboarding()}
       />
 
