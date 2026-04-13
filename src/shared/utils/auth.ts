@@ -1,5 +1,8 @@
 import { supabase } from '../../services/supabase';
 
+const buildAuthRedirectUrl = (path: string) =>
+  `${window.location.origin}${path.startsWith('/') ? path : `/${path}`}`;
+
 export async function signOut() {
   const { error } = await supabase!.auth.signOut();
   if (error) {
@@ -39,8 +42,21 @@ export const deleteUserAccount = async (userId: string) => {
 
 export const resetPassword = async (email: string) => {
   const { data, error } = await supabase!.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/reset-password`,
+    redirectTo: buildAuthRedirectUrl('/reset-password'),
   });
+  if (error) throw error;
+  return data;
+};
+
+export const updateEmail = async (newEmail: string) => {
+  const { data, error } = await supabase!.auth.updateUser(
+    {
+      email: newEmail,
+    },
+    {
+      emailRedirectTo: buildAuthRedirectUrl('/settings'),
+    }
+  );
   if (error) throw error;
   return data;
 };
