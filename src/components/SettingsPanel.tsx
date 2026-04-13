@@ -9,7 +9,7 @@ import { useTheme } from '../shared/providers/ThemeProvider';
 import { getAllSavedActivities } from '../services/API/savedActivities';
 import { generateInviteCode } from '../shared/utils/format';
 import { downloadJsonFile } from '../shared/utils/export';
-import { updateEmail, updatePassword } from '../shared/utils/auth';
+import { signOut, updateEmail, updatePassword } from '../shared/utils/auth';
 import type { AppLocale, Currency } from '../shared/types/user';
 import { useAuthContext } from '../store/context/AuthProvider';
 import { useSettingsContext } from '../store/context/SettingsProvider';
@@ -22,7 +22,7 @@ const SettingsPanel: React.FC = () => {
   const { t } = useI18n();
   const { theme, setTheme } = useTheme();
   const queryClient = useQueryClient();
-  const { user, refresh } = useAuthContext();
+  const { user, refresh, deleteUser } = useAuthContext();
   const { currency, locale, isSettingsLoading, setCurrency, setLocale } =
     useSettingsContext();
   const [inviteCode] = useState(generateInviteCode());
@@ -38,6 +38,7 @@ const SettingsPanel: React.FC = () => {
   }>({});
   const [emailFeedback, setEmailFeedback] = useState<string>();
   const [passwordFeedback, setPasswordFeedback] = useState<string>();
+  const [accountActionError, setAccountActionError] = useState<string>();
 
   const languageOptions = useMemo(
     () => [
@@ -120,6 +121,28 @@ const SettingsPanel: React.FC = () => {
         confirmPassword: '',
       });
       setPasswordFeedback(t('settings.passwordUpdateSuccess'));
+    },
+  });
+
+  const signOutMutation = useMutation({
+    mutationFn: signOut,
+    onMutate: () => {
+      setAccountActionError(undefined);
+    },
+    onError: (error: any) => {
+      setAccountActionError(error?.message || t('settings.logoutFailed'));
+    },
+  });
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: deleteUser,
+    onMutate: () => {
+      setAccountActionError(undefined);
+    },
+    onError: (error: any) => {
+      setAccountActionError(
+        error?.message || t('settings.deleteAccountFailed')
+      );
     },
   });
 
@@ -448,6 +471,53 @@ const SettingsPanel: React.FC = () => {
                 : t('settings.changePassword')}
             </Button>
           </form>
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <h2 className="mb-4 text-lg font-semibold text-text">
+          {t('settings.accountActions')}
+        </h2>
+        <div className="space-y-4">
+          {accountActionError ? (
+            <p className="rounded-lg border border-red-500/30 bg-red-500/5 px-3 py-2 text-sm text-red-600">
+              {accountActionError}
+            </p>
+          ) : null}
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-auto"
+              disabled={
+                !user ||
+                signOutMutation.isPending ||
+                deleteAccountMutation.isPending
+              }
+              onClick={() => void signOutMutation.mutateAsync()}
+            >
+              {signOutMutation.isPending
+                ? t('settings.loggingOut')
+                : t('settings.logout')}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full border-red-500 text-red-600 hover:bg-red-500/10 focus:ring-red-500 sm:w-auto"
+              disabled={
+                !user ||
+                signOutMutation.isPending ||
+                deleteAccountMutation.isPending
+              }
+              onClick={() => void deleteAccountMutation.mutateAsync()}
+            >
+              {deleteAccountMutation.isPending
+                ? t('settings.deletingAccount')
+                : t('settings.deleteAccount')}
+            </Button>
+          </div>
         </div>
       </Card>
 
