@@ -5,8 +5,10 @@
   --color-highlight: 255 214 165; /* Sky peach */
   --color-secondary: 197 185 232; /* Mist lavender */
   --color-bg: 255 248 247; /* Cream white */
+  --color-surface: 255 255 255;
   --color-text: 46 46 46; /* Deep gray */
   --color-muted: 107 107 107; /* Warm gray */
+  --color-border: 229 231 235;
 
   /* Radii */
   --radius-lg: 1.25rem; /* 20px */
@@ -48,6 +50,8 @@
 /* Optional dark theme (kept minimal) */
 .dark {
   --color-bg: 22 22 22;
+  --color-surface: 32 32 36;
   --color-text: 245 245 245;
   --color-muted: 179 179 179;
+  --color-border: 64 64 72;
 }

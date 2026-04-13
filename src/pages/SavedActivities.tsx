@@ -192,7 +192,7 @@ const SavedActivities = () => {
               {t('savedActivities.title')}
             </h1>
           </div>
-          <div className="flex">
+          <div className="flex gap-4">
             <p className="text-textMuted text-sm">
               {t('savedActivities.subtitle')}
             </p>

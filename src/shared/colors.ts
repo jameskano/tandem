@@ -3,7 +3,7 @@ export const COLORS = {
   accent: '#FF9671',
   highlight: '#FFD6A5',
   secondary: '#C5B9E8',
-  bg: '#FFF8F7',
-  text: '#2E2E2E',
-  muted: '#6B6B6B',
+  bg: 'rgb(var(--color-bg) / 1)',
+  text: 'rgb(var(--color-text) / 1)',
+  muted: 'rgb(var(--color-muted) / 1)',
 } as const

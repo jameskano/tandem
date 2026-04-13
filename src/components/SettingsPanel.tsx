@@ -4,6 +4,7 @@ import Card from '../shared/ui/Card';
 import Button from '../shared/ui/Button';
 import Dropdown from '../shared/ui/Dropdown';
 import { useI18n } from '../shared/i18n/useI18n';
+import { useTheme } from '../shared/providers/ThemeProvider';
 import { getAllSavedActivities } from '../services/API/savedActivities';
 import { generateInviteCode } from '../shared/utils/format';
 import { downloadJsonFile } from '../shared/utils/export';
@@ -17,6 +18,7 @@ import {
 
 const SettingsPanel: React.FC = () => {
   const { t } = useI18n();
+  const { theme, setTheme } = useTheme();
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
   const { currency, locale, isSettingsLoading, setCurrency, setLocale } =
@@ -37,6 +39,14 @@ const SettingsPanel: React.FC = () => {
       { value: 'USD' as Currency, label: t('settings.currencyDollar') },
     ],
     [t]
+  );
+
+  const themeOptions = useMemo(
+    () => [
+      { value: 'light', label: t('settings.themeLight') },
+      { value: 'dark', label: t('settings.themeDark') },
+    ],
+    []
   );
 
   const updateSettingsMutation = useMutation({
@@ -128,7 +138,7 @@ const SettingsPanel: React.FC = () => {
                 type="text"
                 value={inviteCode}
                 readOnly
-                className="flex-1 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-text"
+                className="flex-1 rounded-lg border border-appBorder bg-surface px-3 py-2 text-text"
               />
               <Button size="sm" variant="outline">
                 {t('common.copy')}
@@ -183,13 +193,14 @@ const SettingsPanel: React.FC = () => {
 
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-medium text-text">
-                {t('settings.darkMode')}
-              </h3>
+              <h3 className="font-medium text-text">{t('settings.theme')}</h3>
             </div>
-            <Button variant="outline" size="sm">
-              {t('settings.toggle')}
-            </Button>
+            <Dropdown
+              options={themeOptions}
+              value={theme}
+              onChange={value => setTheme(value as 'light' | 'dark')}
+              className="min-w-[160px]"
+            />
           </div>
 
           <div className="flex items-center justify-between">

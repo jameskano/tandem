@@ -9,7 +9,7 @@ const TopNav = () => {
   const { t } = useI18n()
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-gray-200 bg-white md:hidden">
+    <header className="fixed left-0 right-0 top-0 z-50 border-b border-appBorder bg-surface md:hidden">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-2">
         <Link to="/dashboard" className="flex items-center space-x-2">
           <img src={logo1} alt="Tandem Logo" className="w-8" />

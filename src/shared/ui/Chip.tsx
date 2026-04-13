@@ -15,7 +15,7 @@ const Chip: React.FC<ChipProps> = ({
   className,
 }) => {
   const baseClasses =
-    'inline-flex items-center rounded-full font-medium outline-none';
+    'inline-flex items-center rounded-full font-medium outline-none inline-block whitespace-nowrap';
 
   const variantClasses = {
     default: 'bg-gray-100 text-gray-700',

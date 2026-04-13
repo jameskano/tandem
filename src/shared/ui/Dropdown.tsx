@@ -71,7 +71,7 @@ const Dropdown: React.FC<Props> = ({
     <div className={`relative inline-block ${className}`} ref={ref}>
       <button
         type="button"
-        className={`flex w-48 items-center justify-between rounded-md border bg-white px-3 py-2 text-sm ${
+        className={`flex w-48 items-center justify-between rounded-md border border-appBorder bg-surface px-3 py-2 text-sm text-text ${
           disabled ? 'cursor-not-allowed opacity-60' : ''
         }`}
         onClick={() => {
@@ -102,7 +102,7 @@ const Dropdown: React.FC<Props> = ({
         <ul
           role="listbox"
           tabIndex={-1}
-          className={`absolute z-20 mt-2 max-h-60 w-48 overflow-auto rounded-md border bg-white py-1 shadow-sm ${menuClassName}`}
+          className={`absolute z-20 mt-2 max-h-60 w-48 overflow-auto rounded-md border border-appBorder bg-surface py-1 shadow-sm ${menuClassName}`}
         >
           {options.map(opt => (
             <li
@@ -111,7 +111,7 @@ const Dropdown: React.FC<Props> = ({
               aria-selected={isSelected(opt)}
               aria-disabled={disabled}
               onClick={() => toggleOption(opt)}
-              className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100 ${
+              className={`flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-text hover:bg-bg ${
                 isSelected(opt) ? 'font-semibold' : ''
               } ${disabled ? 'pointer-events-none opacity-60' : ''}`}
             >
@@ -120,7 +120,7 @@ const Dropdown: React.FC<Props> = ({
                   className={`flex h-5 w-5 items-center justify-center rounded border ${
                     isSelected(opt)
                       ? 'border-primary bg-primary text-white'
-                      : 'border-gray-300 bg-white text-transparent'
+                      : 'border-appBorder bg-surface text-transparent'
                   }`}
                   aria-hidden="true"
                 >
