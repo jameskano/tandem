@@ -275,10 +275,10 @@ const en = {
   settings: {
     title: 'Settings',
     subtitle: 'Manage your preferences',
-    partnerLink: 'Partner Link',
-    inviteCode: 'Invite Code',
-    inviteDescription:
-      'Share this code with your partner to connect your accounts',
+    // partnerLink: 'Partner Link',
+    // inviteCode: 'Invite Code',
+    // inviteDescription:
+    //   'Share this code with your partner to connect your accounts',
     notifications: 'Notifications',
     pushNotifications: 'Push Notifications',
     pushDescription: 'Get reminders about your planned activities',

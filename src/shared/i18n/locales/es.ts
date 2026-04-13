@@ -278,10 +278,10 @@ const es = {
   settings: {
     title: 'Ajustes',
     subtitle: 'Gestiona tus preferencias',
-    partnerLink: 'Vincular pareja',
-    inviteCode: 'Código de invitación',
-    inviteDescription:
-      'Comparte este código con tu pareja para conectar vuestras cuentas',
+    // partnerLink: 'Vincular pareja',
+    // inviteCode: 'Código de invitación',
+    // inviteDescription:
+    //   'Comparte este código con tu pareja para conectar vuestras cuentas',
     notifications: 'Notificaciones',
     pushNotifications: 'Notificaciones push',
     pushDescription: 'Recibe recordatorios sobre vuestras actividades',

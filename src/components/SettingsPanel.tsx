@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Card from '../shared/ui/Card';
 import Button from '../shared/ui/Button';
@@ -7,7 +7,6 @@ import Input from '../shared/ui/Input';
 import { useI18n } from '../shared/i18n/useI18n';
 import { useTheme } from '../shared/providers/ThemeProvider';
 import { getAllSavedActivities } from '../services/API/savedActivities';
-import { generateInviteCode } from '../shared/utils/format';
 import { downloadJsonFile } from '../shared/utils/export';
 import { signOut, updateEmail, updatePassword } from '../shared/utils/auth';
 import type { AppLocale, Currency } from '../shared/types/user';
@@ -25,7 +24,6 @@ const SettingsPanel: React.FC = () => {
   const { user, refresh, deleteUser } = useAuthContext();
   const { currency, locale, isSettingsLoading, setCurrency, setLocale } =
     useSettingsContext();
-  const [inviteCode] = useState(generateInviteCode());
   const [email, setEmail] = useState('');
   const [passwordForm, setPasswordForm] = useState({
     password: '',
@@ -252,34 +250,6 @@ const SettingsPanel: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Partner Link */}
-      <Card className="p-6">
-        <h2 className="mb-4 text-lg font-semibold text-text">
-          {t('settings.partnerLink')}
-        </h2>
-        <div className="space-y-4">
-          <div>
-            <label className="mb-2 block text-sm font-medium text-text">
-              {t('settings.inviteCode')}
-            </label>
-            <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                value={inviteCode}
-                readOnly
-                className="flex-1 rounded-lg border border-appBorder bg-surface px-3 py-2 text-text"
-              />
-              <Button size="sm" variant="outline">
-                {t('common.copy')}
-              </Button>
-            </div>
-            <p className="text-textMuted mt-2 text-sm">
-              {t('settings.inviteDescription')}
-            </p>
-          </div>
-        </div>
-      </Card>
-
       {/* App Settings */}
       <Card className="p-6">
         <h2 className="mb-4 text-lg font-semibold text-text">
