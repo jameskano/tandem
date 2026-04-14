@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '../hooks/useToast';
 import { COLORS } from '../shared/colors';
 import logo1 from '../assets/main-logo/logo1.png';
 import { useI18n } from '../shared/i18n/useI18n';
@@ -12,6 +13,7 @@ import ResendEmail from '../components/ResendEmail';
 
 const Login: React.FC = () => {
   const { t } = useI18n();
+  const toast = useToast();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -65,8 +67,9 @@ const Login: React.FC = () => {
     setIsLoading(true);
     try {
       await signInWithGoogle();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Google login error:', error);
+      toast.error(error?.message || t('auth.googleAuthFailed'));
     } finally {
       setIsLoading(false);
     }

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Card from '../shared/ui/Card';
 import Button from '../shared/ui/Button';
 import Dropdown from '../shared/ui/Dropdown';
+import { useToast } from '../hooks/useToast';
 import Input from '../shared/ui/Input';
 import { useI18n } from '../shared/i18n/useI18n';
 import { useTheme } from '../shared/providers/ThemeProvider';
@@ -19,6 +20,7 @@ import {
 
 const SettingsPanel: React.FC = () => {
   const { t } = useI18n();
+  const toast = useToast();
   const { theme, setTheme } = useTheme();
   const queryClient = useQueryClient();
   const { user, refresh, deleteUser } = useAuthContext();
@@ -34,9 +36,6 @@ const SettingsPanel: React.FC = () => {
     password?: string;
     confirmPassword?: string;
   }>({});
-  const [emailFeedback, setEmailFeedback] = useState<string>();
-  const [passwordFeedback, setPasswordFeedback] = useState<string>();
-  const [accountActionError, setAccountActionError] = useState<string>();
 
   const languageOptions = useMemo(
     () => [
@@ -106,7 +105,8 @@ const SettingsPanel: React.FC = () => {
     mutationFn: updateEmail,
     onSuccess: async (_data, nextEmail) => {
       await refresh();
-      setEmailFeedback(t('settings.emailUpdateSuccess', { email: nextEmail }));
+      setEmail('');
+      toast.success(t('settings.emailUpdateSuccess', { email: nextEmail }));
     },
   });
 
@@ -118,29 +118,27 @@ const SettingsPanel: React.FC = () => {
         password: '',
         confirmPassword: '',
       });
-      setPasswordFeedback(t('settings.passwordUpdateSuccess'));
+      toast.success(t('settings.passwordUpdateSuccess'));
     },
   });
 
   const signOutMutation = useMutation({
     mutationFn: signOut,
-    onMutate: () => {
-      setAccountActionError(undefined);
+    onSuccess: () => {
+      toast.success(t('settings.logoutSuccess'));
     },
     onError: (error: any) => {
-      setAccountActionError(error?.message || t('settings.logoutFailed'));
+      toast.error(error?.message || t('settings.logoutFailed'));
     },
   });
 
   const deleteAccountMutation = useMutation({
     mutationFn: deleteUser,
-    onMutate: () => {
-      setAccountActionError(undefined);
+    onSuccess: () => {
+      toast.success(t('settings.deleteAccountSuccess'));
     },
     onError: (error: any) => {
-      setAccountActionError(
-        error?.message || t('settings.deleteAccountFailed')
-      );
+      toast.error(error?.message || t('settings.deleteAccountFailed'));
     },
   });
 
@@ -153,6 +151,7 @@ const SettingsPanel: React.FC = () => {
     } catch (error) {
       console.error('Error updating language preference:', error);
       setLocale(previousLocale);
+      toast.error(t('settings.preferenceUpdateFailed'));
     }
   };
 
@@ -165,14 +164,17 @@ const SettingsPanel: React.FC = () => {
     } catch (error) {
       console.error('Error updating currency preference:', error);
       setCurrency(previousCurrency);
+      toast.error(t('settings.preferenceUpdateFailed'));
     }
   };
 
   const handleExportSavedActivities = async () => {
     try {
       await exportSavedActivitiesMutation.mutateAsync();
+      toast.success(t('settings.exportSuccess'));
     } catch (error) {
       console.error('Error exporting saved activities:', error);
+      toast.error(t('settings.exportFailed'));
     }
   };
 
@@ -184,7 +186,6 @@ const SettingsPanel: React.FC = () => {
     const pendingEmail = user?.new_email?.trim().toLowerCase();
 
     setEmailError(undefined);
-    setEmailFeedback(undefined);
 
     if (!normalizedEmail) {
       setEmailError(t('auth.emailRequired'));
@@ -214,8 +215,6 @@ const SettingsPanel: React.FC = () => {
     event.preventDefault();
 
     const nextErrors: typeof passwordErrors = {};
-
-    setPasswordFeedback(undefined);
 
     if (!passwordForm.password) {
       nextErrors.password = t('auth.passwordRequired');
@@ -346,19 +345,12 @@ const SettingsPanel: React.FC = () => {
               onChange={event => {
                 setEmail(event.target.value);
                 setEmailError(undefined);
-                setEmailFeedback(undefined);
               }}
               error={emailError}
               disabled={!user || updateEmailMutation.isPending}
               autoComplete="email"
               placeholder={t('settings.emailPlaceholder')}
             />
-
-            {emailFeedback ? (
-              <p className="rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-sm text-text">
-                {emailFeedback}
-              </p>
-            ) : null}
 
             <Button
               type="submit"
@@ -396,7 +388,6 @@ const SettingsPanel: React.FC = () => {
                   ...prev,
                   password: undefined,
                 }));
-                setPasswordFeedback(undefined);
               }}
               error={passwordErrors.password}
               disabled={!user || updatePasswordMutation.isPending}
@@ -417,19 +408,12 @@ const SettingsPanel: React.FC = () => {
                   ...prev,
                   confirmPassword: undefined,
                 }));
-                setPasswordFeedback(undefined);
               }}
               error={passwordErrors.confirmPassword}
               disabled={!user || updatePasswordMutation.isPending}
               autoComplete="new-password"
               placeholder={t('resetPassword.passwordPlaceholder')}
             />
-
-            {passwordFeedback ? (
-              <p className="rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-sm text-text">
-                {passwordFeedback}
-              </p>
-            ) : null}
 
             <Button
               type="submit"
@@ -449,12 +433,6 @@ const SettingsPanel: React.FC = () => {
           {t('settings.accountActions')}
         </h2>
         <div className="space-y-4">
-          {accountActionError ? (
-            <p className="rounded-lg border border-red-500/30 bg-red-500/5 px-3 py-2 text-sm text-red-600">
-              {accountActionError}
-            </p>
-          ) : null}
-
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button
               type="button"

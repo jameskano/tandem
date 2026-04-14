@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useToast } from '../hooks/useToast';
 import logo1 from '../assets/main-logo/logo1.png';
 import { COLORS } from '../shared/colors';
 import { useI18n } from '../shared/i18n/useI18n';
@@ -12,6 +13,7 @@ import ConfirmEmail from './ConfirmEmail';
 
 const Register: React.FC = () => {
   const { t } = useI18n();
+  const toast = useToast();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -70,8 +72,9 @@ const Register: React.FC = () => {
 
       setRegisteredEmail(formData.email);
       setIsRegistered(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error);
+      toast.error(error?.message || t('auth.registrationFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -81,8 +84,9 @@ const Register: React.FC = () => {
     setIsLoading(true);
     try {
       await signInWithGoogle();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Google registration error:', error);
+      toast.error(error?.message || t('auth.googleAuthFailed'));
     } finally {
       setIsLoading(false);
     }

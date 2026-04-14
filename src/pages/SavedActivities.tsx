@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ConfirmModal from '../components/ConfirmModal';
 import EditSavedActivityModal from '../components/EditSavedActivityModal';
 import SavedActivityCard from '../components/SavedActivityCard';
+import { useToast } from '../hooks/useToast';
 import {
   deleteSavedActivity,
   getSavedActivitiesPage,
@@ -17,9 +18,11 @@ import { SavedActivity } from '../shared/types/saved-activities';
 import { seedActivities } from '../shared/seed';
 
 const PAGE_SIZE = 10;
+const SAVED_ACTIVITIES_TOAST_DURATION = 2000;
 
 const SavedActivities = () => {
   const { t } = useI18n();
+  const toast = useToast();
   const { user } = useAuthContext();
   const [activities, setActivities] = useState<SavedActivity[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -114,6 +117,9 @@ const SavedActivities = () => {
 
     try {
       await deleteSavedActivity(activityToDelete.id);
+      toast.success(t('savedActivities.removeSuccess'), {
+        duration: SAVED_ACTIVITIES_TOAST_DURATION,
+      });
       setActivityToDelete(null);
 
       if (activities.length === 1 && currentPage > 1) {
@@ -130,7 +136,9 @@ const SavedActivities = () => {
       await loadSavedActivities(currentPage, user.id);
     } catch (deleteError) {
       console.error('Unable to delete saved activity.', deleteError);
-      setError(t('savedActivities.removeError'));
+      toast.error(t('savedActivities.removeError'), {
+        duration: SAVED_ACTIVITIES_TOAST_DURATION,
+      });
     } finally {
       setIsDeleting(false);
     }
@@ -157,9 +165,14 @@ const SavedActivities = () => {
         )
       );
       setActivityToEdit(null);
+      toast.success(t('savedActivities.updateSuccess'), {
+        duration: SAVED_ACTIVITIES_TOAST_DURATION,
+      });
     } catch (editError) {
       console.error('Unable to update saved activity.', editError);
-      setError(t('savedActivities.updateError'));
+      toast.error(t('savedActivities.updateError'), {
+        duration: SAVED_ACTIVITIES_TOAST_DURATION,
+      });
     } finally {
       setIsEditing(false);
     }

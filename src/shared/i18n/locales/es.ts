@@ -83,6 +83,9 @@ const es = {
     confirmPasswordMissing: 'Debes confirmar la contraseña',
     passwordsDoNotMatch: 'Las contraseñas no coinciden',
     loginFailed: 'No se pudo iniciar sesión. Inténtalo de nuevo.',
+    registrationFailed: 'No se pudo completar el registro. Inténtalo de nuevo.',
+    googleAuthFailed:
+      'No se pudo iniciar sesión con Google. Inténtalo de nuevo.',
     resetEmailFailed: 'No se pudo enviar el correo de restablecimiento',
     updatePasswordFailed: 'No se pudo actualizar la contraseña',
     passwordUpdated: 'Contraseña actualizada correctamente',
@@ -255,7 +258,9 @@ const es = {
     emptyDescription: 'Guarda ideas desde Descubrir y aparecerán aquí.',
     loadError: 'No se han podido cargar las actividades guardadas ahora mismo.',
     removeError: 'No se pudo eliminar la actividad. Inténtalo de nuevo.',
+    removeSuccess: 'Actividad eliminada correctamente.',
     updateError: 'No se pudo actualizar la actividad. Inténtalo de nuevo.',
+    updateSuccess: 'Actividad actualizada correctamente.',
     untitled: 'Actividad sin título',
     noDescription: 'No hay descripcion disponible.',
     editAria: 'Editar {{title}}',
@@ -309,6 +314,9 @@ const es = {
       'Descarga tus actividades guardadas en un archivo JSON',
     export: 'Exportar',
     exporting: 'Exportando...',
+    exportSuccess: 'Actividades guardadas exportadas correctamente.',
+    exportFailed:
+      'No se pudieron exportar las actividades guardadas. Inténtalo de nuevo.',
     accountSecurity: 'Seguridad de la cuenta',
     emailAddress: 'Correo electrónico',
     emailChangeDescription: 'Cambia el correo con el que inicias sesión.',
@@ -334,10 +342,14 @@ const es = {
     accountActions: 'Acciones de la cuenta',
     logout: 'Cerrar sesión',
     loggingOut: 'Cerrando sesión...',
+    logoutSuccess: 'Sesión cerrada correctamente.',
     logoutFailed: 'No se pudo cerrar sesión. Inténtalo de nuevo.',
     deleteAccount: 'Eliminar cuenta',
     deletingAccount: 'Eliminando cuenta...',
+    deleteAccountSuccess: 'Cuenta eliminada correctamente.',
     deleteAccountFailed: 'No se pudo eliminar la cuenta. Inténtalo de nuevo.',
+    preferenceUpdateFailed:
+      'No se pudo guardar la preferencia. Inténtalo de nuevo.',
     about: 'Acerca de',
     version: 'Versión 1.0.0',
     builtForCouples: 'Hecho con cariño para parejas',
@@ -369,3 +381,6 @@ const es = {
 } as const;
 
 export default es;
+
+
+
