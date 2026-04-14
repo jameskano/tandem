@@ -8,6 +8,7 @@ import {
 import ConfirmModal from '../components/ConfirmModal';
 import EditSavedActivityModal from '../components/EditSavedActivityModal';
 import SavedActivityCard from '../components/SavedActivityCard';
+import SavedActivitiesPagination from '../components/SavedActivitiesPagination';
 import { useToast } from '../hooks/useToast';
 import {
   deleteSavedActivity,
@@ -17,8 +18,6 @@ import {
   updateSavedActivity,
 } from '../services/API/savedActivities';
 import { useI18n } from '../shared/i18n/useI18n';
-import { ChevronLeft, ChevronRight } from '../shared/icons';
-import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
 import Chip from '../shared/ui/Chip';
 import { useAuthContext } from '../store/context/AuthProvider';
@@ -56,7 +55,9 @@ const SavedActivities = () => {
   const activities = savedActivitiesQuery.data?.activities ?? [];
   const totalCount = savedActivitiesQuery.data?.totalCount ?? 0;
   const isLoading = savedActivitiesQuery.isLoading;
-  const error = savedActivitiesQuery.isError ? t('savedActivities.loadError') : null;
+  const error = savedActivitiesQuery.isError
+    ? t('savedActivities.loadError')
+    : null;
 
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
@@ -225,43 +226,13 @@ const SavedActivities = () => {
               ))}
             </div>
 
-            <div className="flex flex-col gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-md sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-textMuted text-sm">
-                {t('savedActivities.page', {
-                  current: currentPage,
-                  total: totalPages,
-                })}
-              </p>
-
-              <div className="flex items-center gap-2 self-end sm:self-auto">
-                <Button
-                  type="button"
-                  variant="outlineSoft"
-                  size="sm"
-                  disabled={
-                    currentPage === 1 || isLoading || savedActivitiesQuery.isFetching
-                  }
-                  onClick={() => setCurrentPage(previous => previous - 1)}
-                >
-                  <ChevronLeft size={16} aria-hidden="true" />
-                  <span className="ml-1">{t('common.previous')}</span>
-                </Button>
-                <Button
-                  type="button"
-                  variant="outlineSoft"
-                  size="sm"
-                  disabled={
-                    currentPage >= totalPages ||
-                    isLoading ||
-                    savedActivitiesQuery.isFetching
-                  }
-                  onClick={() => setCurrentPage(previous => previous + 1)}
-                >
-                  <span className="mr-1">{t('common.next')}</span>
-                  <ChevronRight size={16} aria-hidden="true" />
-                </Button>
-              </div>
-            </div>
+            <SavedActivitiesPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              disabled={isLoading || savedActivitiesQuery.isFetching}
+              onPrevious={() => setCurrentPage(previous => previous - 1)}
+              onNext={() => setCurrentPage(previous => previous + 1)}
+            />
           </>
         ) : (
           <Card className="space-y-2">
