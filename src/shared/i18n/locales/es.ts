@@ -158,10 +158,10 @@ const es = {
       'Genera una primera tanda para ver aquí 10 sugerencias.',
     generationFailed: 'La generación de ideas ha fallado.',
     labelVariants: {
-      one: 'Encuentra y planifica vuestra proxima actividad',
-      two: 'Cuentame que os apetece',
-      three: 'Que os gustaría descubrir o planificar?',
-      four: 'Buscais algo divertido para hacer juntos?',
+      one: 'Encuentra y planifica vuestra próxima actividad',
+      two: 'Cuéntame qué os apetece',
+      three: '¿Qué os gustaría descubrir o planificar?',
+      four: '¿Buscáis algo divertido para hacer juntos?',
       five: 'Vamos a planear algo increible',
     },
     placeholderVariants: {
@@ -381,6 +381,3 @@ const es = {
 } as const;
 
 export default es;
-
-
-

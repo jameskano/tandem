@@ -452,7 +452,7 @@ const SettingsPanel: React.FC = () => {
 
             <Button
               type="button"
-              variant="outline"
+              variant="primaryOutline"
               className="w-full border-red-500 text-red-600 hover:bg-red-500/10 focus:ring-red-500 sm:w-auto"
               disabled={
                 !user ||
