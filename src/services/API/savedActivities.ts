@@ -6,6 +6,16 @@ import {
 } from '../../shared/types/saved-activities';
 import { supabase } from '../supabase';
 
+export const savedActivitiesQueryKey = (coupleId?: string) =>
+  ['saved-activities', coupleId] as const;
+
+export const savedActivitiesPageQueryKey = ({
+  coupleId,
+  page,
+  pageSize = 10,
+}: GetSavedActivitiesPageParams) =>
+  [...savedActivitiesQueryKey(coupleId), page, pageSize] as const;
+
 export const getSavedActivitiesPage = async ({
   coupleId,
   page,
