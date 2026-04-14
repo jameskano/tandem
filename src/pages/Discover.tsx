@@ -259,9 +259,9 @@ const Discover: React.FC = () => {
             </Button>
           </div>
 
-          <details className="rounded-lg border border-gray-200 bg-white/60 p-4">
+          <details className="rounded-xl border border-appBorder bg-bg/60 p-4 shadow-sm backdrop-blur-sm transition-colors open:bg-surface/80 dark:bg-surface/40 dark:open:bg-surface/70">
             <summary
-              className="flex cursor-pointer list-none flex-row items-center justify-between text-sm font-semibold text-text"
+              className="flex cursor-pointer list-none flex-row items-center justify-between rounded-lg text-sm font-semibold text-text transition-colors hover:text-primary"
               onClick={expandHadler}
             >
               {t('discover.refine')}
