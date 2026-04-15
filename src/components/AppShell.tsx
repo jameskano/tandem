@@ -8,7 +8,7 @@ type AppShellProps = {
   children: React.ReactNode;
 };
 
-const AppShell: React.FC<AppShellProps> = ({ children }) => {
+const AppShell = ({ children }: AppShellProps) => {
   const location = useLocation();
   const { user, loading } = useAuthContext();
 

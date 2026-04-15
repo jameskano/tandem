@@ -1,5 +1,6 @@
 // './App.css';
 import { RouterProvider } from 'react-router-dom';
+import BlockingLoader from './components/BlockingLoader';
 import ToastViewport from './components/ToastViewport';
 import QueryProvider from './shared/providers/QueryProvider';
 import ThemeProvider from './shared/providers/ThemeProvider';
@@ -14,6 +15,7 @@ const App = () => {
         <AuthProvider>
           <SettingsProvider>
             <RouterProvider router={router} />
+            <BlockingLoader />
             <ToastViewport />
           </SettingsProvider>
         </AuthProvider>

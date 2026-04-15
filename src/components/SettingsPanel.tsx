@@ -4,6 +4,7 @@ import Card from '../shared/ui/Card';
 import Button from '../shared/ui/Button';
 import Dropdown from '../shared/ui/Dropdown';
 import { useToast } from '../hooks/useToast';
+import { useBlockingLoader } from '../hooks/useBlockingLoader';
 import Input from '../shared/ui/Input';
 import { useI18n } from '../shared/i18n/useI18n';
 import { useTheme } from '../shared/providers/ThemeProvider';
@@ -21,6 +22,7 @@ import {
 const SettingsPanel: React.FC = () => {
   const { t } = useI18n();
   const toast = useToast();
+  const blockingLoader = useBlockingLoader();
   const { theme, setTheme } = useTheme();
   const queryClient = useQueryClient();
   const { user, refresh, deleteUser } = useAuthContext();
@@ -123,7 +125,10 @@ const SettingsPanel: React.FC = () => {
   });
 
   const signOutMutation = useMutation({
-    mutationFn: signOut,
+    mutationFn: () =>
+      blockingLoader.run(() => signOut(), {
+        message: t('settings.loggingOut'),
+      }),
     onSuccess: () => {
       toast.success(t('settings.logoutSuccess'));
     },
@@ -133,8 +138,16 @@ const SettingsPanel: React.FC = () => {
   });
 
   const deleteAccountMutation = useMutation({
-    mutationFn: deleteUser,
-    onSuccess: () => {
+    mutationFn: () =>
+      blockingLoader.run(() => deleteUser(), {
+        message: t('settings.deletingAccount'),
+        delay: 0,
+      }),
+    onSuccess: deleted => {
+      if (!deleted) {
+        return;
+      }
+
       toast.success(t('settings.deleteAccountSuccess'));
     },
     onError: (error: any) => {
