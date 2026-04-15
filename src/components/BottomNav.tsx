@@ -20,15 +20,15 @@ const BottomNav: React.FC = () => {
   ];
 
   return (
-    <nav className="safe-bottom fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-white md:hidden">
+    <nav className="safe-bottom sticky bottom-0 left-0 right-0 z-40 border-t border-appBorder bg-surface md:hidden">
       <div className="relative grid h-16 grid-cols-3 items-center">
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/3 top-1/2 h-8 -translate-x-1/2 -translate-y-1/2 border-l border-gray-200"
+          className="pointer-events-none absolute left-1/3 top-1/2 h-8 -translate-x-1/2 -translate-y-1/2 border-l border-appBorder"
         />
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute left-2/3 top-1/2 h-8 -translate-x-1/2 -translate-y-1/2 border-l border-gray-200"
+          className="pointer-events-none absolute left-2/3 top-1/2 h-8 -translate-x-1/2 -translate-y-1/2 border-l border-appBorder"
         />
         {navItems.map(({ path, icon: Icon, label }) => {
           const isActive = location.pathname === path;

@@ -1,26 +1,12 @@
 import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import BottomNav from './BottomNav';
-import DesktopNav from './DesktopNav';
+import { Outlet } from 'react-router-dom';
+import AppShell from './AppShell';
 
 const Layout: React.FC = () => {
-  const location = useLocation();
-  const isMainPage = location.pathname === '/';
-
   return (
-    <div className="flex min-h-screen flex-col bg-bg">
-      {!isMainPage && <DesktopNav />}
-
-      <main
-        className={
-          isMainPage ? 'flex flex-1 pb-0' : 'flex flex-1 pb-20 md:pb-0'
-        }
-      >
+    <AppShell>
         <Outlet />
-      </main>
-
-      {!isMainPage && <BottomNav />}
-    </div>
+    </AppShell>
   );
 };
 

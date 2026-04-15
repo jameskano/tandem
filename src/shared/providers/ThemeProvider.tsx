@@ -1,7 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
+export type ThemeMode = 'light' | 'dark'
+
 interface ThemeContextType {
-  theme: 'light' | 'dark'
+  theme: ThemeMode
+  setTheme: (theme: ThemeMode) => void
   toggleTheme: () => void
 }
 
@@ -20,13 +23,17 @@ interface ThemeProviderProps {
 }
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const [theme, setTheme] = useState<ThemeMode>('light')
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
+    const savedTheme = localStorage.getItem('theme') as ThemeMode | null
     if (savedTheme) {
       setTheme(savedTheme)
+      return
     }
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    setTheme(prefersDark ? 'dark' : 'light')
   }, [])
 
   useEffect(() => {
@@ -39,7 +46,7 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   )

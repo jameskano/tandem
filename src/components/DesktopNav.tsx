@@ -8,7 +8,7 @@ const DesktopNav: React.FC = () => {
   const { t } = useI18n();
 
   return (
-    <header className="sticky top-0 z-50 hidden border-b border-gray-200 bg-white md:block">
+    <header className="sticky top-0 z-50 hidden border-b border-appBorder bg-surface md:block">
       <div className="mx-auto max-w-6xl px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/dashboard" className="flex items-center space-x-2">

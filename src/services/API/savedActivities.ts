@@ -6,6 +6,16 @@ import {
 } from '../../shared/types/saved-activities';
 import { supabase } from '../supabase';
 
+export const savedActivitiesQueryKey = (coupleId?: string) =>
+  ['saved-activities', coupleId] as const;
+
+export const savedActivitiesPageQueryKey = ({
+  coupleId,
+  page,
+  pageSize = 10,
+}: GetSavedActivitiesPageParams) =>
+  [...savedActivitiesQueryKey(coupleId), page, pageSize] as const;
+
 export const getSavedActivitiesPage = async ({
   coupleId,
   page,
@@ -42,6 +52,28 @@ export const getSavedActivitiesPage = async ({
     activities: (data as SavedActivity[] | null) ?? [],
     totalCount: count ?? 0,
   };
+};
+
+export const getAllSavedActivities = async (coupleId: string) => {
+  if (!supabase) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  if (!coupleId) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('saved_activities')
+    .select('id, title, description, tags, couple_id, saved_by, created_at')
+    .eq('couple_id', coupleId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return (data as SavedActivity[] | null) ?? [];
 };
 
 export const deleteSavedActivity = async (activityId: string) => {

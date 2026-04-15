@@ -1,7 +1,8 @@
+export type AppLocale = 'en-US' | 'es-ES';
 export type UserSettings = {
   user_id: string;
   currency: Currency;
-  locale: string;
+  locale: AppLocale;
   country: string | null;
   city: string | null;
   onboarding_completed: boolean;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useToast } from '../hooks/useToast';
 import { COLORS } from '../shared/colors';
 import logo1 from '../assets/main-logo/logo1.png';
 import { useI18n } from '../shared/i18n/useI18n';
@@ -10,15 +11,14 @@ import { resetPassword } from '../shared/utils/auth';
 
 const ForgotPassword: React.FC = () => {
   const { t } = useI18n();
+  const toast = useToast();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setSuccess(false);
 
     if (!email) {
       setError(t('auth.emailRequired'));
@@ -28,8 +28,8 @@ const ForgotPassword: React.FC = () => {
     setIsLoading(true);
     try {
       await resetPassword(email);
-      setSuccess(true);
       setEmail('');
+      toast.success(t('forgotPassword.success'));
     } catch (err: any) {
       setError(err.message || t('auth.resetEmailFailed'));
     } finally {
@@ -56,15 +56,6 @@ const ForgotPassword: React.FC = () => {
 
       <div className="flex flex-1 items-center justify-center px-4 py-8">
         <Card className="w-full max-w-md space-y-6">
-          {success && (
-            <div
-              className="rounded p-4 text-sm"
-              style={{ backgroundColor: '#d4edda', color: '#155724' }}
-            >
-              {t('forgotPassword.success')}
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               label={t('common.email')}

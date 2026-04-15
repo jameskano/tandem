@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../../services/supabase';
+import { useBlockingLoader } from '../../hooks/useBlockingLoader';
 import { deleteUserAccount, signOut } from '../../shared/utils/auth';
 
 type AuthContextType = {
@@ -14,12 +15,13 @@ type AuthContextType = {
   session: Session | null;
   loading: boolean;
   refresh: () => Promise<void>;
-  deleteUser: () => Promise<void>;
+  deleteUser: () => Promise<boolean>;
 };
 
 const AuthContext = createContext({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const { show, hide } = useBlockingLoader();
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,14 +35,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const deleteUser = async () => {
     if (!confirm('This will permanently delete your account. Continue?'))
-      return;
+      return false;
     setLoading(true);
     try {
       const data = await deleteUserAccount(user!.id);
       console.log(data, 'User signed out before deletion');
       await signOut();
+      return true;
     } catch (err: any) {
       console.error(err?.message ?? 'Delete error');
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -48,10 +52,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
+    const loaderId = show();
 
     (async () => {
-      await refresh();
-      if (mounted) setLoading(false);
+      try {
+        await refresh();
+      } finally {
+        hide(loaderId);
+        if (mounted) setLoading(false);
+      }
     })();
 
     const { data: sub } = supabase!.auth.onAuthStateChange(
@@ -64,6 +73,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => {
       mounted = false;
+      hide(loaderId);
       sub.subscription.unsubscribe();
     };
   }, []);

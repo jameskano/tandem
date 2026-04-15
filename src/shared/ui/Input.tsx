@@ -29,7 +29,7 @@ const Input: React.FC<InputProps> = ({
           'placeholder:text-textMuted',
           error
             ? 'border-red-500 focus:border-red-600'
-            : 'border-gray-200 focus:border-primary',
+            : 'border-appBorder focus:border-primary',
           className
         )}
         style={{

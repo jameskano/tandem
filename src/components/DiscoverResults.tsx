@@ -21,7 +21,7 @@ const DiscoverResults: React.FC<DiscoverResultsProps> = ({
         <div className="min-w-0 flex-1">
           <div className="space-y-1">
             <div className="flex items-start items-center justify-between gap-3">
-              <h3 className="min-w-0 flex-1 pr-4 text-lg font-semibold text-text">
+              <h3 className="min-w-0 flex-1 pr-4 text-lg font-semibold text-primary">
                 {result.title}
               </h3>
               <HeartIcon

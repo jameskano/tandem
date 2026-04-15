@@ -29,7 +29,7 @@ const Card: React.FC<CardProps> = ({
   return (
     <div
       className={cn(
-        'bg-white rounded-2xl border border-gray-100',
+        'rounded-2xl border border-appBorder bg-surface text-text',
         paddingClasses[padding],
         shadowClasses[shadow],
         className

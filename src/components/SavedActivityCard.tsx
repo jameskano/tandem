@@ -34,9 +34,10 @@ const SavedActivityCard: React.FC<SavedActivityCardProps> = ({
               <button
                 type="button"
                 aria-label={t('savedActivities.editAria', {
-                  title: activity.title?.trim() || t('savedActivities.untitled'),
+                  title:
+                    activity.title?.trim() || t('savedActivities.untitled'),
                 })}
-                className="text-textMuted min-h-0 min-w-0 rounded-lg transition-colors hover:bg-bg hover:text-primary disabled:pointer-events-none disabled:opacity-50"
+                className="min-h-0 min-w-0 rounded-lg text-primary transition-colors hover:bg-bg hover:text-primary disabled:pointer-events-none disabled:opacity-50"
                 disabled={isEditing || isDeleting}
                 onClick={() => onEdit?.(activity)}
               >
@@ -45,9 +46,10 @@ const SavedActivityCard: React.FC<SavedActivityCardProps> = ({
               <button
                 type="button"
                 aria-label={t('savedActivities.removeAria', {
-                  title: activity.title?.trim() || t('savedActivities.untitled'),
+                  title:
+                    activity.title?.trim() || t('savedActivities.untitled'),
                 })}
-                className="text-textMuted min-h-0 min-w-0 rounded-lg transition-colors hover:bg-bg hover:text-red-600 disabled:pointer-events-none disabled:opacity-50"
+                className="min-h-0 min-w-0 rounded-lg text-primary transition-colors hover:bg-bg hover:text-red-600 disabled:pointer-events-none disabled:opacity-50"
                 disabled={isDeleting || isEditing}
                 onClick={() => onRemove?.(activity)}
               >
