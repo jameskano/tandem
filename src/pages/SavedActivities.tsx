@@ -154,7 +154,7 @@ const SavedActivities = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-bg">
+    <div className="min-h-full w-full bg-bg">
       <EditSavedActivityModal
         activity={activityToEdit}
         isSubmitting={updateSavedActivityMutation.isPending}

@@ -20,7 +20,7 @@ const BottomNav: React.FC = () => {
   ];
 
   return (
-    <nav className="safe-bottom fixed bottom-0 left-0 right-0 border-t border-appBorder bg-surface md:hidden">
+    <nav className="safe-bottom sticky bottom-0 left-0 right-0 z-40 border-t border-appBorder bg-surface md:hidden">
       <div className="relative grid h-16 grid-cols-3 items-center">
         <span
           aria-hidden="true"

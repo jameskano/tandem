@@ -224,7 +224,7 @@ const Discover: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-bg">
+    <div className="min-h-full w-full bg-bg">
       <OnboardingModal
         isOpen={Boolean(user) && !isSettingsLoading && !onboardingCompleted}
         isSubmitting={completeOnboardingMutation.isPending}
