@@ -19,6 +19,7 @@ import {
 } from '../shared/constants/text-constants';
 import type {
   Constraint,
+  DiscoverBatchSize,
   DiscoverFilters,
   DiscoverResult,
   DiscoverSuggestion,
@@ -50,6 +51,7 @@ const Discover: React.FC = () => {
   const initialPrompt = location.state?.prompt;
   const [prompt, setPrompt] = useState(initialPrompt || '');
   const [expanded, setExpanded] = useState(false);
+  const [batchSize, setBatchSize] = useState<DiscoverBatchSize>(5);
   const [filters, setFilters] = useState<FilterState>({
     vibe: [],
     constraints: [],
@@ -59,6 +61,7 @@ const Discover: React.FC = () => {
     DiscoverSuggestion[]
   >([]);
   const [generationRound, setGenerationRound] = useState(0);
+  const [canLoadMore, setCanLoadMore] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedSuggestionIds, setSelectedSuggestionIds] = useState<string[]>(
     []
@@ -66,6 +69,22 @@ const Discover: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { getDiscoverLabelText, getDiscoverPlaceholderText } = useUtils();
   const { generateDiscoverSuggestions } = useDiscoverSuggestions();
+
+  const isPremiumUser = useMemo(() => {
+    if (!user) {
+      return false;
+    }
+
+    return (
+      user.app_metadata?.plan === 'premium' ||
+      user.app_metadata?.subscription_tier === 'premium' ||
+      user.user_metadata?.plan === 'premium' ||
+      user.user_metadata?.subscription_tier === 'premium' ||
+      user.user_metadata?.is_premium === true
+    );
+  }, [user]);
+
+  const activeBatchSize: DiscoverBatchSize = isPremiumUser ? batchSize : 5;
 
   const translatedDiscoverBudgetOptions = useMemo(
     () => discoverBudgetOptions.map(item => ({ ...item, label: t(item.label) })),
@@ -139,10 +158,12 @@ const Discover: React.FC = () => {
     setError(null);
 
     try {
-      const { results, suggestions } = await generateDiscoverSuggestions({
+      const { results, suggestions, canLoadMore: nextCanLoadMore } =
+        await generateDiscoverSuggestions({
         filters: discoverFilters,
         previousSuggestions: loadMore ? allGeneratedSuggestions : [],
         round: nextRound,
+        requestCount: activeBatchSize,
       });
 
       setCurrentBatch(results);
@@ -150,6 +171,7 @@ const Discover: React.FC = () => {
         loadMore ? [...previous, ...suggestions] : suggestions
       );
       setGenerationRound(nextRound);
+      setCanLoadMore(nextCanLoadMore);
     } catch (generationError) {
       setError(
         generationError instanceof Error
@@ -248,14 +270,41 @@ const Discover: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+            {isPremiumUser ? (
+              <div className="flex flex-wrap gap-2">
+                {[5, 10].map(option => (
+                  <Button
+                    key={option}
+                    type="button"
+                    onClick={() => setBatchSize(option as DiscoverBatchSize)}
+                    variant="ghost"
+                    size="sm"
+                    className={chipButtonClassName}
+                  >
+                    <Chip
+                      variant={batchSize === option ? 'primary' : 'secondary'}
+                      size="sm"
+                      className={chipClassName}
+                    >
+                      {t('discover.batchSizeOption', { count: option })}
+                    </Chip>
+                  </Button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-textMuted">
+                {t('discover.freePlanNotice', { count: activeBatchSize })}
+              </p>
+            )}
+
             <Button
               size="md"
               disabled={!canGenerate || isGenerating}
               onClick={() => void handleGenerate(false)}
             >
               {isGenerating && generationRound === 0
-                ? t('discover.generating')
-                : t('discover.generateIdeas')}
+                ? t('discover.generatingCount', { count: activeBatchSize })
+                : t('discover.generateIdeasCount', { count: activeBatchSize })}
             </Button>
           </div>
 
@@ -464,24 +513,30 @@ const Discover: React.FC = () => {
                 ))}
               </div>
 
-              <div className="flex flex-col items-center pt-2">
-                <Button
-                  size="md"
-                  variant="primaryOutline"
-                  disabled={isGenerating}
-                  onClick={() => void handleGenerate(true)}
-                >
-                  {isGenerating && generationRound > 0
-                    ? t('discover.generatingMore')
-                    : t('discover.generateMore')}
-                </Button>
-              </div>
+              {canLoadMore ? (
+                <div className="flex flex-col items-center pt-2">
+                  <Button
+                    size="md"
+                    variant="primaryOutline"
+                    disabled={isGenerating}
+                    onClick={() => void handleGenerate(true)}
+                  >
+                    {isGenerating && generationRound > 0
+                      ? t('discover.generatingMoreCount', {
+                          count: activeBatchSize,
+                        })
+                      : t('discover.generateMoreCount', {
+                          count: activeBatchSize,
+                        })}
+                  </Button>
+                </div>
+              ) : null}
             </>
           ) : (
             <Card className="space-y-2">
               <p className="font-medium text-text">{t('discover.noIdeas')}</p>
               <p className="text-textMuted text-sm">
-                {t('discover.noIdeasDescription')}
+                {t('discover.noIdeasDescription', { count: activeBatchSize })}
               </p>
             </Card>
           )}
