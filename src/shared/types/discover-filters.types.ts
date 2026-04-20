@@ -43,6 +43,8 @@ export type Weather =
   | 'cloudy'
   | 'foggy';
 
+export type DiscoverBatchSize = 5 | 10;
+
 export type FilterState = {
   budget?: Budget;
   time?: TimeAvailable;
@@ -77,4 +79,12 @@ export type DiscoverResult = {
   title: string;
   description: string;
   tags: string[];
+};
+
+export type DiscoverGenerationResponse = {
+  suggestions: DiscoverSuggestion[];
+  count: DiscoverBatchSize;
+  canLoadMore: boolean;
+  isPremium: boolean;
+  round: number;
 };

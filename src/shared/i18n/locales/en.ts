@@ -134,8 +134,15 @@ const en = {
     title: 'Discover',
     generateIdeas: 'Generate ideas',
     generating: 'Generating...',
-    generateMore: 'Generate 10 more',
-    generatingMore: 'Generating 10 more...',
+    generateIdeasCount: 'Generate {{count}} ideas',
+    generatingCount: 'Generating {{count}} ideas...',
+    generateMore: 'Generate more',
+    generatingMore: 'Generating more...',
+    generateMoreCount: 'Generate {{count}} more',
+    generatingMoreCount: 'Generating {{count}} more...',
+    batchSizeOption: '{{count}} ideas',
+    freePlanNotice:
+      'Free plan: {{count}} ideas per request. To get more, start a new request.',
     refine: 'Refine',
     budget: 'Budget',
     timeAvailable: 'Time available',
@@ -151,7 +158,8 @@ const en = {
     ideasCount: '{{count}} ideas',
     generationUnavailable: 'Generation unavailable',
     noIdeas: 'No ideas yet',
-    noIdeasDescription: 'Generate a first batch to see 10 suggestions here.',
+    noIdeasDescription:
+      'Generate a first batch to see {{count}} suggestions here.',
     generationFailed: 'Discover generation failed.',
     labelVariants: {
       one: 'Find and plan your next activity',

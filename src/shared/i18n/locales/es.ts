@@ -137,8 +137,15 @@ const es = {
     title: 'Descubrir',
     generateIdeas: 'Generar ideas',
     generating: 'Generando...',
-    generateMore: 'Generar 10 mas',
-    generatingMore: 'Generando 10 mas...',
+    generateIdeasCount: 'Generar {{count}} ideas',
+    generatingCount: 'Generando {{count}} ideas...',
+    generateMore: 'Generar más',
+    generatingMore: 'Generando más...',
+    generateMoreCount: 'Generar {{count}} más',
+    generatingMoreCount: 'Generando {{count}} más...',
+    batchSizeOption: '{{count}} ideas',
+    freePlanNotice:
+      'Plan gratis: {{count}} ideas por solicitud. Para obtener más, inicia una nueva búsqueda.',
     refine: 'Refinar',
     budget: 'Presupuesto',
     timeAvailable: 'Tiempo disponible',
@@ -155,7 +162,7 @@ const es = {
     generationUnavailable: 'Generación no disponible',
     noIdeas: 'Todavía no hay ideas',
     noIdeasDescription:
-      'Genera una primera tanda para ver aquí 10 sugerencias.',
+      'Genera una primera tanda para ver aquí {{count}} sugerencias.',
     generationFailed: 'La generación de ideas ha fallado.',
     labelVariants: {
       one: 'Encuentra y planifica vuestra próxima actividad',
