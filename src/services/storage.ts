@@ -9,6 +9,11 @@ export const uploadPhoto = async (
   file: File,
   path: string
 ): Promise<UploadResult | null> => {
+  if (!supabase) {
+    console.error('Supabase client is not configured.')
+    return null
+  }
+
   try {
     const { data, error } = await supabase.storage
       .from('moments')
@@ -60,6 +65,11 @@ export const uploadFromDataUrl = async (
 }
 
 export const deletePhoto = async (path: string): Promise<boolean> => {
+  if (!supabase) {
+    console.error('Supabase client is not configured.')
+    return false
+  }
+
   try {
     const { error } = await supabase.storage
       .from('moments')
@@ -78,6 +88,10 @@ export const deletePhoto = async (path: string): Promise<boolean> => {
 }
 
 export const getPublicUrl = (path: string): string => {
+  if (!supabase) {
+    return ''
+  }
+
   const { data } = supabase.storage
     .from('moments')
     .getPublicUrl(path)

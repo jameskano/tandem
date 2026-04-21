@@ -11,8 +11,12 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
-    "cap:init": "cap init Tandem com.yourco.tandem --web-dir=dist",
+    "cap:init": "cap init Tandem com.tandem.app --web-dir=dist",
+    "cap:add:android": "cap add android",
+    "cap:add:ios": "cap add ios",
     "cap:sync": "cap sync",
+    "cap:copy": "cap copy",
+    "cap:run:android": "cap run android",
     "cap:ios": "cap open ios",
     "cap:android": "cap open android",
     "ui:setup": "npx shadcn@latest init"
