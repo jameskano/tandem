@@ -1,12 +1,12 @@
 import React from 'react';
-import MomentsGrid from '../components/MomentsGrid';
-import { useMomentsStore } from '../hooks/useMomentsStore';
+// import MomentsGrid from '../components/MomentsGrid';
+// import { useMomentsStore } from '../hooks/useMomentsStore';
 import { useI18n } from '../shared/i18n/useI18n';
 import Button from '../shared/ui/Button';
 
 const Moments: React.FC = () => {
   const { t } = useI18n();
-  const { moments } = useMomentsStore();
+  // const { moments } = useMomentsStore();
 
   return (
     <div className="min-h-screen bg-bg">
@@ -26,7 +26,7 @@ const Moments: React.FC = () => {
             <Button>{t('moments.addPhoto')}</Button>
           </div>
 
-          <MomentsGrid />
+          {/* <MomentsGrid /> */}
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { CalendarDays } from 'lucide-react';
 import { COLORS } from '../shared/colors';
-import { usePlansStore } from '../hooks/usePlansStore';
 import { seedData } from '../shared/seed';
 import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';

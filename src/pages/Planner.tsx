@@ -1,20 +1,20 @@
 import React, { useEffect } from 'react';
-import PlannerGrid from '../components/PlannerGrid';
-import { usePlansStore } from '../hooks/usePlansStore';
+// import PlannerGrid from '../components/PlannerGrid';
+// import { usePlansStore } from '../hooks/usePlansStore';
 import { seedData } from '../shared/seed';
 import { useI18n } from '../shared/i18n/useI18n';
 import Button from '../shared/ui/Button';
 
 const Planner: React.FC = () => {
   const { t } = useI18n();
-  const { plans, addPlan } = usePlansStore();
+  // const { plans, addPlan } = usePlansStore();
 
   // Load seed data on first visit
-  useEffect(() => {
-    if (plans.length === 0) {
-      seedData.plans.forEach(addPlan);
-    }
-  }, [plans.length, addPlan]);
+  // useEffect(() => {
+  //   if (plans.length === 0) {
+  //     seedData.plans.forEach(addPlan);
+  //   }
+  // }, [plans.length, addPlan]);
 
   return (
     <div className="min-h-screen bg-bg">
@@ -34,7 +34,7 @@ const Planner: React.FC = () => {
             <Button>{t('planner.addPlan')}</Button>
           </div>
 
-          <PlannerGrid />
+          {/* <PlannerGrid /> */}
         </div>
       </div>
     </div>

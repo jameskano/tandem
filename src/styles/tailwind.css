@@ -1,8 +1,8 @@
 @import "./tokens.css";
+@import "./components.css";
 
 @tailwind base;
 @tailwind components;
-@import "./components.css";
 @tailwind utilities;
 
 @layer base {
@@ -17,6 +17,10 @@
 
   body {
     margin: 0;
+  }
+
+  #root {
+    min-height: 100vh;
   }
 
   /* Safe area support for mobile */
@@ -34,6 +38,16 @@
 
   .safe-right {
     padding-right: env(safe-area-inset-right);
+  }
+
+  .platform-native {
+    min-height: 100dvh;
+  }
+
+  .platform-web {
+    background:
+      radial-gradient(circle at top, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 32%),
+      var(--color-bg);
   }
 
   /* Ensure minimum tap target size */

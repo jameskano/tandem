@@ -1,56 +1,46 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo1 from '../assets/main-logo/logo1.png';
+import { appNavigationItems } from '../shared/constants/navigation';
 import { useI18n } from '../shared/i18n/useI18n';
+import { cn } from '../shared/utils/format';
 
 const DesktopNav: React.FC = () => {
   const location = useLocation();
   const { t } = useI18n();
 
   return (
-    <header className="sticky top-0 z-50 hidden border-b border-appBorder bg-surface md:block">
-      <div className="mx-auto max-w-6xl px-4 py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/dashboard" className="flex items-center space-x-2">
-            <img src={logo1} alt="Tandem Logo" className="w-8" />
-            <span className="text-xl font-bold text-text">
+    <header className="sticky top-0 z-50 border-b border-appBorder bg-surface/90 backdrop-blur">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 py-4">
+        <Link to="/dashboard" className="flex min-w-0 items-center gap-3">
+          <img src={logo1} alt="Tandem Logo" className="h-10 w-10 rounded-xl" />
+          <div className="min-w-0">
+            <p className="text-textMuted text-xs font-medium uppercase tracking-[0.24em]">
               {t('common.appName')}
-            </span>
-          </Link>
+            </p>
+          </div>
+        </Link>
 
-          <nav className="hidden items-center space-x-6 md:flex">
-            <Link
-              to="/dashboard"
-              className={`rounded-lg px-3 py-2 transition-colors ${
-                location.pathname === '/dashboard'
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-textMuted hover:text-text'
-              }`}
-            >
-              {t('nav.dashboard')}
-            </Link>
-            <Link
-              to="/planner"
-              className={`rounded-lg px-3 py-2 transition-colors ${
-                location.pathname === '/planner'
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-textMuted hover:text-text'
-              }`}
-            >
-              {t('nav.planner')}
-            </Link>
-            <Link
-              to="/settings"
-              className={`rounded-lg px-3 py-2 transition-colors ${
-                location.pathname === '/settings'
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-textMuted hover:text-text'
-              }`}
-            >
-              {t('nav.settings')}
-            </Link>
-          </nav>
-        </div>
+        <nav className="flex items-center gap-2 rounded-2xl border border-appBorder bg-bg/70 p-1">
+          {appNavigationItems.map(({ path, labelKey }) => {
+            const isActive = location.pathname === path;
+
+            return (
+              <Link
+                key={path}
+                to={path}
+                className={cn(
+                  'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors',
+                  isActive
+                    ? 'text-primaryForeground bg-primary shadow-sm'
+                    : 'text-textMuted hover:bg-surface hover:text-text'
+                )}
+              >
+                <span>{t(labelKey)}</span>
+              </Link>
+            );
+          })}
+        </nav>
       </div>
     </header>
   );
