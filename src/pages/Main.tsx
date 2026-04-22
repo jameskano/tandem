@@ -10,7 +10,7 @@ const Main: React.FC = () => {
   const { t } = useI18n();
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen w-full bg-bg">
       <div className="px-4 py-8 md:py-16">
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-8">

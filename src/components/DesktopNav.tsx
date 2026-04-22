@@ -15,17 +15,14 @@ const DesktopNav: React.FC = () => {
         <Link to="/dashboard" className="flex min-w-0 items-center gap-3">
           <img src={logo1} alt="Tandem Logo" className="h-10 w-10 rounded-xl" />
           <div className="min-w-0">
-            <p className="text-xs font-medium uppercase tracking-[0.24em] text-textMuted">
+            <p className="text-textMuted text-xs font-medium uppercase tracking-[0.24em]">
               {t('common.appName')}
-            </p>
-            <p className="truncate text-lg font-semibold text-text">
-              {t('discover.title')}
             </p>
           </div>
         </Link>
 
         <nav className="flex items-center gap-2 rounded-2xl border border-appBorder bg-bg/70 p-1">
-          {appNavigationItems.map(({ path, icon: Icon, labelKey }) => {
+          {appNavigationItems.map(({ path, labelKey }) => {
             const isActive = location.pathname === path;
 
             return (
@@ -35,11 +32,10 @@ const DesktopNav: React.FC = () => {
                 className={cn(
                   'flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-primary text-primaryForeground shadow-sm'
+                    ? 'text-primaryForeground bg-primary shadow-sm'
                     : 'text-textMuted hover:bg-surface hover:text-text'
                 )}
               >
-                <Icon size={18} />
                 <span>{t(labelKey)}</span>
               </Link>
             );

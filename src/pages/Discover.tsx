@@ -44,6 +44,7 @@ const Discover: React.FC = () => {
   const location = useLocation();
   const { user } = useAuthContext();
   const {
+    currency,
     onboardingCompleted,
     isSettingsLoading,
     setOnboardingCompleted,
@@ -86,16 +87,21 @@ const Discover: React.FC = () => {
 
   const activeBatchSize: DiscoverBatchSize = isPremiumUser ? batchSize : 5;
 
-  const translatedDiscoverBudgetOptions = useMemo(
-    () => discoverBudgetOptions.map(item => ({ ...item, label: t(item.label) })),
-    [t]
-  );
+  const translatedDiscoverBudgetOptions = useMemo(() => {
+    const currencySymbol = currency === 'USD' ? '$' : '\u20ac';
+
+    return discoverBudgetOptions.map(item => ({
+      ...item,
+      label: t(item.label).replaceAll('$', currencySymbol),
+    }));
+  }, [currency, t]);
   const translatedDiscoverTimeOptions = useMemo(
     () => discoverTimeOptions.map(item => ({ ...item, label: t(item.label) })),
     [t]
   );
   const translatedDiscoverSettingOptions = useMemo(
-    () => discoverSettingOptions.map(item => ({ ...item, label: t(item.label) })),
+    () =>
+      discoverSettingOptions.map(item => ({ ...item, label: t(item.label) })),
     [t]
   );
   const translatedDiscoverVibeOptions = useMemo(
@@ -103,12 +109,16 @@ const Discover: React.FC = () => {
     [t]
   );
   const translatedDiscoverEnergyOptions = useMemo(
-    () => discoverEnergyOptions.map(item => ({ ...item, label: t(item.label) })),
+    () =>
+      discoverEnergyOptions.map(item => ({ ...item, label: t(item.label) })),
     [t]
   );
   const translatedDiscoverConstraintsOptions = useMemo(
     () =>
-      discoverConstraintsOptions.map(item => ({ ...item, label: t(item.label) })),
+      discoverConstraintsOptions.map(item => ({
+        ...item,
+        label: t(item.label),
+      })),
     [t]
   );
   const translatedDiscoverManualWeatherOptions = useMemo(
@@ -158,8 +168,11 @@ const Discover: React.FC = () => {
     setError(null);
 
     try {
-      const { results, suggestions, canLoadMore: nextCanLoadMore } =
-        await generateDiscoverSuggestions({
+      const {
+        results,
+        suggestions,
+        canLoadMore: nextCanLoadMore,
+      } = await generateDiscoverSuggestions({
         filters: discoverFilters,
         previousSuggestions: loadMore ? allGeneratedSuggestions : [],
         round: nextRound,
@@ -214,10 +227,7 @@ const Discover: React.FC = () => {
     },
     onSuccess: updatedSettings => {
       setOnboardingCompleted(updatedSettings.onboarding_completed);
-      queryClient.setQueryData(
-        userSettingsQueryKey(user?.id),
-        updatedSettings
-      );
+      queryClient.setQueryData(userSettingsQueryKey(user?.id), updatedSettings);
     },
   });
 
@@ -255,7 +265,9 @@ const Discover: React.FC = () => {
 
       <div className="mx-auto max-w-4xl space-y-5 px-4 py-6">
         <div>
-          <h1 className="text-2xl font-bold text-text">{t('discover.title')}</h1>
+          <h1 className="text-2xl font-bold text-text">
+            {t('discover.title')}
+          </h1>
         </div>
 
         <Card className="space-y-4">
@@ -269,7 +281,7 @@ const Discover: React.FC = () => {
             />
           </div>
 
-          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <div className="flex flex-col gap-2 sm:flex-wrap">
             {isPremiumUser ? (
               <div className="flex flex-wrap gap-2">
                 {[5, 10].map(option => (
@@ -292,7 +304,7 @@ const Discover: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-textMuted">
+              <p className="text-textMuted text-sm">
                 {t('discover.freePlanNotice', { count: activeBatchSize })}
               </p>
             )}
@@ -320,7 +332,9 @@ const Discover: React.FC = () => {
             </summary>
             <div className="mt-4 space-y-4">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">{t('discover.budget')}</p>
+                <p className="text-sm font-medium text-text">
+                  {t('discover.budget')}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {translatedDiscoverBudgetOptions.map(item => (
                     <Button
@@ -376,7 +390,9 @@ const Discover: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">{t('discover.setting')}</p>
+                <p className="text-sm font-medium text-text">
+                  {t('discover.setting')}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {translatedDiscoverSettingOptions.map(item => (
                     <Button
@@ -404,7 +420,9 @@ const Discover: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">{t('discover.vibe')}</p>
+                <p className="text-sm font-medium text-text">
+                  {t('discover.vibe')}
+                </p>
                 <Dropdown
                   options={translatedDiscoverVibeOptions}
                   value={filters.vibe}
@@ -420,7 +438,9 @@ const Discover: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">{t('discover.energy')}</p>
+                <p className="text-sm font-medium text-text">
+                  {t('discover.energy')}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {translatedDiscoverEnergyOptions.map(item => (
                     <Button
@@ -466,7 +486,9 @@ const Discover: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium text-text">{t('discover.weather')}</p>
+                <p className="text-sm font-medium text-text">
+                  {t('discover.weather')}
+                </p>
                 <Dropdown
                   options={translatedDiscoverManualWeatherOptions}
                   value={filters.weather}
@@ -485,7 +507,9 @@ const Discover: React.FC = () => {
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-text">{t('discover.results')}</h2>
+            <h2 className="text-lg font-semibold text-text">
+              {t('discover.results')}
+            </h2>
             <Chip variant="secondary" size="sm">
               {t('discover.ideasCount', { count: currentBatch.length })}
             </Chip>
@@ -493,7 +517,9 @@ const Discover: React.FC = () => {
 
           {error ? (
             <Card className="space-y-2">
-              <p className="font-medium text-text">{t('discover.generationUnavailable')}</p>
+              <p className="font-medium text-text">
+                {t('discover.generationUnavailable')}
+              </p>
               <p className="text-textMuted text-sm">{error}</p>
             </Card>
           ) : null}

@@ -19,7 +19,9 @@ const AppShell = ({ children }: AppShellProps) => {
   const isNativePlatform = Capacitor.isNativePlatform();
 
   return (
-    <div className={`flex min-h-screen flex-col bg-bg ${getPlatformClassName()}`}>
+    <div
+      className={`flex min-h-screen flex-col bg-bg ${getPlatformClassName()}`}
+    >
       {showNavigation && !isNativePlatform ? <DesktopNav /> : null}
 
       <main
@@ -27,8 +29,8 @@ const AppShell = ({ children }: AppShellProps) => {
           showNavigation && isNativePlatform
             ? 'flex flex-1 pb-20'
             : showNavigation && !isNativePlatform
-            ? 'flex flex-1 justify-center'
-            : 'flex flex-1 pb-0'
+              ? 'flex flex-1 justify-center'
+              : 'flex flex-1 pb-0'
         }
       >
         {children}

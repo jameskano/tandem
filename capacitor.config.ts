@@ -1,12 +1,19 @@
-import { CapacitorConfig } from '@capacitor/cli';
+import type { CapacitorConfig } from '@capacitor/cli';
+
+const isDevServerEnabled = process.env.CAPACITOR_DEV_SERVER === 'true';
 
 const config: CapacitorConfig = {
   appId: 'com.tandem.app',
   appName: 'Tandem',
   webDir: 'dist',
-  server: {
-    androidScheme: 'https',
-  },
+  ...(isDevServerEnabled
+    ? {
+        server: {
+          url: process.env.CAPACITOR_DEV_SERVER_URL ?? 'http://localhost:3000',
+          cleartext: true,
+        },
+      }
+    : {}),
   ios: {
     contentInset: 'automatic',
   },
@@ -15,9 +22,7 @@ const config: CapacitorConfig = {
       presentationOptions: ['badge', 'sound', 'alert'],
     },
     LocalNotifications: {
-      smallIcon: 'ic_stat_icon_config_sample',
       iconColor: '#FF6B81',
-      sound: 'beep.wav',
     },
     SplashScreen: {
       launchShowDuration: 1200,

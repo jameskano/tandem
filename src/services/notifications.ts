@@ -62,7 +62,6 @@ export const scheduleLocal = async (
             body,
             id: Date.now(),
             schedule: { at: when },
-            sound: 'beep.wav',
             attachments: undefined,
             actionTypeId: '',
             extra: null
