@@ -15,7 +15,9 @@ const AppShell = ({ children }: AppShellProps) => {
   const { user, loading } = useAuthContext();
 
   const isMainPage = location.pathname === '/';
-  const showNavigation = !isMainPage && !loading && Boolean(user);
+  const isStandalonePage = ['/privacy', '/terms'].includes(location.pathname);
+  const showNavigation =
+    !isMainPage && !isStandalonePage && !loading && Boolean(user);
   const isNativePlatform = Capacitor.isNativePlatform();
 
   return (

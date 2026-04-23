@@ -32,6 +32,7 @@ import Chip from '../shared/ui/Chip';
 import Dropdown from '../shared/ui/Dropdown';
 import Textarea from '../shared/ui/Textarea';
 import { useAuthContext } from '../store/context/AuthProvider';
+import { useRevenueCatContext } from '../store/context/RevenueCatProvider';
 import { useSettingsContext } from '../store/context/SettingsProvider';
 import {
   updateUserSettings,
@@ -43,6 +44,8 @@ const Discover: React.FC = () => {
   const queryClient = useQueryClient();
   const location = useLocation();
   const { user } = useAuthContext();
+  const { hasTandemPro, isLoading: isSubscriptionLoading, presentPaywallIfNeeded } =
+    useRevenueCatContext();
   const {
     currency,
     onboardingCompleted,
@@ -71,19 +74,7 @@ const Discover: React.FC = () => {
   const { getDiscoverLabelText, getDiscoverPlaceholderText } = useUtils();
   const { generateDiscoverSuggestions } = useDiscoverSuggestions();
 
-  const isPremiumUser = useMemo(() => {
-    if (!user) {
-      return false;
-    }
-
-    return (
-      user.app_metadata?.plan === 'premium' ||
-      user.app_metadata?.subscription_tier === 'premium' ||
-      user.user_metadata?.plan === 'premium' ||
-      user.user_metadata?.subscription_tier === 'premium' ||
-      user.user_metadata?.is_premium === true
-    );
-  }, [user]);
+  const isPremiumUser = hasTandemPro;
 
   const activeBatchSize: DiscoverBatchSize = isPremiumUser ? batchSize : 5;
 
@@ -196,6 +187,22 @@ const Discover: React.FC = () => {
     }
   };
 
+  const handlePremiumBatchSize = async (option: DiscoverBatchSize) => {
+    if (hasTandemPro) {
+      setBatchSize(option);
+      return;
+    }
+
+    try {
+      const hasAccess = await presentPaywallIfNeeded();
+      if (hasAccess) {
+        setBatchSize(option);
+      }
+    } catch (paywallError) {
+      console.error('Unable to present RevenueCat paywall.', paywallError);
+    }
+  };
+
   const expandHadler = () => setExpanded(prev => !prev);
 
   const chipButtonClassName =
@@ -282,16 +289,21 @@ const Discover: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-wrap">
-            {isPremiumUser ? (
-              <div className="flex flex-wrap gap-2">
-                {[5, 10].map(option => (
+            <div className="flex flex-wrap gap-2">
+              {[5, 10].map(option => {
+                const isLockedPremiumOption = option > 5 && !isPremiumUser;
+
+                return (
                   <Button
                     key={option}
                     type="button"
-                    onClick={() => setBatchSize(option as DiscoverBatchSize)}
+                    onClick={() =>
+                      void handlePremiumBatchSize(option as DiscoverBatchSize)
+                    }
                     variant="ghost"
                     size="sm"
                     className={chipButtonClassName}
+                    disabled={isSubscriptionLoading}
                   >
                     <Chip
                       variant={batchSize === option ? 'primary' : 'secondary'}
@@ -299,15 +311,18 @@ const Discover: React.FC = () => {
                       className={chipClassName}
                     >
                       {t('discover.batchSizeOption', { count: option })}
+                      {isLockedPremiumOption ? ' Pro' : ''}
                     </Chip>
                   </Button>
-                ))}
-              </div>
-            ) : (
+                );
+              })}
+            </div>
+
+            {!isPremiumUser ? (
               <p className="text-textMuted text-sm">
                 {t('discover.freePlanNotice', { count: activeBatchSize })}
               </p>
-            )}
+            ) : null}
 
             <Button
               size="md"

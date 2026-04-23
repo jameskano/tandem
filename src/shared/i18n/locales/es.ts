@@ -169,7 +169,7 @@ const es = {
       two: 'Cuéntame qué os apetece',
       three: '¿Qué os gustaría descubrir o planificar?',
       four: '¿Buscáis algo divertido para hacer juntos?',
-      five: 'Vamos a planear algo increible',
+      five: 'Vamos a planear algo increíble',
     },
     placeholderVariants: {
       one: 'Planifica una cena romántica para esta noche...',
@@ -324,6 +324,28 @@ const es = {
     exportSuccess: 'Actividades guardadas exportadas correctamente.',
     exportFailed:
       'No se pudieron exportar las actividades guardadas. Inténtalo de nuevo.',
+    subscription: 'Suscripción',
+    subscriptionActive: 'Tandem Pro está activo',
+    subscriptionInactive: 'Tandem Pro no está activo',
+    subscriptionDescription:
+      'Desbloquea lotes más grandes en Discover y funciones premium.',
+    subscriptionRenews: 'El acceso actual se renueva o caduca el {{date}}.',
+    subscriptionNativeOnly:
+      'Las suscripciones están disponibles en la app móvil instalada.',
+    viewPlans: 'Ver planes',
+    subscribeMonthly: 'Mensual',
+    subscribeMonthlyPrice: 'Mensual {{price}}',
+    subscribeYearly: 'Anual',
+    subscribeYearlyPrice: 'Anual {{price}}',
+    restorePurchases: 'Restaurar compras',
+    manageSubscription: 'Gestionar suscripción',
+    subscriptionUpdated: 'Suscripción actualizada correctamente.',
+    subscriptionPurchaseComplete: 'Compra completada correctamente.',
+    subscriptionRestored: 'Compras restauradas correctamente.',
+    subscriptionNothingToRestore:
+      'No se encontró ninguna compra activa de Tandem Pro.',
+    subscriptionActionFailed:
+      'No se pudo completar la accion de suscripcion. Inténtalo de nuevo.',
     accountSecurity: 'Seguridad de la cuenta',
     emailAddress: 'Correo electrónico',
     emailChangeDescription: 'Cambia el correo con el que inicias sesión.',

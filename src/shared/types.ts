@@ -42,4 +42,5 @@ export type envSchema = {
   VITE_SUPABASE_URL: string;
   VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY: string;
   VITE_APP_NAME: string;
+  VITE_APP_PUBLIC_URL?: string;
 };

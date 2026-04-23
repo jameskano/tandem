@@ -13,11 +13,16 @@ import { downloadJsonFile } from '../shared/utils/export';
 import { signOut, updateEmail, updatePassword } from '../shared/utils/auth';
 import type { AppLocale, Currency } from '../shared/types/user';
 import { useAuthContext } from '../store/context/AuthProvider';
+import { useRevenueCatContext } from '../store/context/RevenueCatProvider';
 import { useSettingsContext } from '../store/context/SettingsProvider';
 import {
   updateUserSettings,
   userSettingsQueryKey,
 } from '../services/API/userSettings';
+import {
+  REVENUECAT_PRODUCTS,
+  TANDEM_PRO_ENTITLEMENT_ID,
+} from '../services/revenueCat';
 
 const SettingsPanel: React.FC = () => {
   const { t } = useI18n();
@@ -26,6 +31,18 @@ const SettingsPanel: React.FC = () => {
   const { theme, setTheme } = useTheme();
   const queryClient = useQueryClient();
   const { user, refresh, deleteUser } = useAuthContext();
+  const {
+    isAvailable: isRevenueCatAvailable,
+    isLoading: isSubscriptionLoading,
+    error: subscriptionError,
+    hasTandemPro,
+    customerInfo,
+    currentOffering,
+    presentPaywall,
+    purchaseProduct,
+    restorePurchases,
+    presentCustomerCenter,
+  } = useRevenueCatContext();
   const { currency, locale, isSettingsLoading, setCurrency, setLocale } =
     useSettingsContext();
   const [email, setEmail] = useState('');
@@ -155,6 +172,56 @@ const SettingsPanel: React.FC = () => {
     },
   });
 
+  const presentPaywallMutation = useMutation({
+    mutationFn: presentPaywall,
+    onSuccess: unlocked => {
+      if (unlocked) {
+        toast.success(t('settings.subscriptionUpdated'));
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || t('settings.subscriptionActionFailed'));
+    },
+  });
+
+  const purchaseProductMutation = useMutation({
+    mutationFn: purchaseProduct,
+    onSuccess: nextCustomerInfo => {
+      toast.success(
+        nextCustomerInfo.entitlements.active[TANDEM_PRO_ENTITLEMENT_ID]
+          ? t('settings.subscriptionUpdated')
+          : t('settings.subscriptionPurchaseComplete')
+      );
+    },
+    onError: (error: any) => {
+      if (error?.userCancelled) {
+        return;
+      }
+      toast.error(error?.message || t('settings.subscriptionActionFailed'));
+    },
+  });
+
+  const restorePurchasesMutation = useMutation({
+    mutationFn: restorePurchases,
+    onSuccess: nextCustomerInfo => {
+      toast.success(
+        nextCustomerInfo.entitlements.active[TANDEM_PRO_ENTITLEMENT_ID]
+          ? t('settings.subscriptionRestored')
+          : t('settings.subscriptionNothingToRestore')
+      );
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || t('settings.subscriptionActionFailed'));
+    },
+  });
+
+  const customerCenterMutation = useMutation({
+    mutationFn: presentCustomerCenter,
+    onError: (error: any) => {
+      toast.error(error?.message || t('settings.subscriptionActionFailed'));
+    },
+  });
+
   const handleLocaleChange = async (nextLocale: AppLocale) => {
     const previousLocale = locale;
     setLocale(nextLocale);
@@ -259,6 +326,28 @@ const SettingsPanel: React.FC = () => {
   const pendingEmail = user?.new_email?.trim() ?? '';
   const hasPendingEmailChange =
     Boolean(pendingEmail) && pendingEmail !== user?.email?.trim();
+  const monthlyPackage =
+    currentOffering?.monthly ??
+    currentOffering?.availablePackages.find(
+      item =>
+        item.identifier === REVENUECAT_PRODUCTS.monthly ||
+        item.product.identifier === REVENUECAT_PRODUCTS.monthly
+    );
+  const yearlyPackage =
+    currentOffering?.annual ??
+    currentOffering?.availablePackages.find(
+      item =>
+        item.identifier === REVENUECAT_PRODUCTS.yearly ||
+        item.product.identifier === REVENUECAT_PRODUCTS.yearly
+    );
+  const activeEntitlement =
+    customerInfo?.entitlements.active[TANDEM_PRO_ENTITLEMENT_ID];
+  const subscriptionActionPending =
+    isSubscriptionLoading ||
+    presentPaywallMutation.isPending ||
+    purchaseProductMutation.isPending ||
+    restorePurchasesMutation.isPending ||
+    customerCenterMutation.isPending;
 
   return (
     <div className="space-y-6">
@@ -329,6 +418,109 @@ const SettingsPanel: React.FC = () => {
               {exportSavedActivitiesMutation.isPending
                 ? t('settings.exporting')
                 : t('settings.export')}
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <h2 className="mb-4 text-lg font-semibold text-text">
+          {t('settings.subscription')}
+        </h2>
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="font-medium text-text">
+              {hasTandemPro
+                ? t('settings.subscriptionActive')
+                : t('settings.subscriptionInactive')}
+            </h3>
+            <p className="text-textMuted text-sm">
+              {activeEntitlement?.expirationDate
+                ? t('settings.subscriptionRenews', {
+                    date: new Date(
+                      activeEntitlement.expirationDate
+                    ).toLocaleDateString(),
+                  })
+                : t('settings.subscriptionDescription')}
+            </p>
+            {!isRevenueCatAvailable ? (
+              <p className="text-textMuted text-sm">
+                {t('settings.subscriptionNativeOnly')}
+              </p>
+            ) : null}
+            {subscriptionError ? (
+              <p className="text-sm text-red-600">{subscriptionError}</p>
+            ) : null}
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button
+              type="button"
+              className="w-full sm:w-auto"
+              disabled={
+                !user || !isRevenueCatAvailable || subscriptionActionPending
+              }
+              onClick={() => void presentPaywallMutation.mutateAsync()}
+            >
+              {t('settings.viewPlans')}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outlineSoft"
+              className="w-full sm:w-auto"
+              disabled={
+                !user || !isRevenueCatAvailable || subscriptionActionPending
+              }
+              onClick={() =>
+                void purchaseProductMutation.mutateAsync('monthly')
+              }
+            >
+              {monthlyPackage?.product.priceString
+                ? t('settings.subscribeMonthlyPrice', {
+                    price: monthlyPackage.product.priceString,
+                  })
+                : t('settings.subscribeMonthly')}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outlineSoft"
+              className="w-full sm:w-auto"
+              disabled={
+                !user || !isRevenueCatAvailable || subscriptionActionPending
+              }
+              onClick={() => void purchaseProductMutation.mutateAsync('yearly')}
+            >
+              {yearlyPackage?.product.priceString
+                ? t('settings.subscribeYearlyPrice', {
+                    price: yearlyPackage.product.priceString,
+                  })
+                : t('settings.subscribeYearly')}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-auto"
+              disabled={
+                !user || !isRevenueCatAvailable || subscriptionActionPending
+              }
+              onClick={() => void restorePurchasesMutation.mutateAsync()}
+            >
+              {t('settings.restorePurchases')}
+            </Button>
+
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full sm:w-auto"
+              disabled={
+                !user || !isRevenueCatAvailable || subscriptionActionPending
+              }
+              onClick={() => void customerCenterMutation.mutateAsync()}
+            >
+              {t('settings.manageSubscription')}
             </Button>
           </div>
         </div>

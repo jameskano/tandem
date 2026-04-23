@@ -9,11 +9,13 @@ import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
 import ErrorPage from '../pages/ErrorPage';
 import NotFound from '../pages/NotFound';
+import Privacy from '../pages/Privacy';
 import {
   ProtectedRoute,
   PublicRoute,
 } from '../components/ProtectedRoute';
 import SavedActivities from '../pages/SavedActivities';
+import Terms from '../pages/Terms';
 
 export const router = createBrowserRouter([
   {
@@ -67,6 +69,14 @@ export const router = createBrowserRouter([
             <Main />
           </PublicRoute>
         ),
+      },
+      {
+        path: 'privacy',
+        element: <Privacy />,
+      },
+      {
+        path: 'terms',
+        element: <Terms />,
       },
       {
         path: 'dashboard',
