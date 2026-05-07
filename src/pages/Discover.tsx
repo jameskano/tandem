@@ -44,8 +44,11 @@ const Discover: React.FC = () => {
   const queryClient = useQueryClient();
   const location = useLocation();
   const { user } = useAuthContext();
-  const { hasTandemPro, isLoading: isSubscriptionLoading, presentPaywallIfNeeded } =
-    useRevenueCatContext();
+  const {
+    hasTandemPro,
+    isLoading: isSubscriptionLoading,
+    presentPaywallIfNeeded,
+  } = useRevenueCatContext();
   const {
     currency,
     onboardingCompleted,
@@ -318,12 +321,6 @@ const Discover: React.FC = () => {
               })}
             </div>
 
-            {!isPremiumUser ? (
-              <p className="text-textMuted text-sm">
-                {t('discover.freePlanNotice', { count: activeBatchSize })}
-              </p>
-            ) : null}
-
             <Button
               size="md"
               disabled={!canGenerate || isGenerating}
@@ -535,7 +532,9 @@ const Discover: React.FC = () => {
               <p className="font-medium text-text">
                 {t('discover.generationUnavailable')}
               </p>
-              <p className="text-textMuted text-sm">{error}</p>
+              <p className="text-textMuted text-sm">
+                {t('discover.generationErrorMessage')}
+              </p>
             </Card>
           ) : null}
 

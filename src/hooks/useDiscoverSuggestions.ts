@@ -11,6 +11,54 @@ import type {
 type DiscoverFunctionPayload = Partial<DiscoverGenerationResponse> & {
   results?: DiscoverSuggestion[];
   data?: DiscoverSuggestion[];
+  error?: string;
+  details?: string;
+};
+
+const readFunctionErrorMessage = async (
+  error: unknown,
+  payload: DiscoverFunctionPayload | null
+) => {
+  if (payload?.details) {
+    return payload.details;
+  }
+
+  if (payload?.error) {
+    return payload.error;
+  }
+
+  if (
+    error &&
+    typeof error === 'object' &&
+    'context' in error &&
+    error.context instanceof Response
+  ) {
+    try {
+      const errorPayload = (await error.context
+        .clone()
+        .json()) as DiscoverFunctionPayload;
+
+      if (errorPayload.details) {
+        return errorPayload.details;
+      }
+
+      if (errorPayload.error) {
+        return errorPayload.error;
+      }
+    } catch {
+      try {
+        const errorText = await error.context.clone().text();
+
+        if (errorText.trim()) {
+          return errorText;
+        }
+      } catch {
+        return null;
+      }
+    }
+  }
+
+  return null;
 };
 
 const normalizeSuggestion = (
@@ -95,11 +143,13 @@ export const useDiscoverSuggestions = () => {
       },
     });
 
-    if (error) {
-      throw new Error(error.message || 'Discover generation failed.');
-    }
-
     const payload = (data ?? {}) as DiscoverFunctionPayload;
+
+    if (error) {
+      const message = await readFunctionErrorMessage(error, payload);
+
+      throw new Error(message || error.message || 'Discover generation failed.');
+    }
     const suggestions = readSuggestions(payload)
       .map(normalizeSuggestion)
       .filter(

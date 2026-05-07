@@ -144,8 +144,6 @@ const es = {
     generateMoreCount: 'Generar {{count}} más',
     generatingMoreCount: 'Generando {{count}} más...',
     batchSizeOption: '{{count}} ideas',
-    freePlanNotice:
-      'Plan gratis: {{count}} ideas por solicitud. Para obtener más, inicia una nueva búsqueda.',
     refine: 'Refinar',
     budget: 'Presupuesto',
     timeAvailable: 'Tiempo disponible',
@@ -160,6 +158,8 @@ const es = {
     results: 'Resultados',
     ideasCount: '{{count}} ideas',
     generationUnavailable: 'Generación no disponible',
+    generationErrorMessage:
+      'No hemos podido generar ideas ahora mismo. Inténtalo de nuevo más tarde.',
     noIdeas: 'Todavía no hay ideas',
     noIdeasDescription:
       'Genera una primera tanda para ver aquí {{count}} sugerencias.',
@@ -262,7 +262,7 @@ const es = {
     loading: 'Cargando actividades guardadas...',
     page: 'Página {{current}} de {{total}}',
     emptyTitle: 'Todavía no hay actividades guardadas',
-    emptyDescription: 'Guarda ideas desde Descubrir y aparecerán aquí.',
+    emptyDescription: 'Guarda ideas y aparecerán aquí.',
     loadError: 'No se han podido cargar las actividades guardadas ahora mismo.',
     removeError: 'No se pudo eliminar la actividad. Inténtalo de nuevo.',
     removeSuccess: 'Actividad eliminada correctamente.',
@@ -317,8 +317,7 @@ const es = {
     darkModeDescription: 'Cambia entre tema claro y oscuro',
     toggle: 'Cambiar',
     dataExport: 'Exportar datos',
-    dataExportDescription:
-      'Descarga tus actividades guardadas en un archivo JSON',
+    dataExportDescription: 'Descarga tus actividades guardadas',
     export: 'Exportar',
     exporting: 'Exportando...',
     exportSuccess: 'Actividades guardadas exportadas correctamente.',
@@ -328,7 +327,7 @@ const es = {
     subscriptionActive: 'Tandem Pro está activo',
     subscriptionInactive: 'Tandem Pro no está activo',
     subscriptionDescription:
-      'Desbloquea lotes más grandes en Discover y funciones premium.',
+      'Desbloquea lotes más grandes de ideas y funciones premium.',
     subscriptionRenews: 'El acceso actual se renueva o caduca el {{date}}.',
     subscriptionNativeOnly:
       'Las suscripciones están disponibles en la app móvil instalada.',
@@ -345,7 +344,7 @@ const es = {
     subscriptionNothingToRestore:
       'No se encontró ninguna compra activa de Tandem Pro.',
     subscriptionActionFailed:
-      'No se pudo completar la accion de suscripcion. Inténtalo de nuevo.',
+      'No se pudo completar la accion de suscripción. Inténtalo de nuevo.',
     accountSecurity: 'Seguridad de la cuenta',
     emailAddress: 'Correo electrónico',
     emailChangeDescription: 'Cambia el correo con el que inicias sesión.',

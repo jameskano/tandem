@@ -84,6 +84,22 @@ const corsHeaders = {
   'Content-Type': 'application/json',
 };
 
+const getErrorDetails = (error: unknown) => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return 'Unknown error';
+  }
+};
+
 const ai = new GoogleGenAI({
   apiKey: Deno.env.get('GEMINI_API_KEY')!,
 });
@@ -295,6 +311,10 @@ Deno.serve(async req => {
   }
 
   try {
+    if (!Deno.env.get('GEMINI_API_KEY')) {
+      throw new Error('Missing GEMINI_API_KEY secret.');
+    }
+
     const body = (await req.json()) as DiscoverRequestBody;
     const filters = body.filters ?? {};
     const isPremium = await getIsPremiumUser(req);
@@ -447,7 +467,10 @@ Deno.serve(async req => {
     console.error(error);
 
     return new Response(
-      JSON.stringify({ error: 'Failed to generate discover suggestions.' }),
+      JSON.stringify({
+        error: 'Failed to generate discover suggestions.',
+        details: getErrorDetails(error),
+      }),
       {
         status: 500,
         headers: corsHeaders,

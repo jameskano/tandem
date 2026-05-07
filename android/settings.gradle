@@ -3,3 +3,11 @@ include ':capacitor-cordova-android-plugins'
 project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
 
 apply from: 'capacitor.settings.gradle'
+
+gradle.beforeProject { project ->
+    if (project.projectDir.absolutePath.contains("node_modules")) {
+        project.layout.buildDirectory.set(
+            new File(rootProject.projectDir, "build/node_modules-build/${project.name}")
+        )
+    }
+}

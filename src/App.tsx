@@ -34,8 +34,8 @@ const App = () => {
       await router.navigate(nextRoute);
     };
 
-    void CapacitorApp.getLaunchUrl().then(({ url }) => {
-      void navigateFromUrl(url);
+    void CapacitorApp.getLaunchUrl().then(launchUrl => {
+      void navigateFromUrl(launchUrl?.url);
     });
 
     void CapacitorApp.addListener('appUrlOpen', ({ url }) => {

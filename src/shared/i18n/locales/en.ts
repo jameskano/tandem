@@ -141,8 +141,6 @@ const en = {
     generateMoreCount: 'Generate {{count}} more',
     generatingMoreCount: 'Generating {{count}} more...',
     batchSizeOption: '{{count}} ideas',
-    freePlanNotice:
-      'Free plan: {{count}} ideas per request. To get more, start a new request.',
     refine: 'Refine',
     budget: 'Budget',
     timeAvailable: 'Time available',
@@ -157,6 +155,8 @@ const en = {
     results: 'Results',
     ideasCount: '{{count}} ideas',
     generationUnavailable: 'Generation unavailable',
+    generationErrorMessage:
+      "We couldn't generate ideas right now. Try again in a moment.",
     noIdeas: 'No ideas yet',
     noIdeasDescription:
       'Generate a first batch to see {{count}} suggestions here.',
@@ -259,7 +259,7 @@ const en = {
     loading: 'Loading saved activities...',
     page: 'Page {{current}} of {{total}}',
     emptyTitle: 'No saved activities yet',
-    emptyDescription: 'Save ideas from Discover and they will appear here.',
+    emptyDescription: 'Save ideas and they will appear here.',
     loadError: 'Saved activities could not be loaded right now.',
     removeError: 'The activity could not be removed. Please try again.',
     removeSuccess: 'Activity removed successfully.',
@@ -314,7 +314,7 @@ const en = {
     darkModeDescription: 'Switch between light and dark themes',
     toggle: 'Toggle',
     dataExport: 'Data Export',
-    dataExportDescription: 'Download your saved activities as a JSON file',
+    dataExportDescription: 'Download your saved activities',
     export: 'Export',
     exporting: 'Exporting...',
     exportSuccess: 'Saved activities exported successfully.',
@@ -323,7 +323,7 @@ const en = {
     subscriptionActive: 'Tandem Pro is active',
     subscriptionInactive: 'Tandem Pro is not active',
     subscriptionDescription:
-      'Unlock larger Discover batches and premium subscription features.',
+      'Unlock larger batches of ideas and premium subscription features.',
     subscriptionRenews: 'Current access renews or expires on {{date}}.',
     subscriptionNativeOnly:
       'Subscriptions are available in the installed mobile app.',
@@ -338,8 +338,7 @@ const en = {
     subscriptionPurchaseComplete: 'Purchase completed successfully.',
     subscriptionRestored: 'Purchases restored successfully.',
     subscriptionNothingToRestore: 'No active Tandem Pro purchase was found.',
-    subscriptionActionFailed:
-      'Subscription action failed. Please try again.',
+    subscriptionActionFailed: 'Subscription action failed. Please try again.',
     accountSecurity: 'Account Security',
     emailAddress: 'Email Address',
     emailChangeDescription: 'Change your sign-in email.',

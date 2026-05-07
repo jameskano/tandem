@@ -195,7 +195,9 @@ const SavedActivities = () => {
             <p className="font-medium text-text">
               {t('savedActivities.unavailable')}
             </p>
-            <p className="text-textMuted text-sm">{error}</p>
+            <p className="text-textMuted text-sm">
+              {t('savedActivities.loadError')}
+            </p>
           </Card>
         ) : null}
 
