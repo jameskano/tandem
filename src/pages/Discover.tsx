@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import DiscoverResults from '../components/DiscoverResults';
@@ -12,14 +12,13 @@ import type {
   DiscoverBatchSize,
   DiscoverFilters,
   DiscoverResult,
-  DiscoverSuggestion,
-  FilterState,
 } from '../shared/types/discover-filters.types';
 import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
 import Chip from '../shared/ui/Chip';
 import Textarea from '../shared/ui/Textarea';
 import { useAuthContext } from '../store/context/AuthProvider';
+import { useDiscoverStore } from '../store/discoverStore';
 import { useRevenueCatContext } from '../store/context/RevenueCatProvider';
 import { useSettingsContext } from '../store/context/SettingsProvider';
 import {
@@ -43,30 +42,45 @@ const Discover: React.FC = () => {
     isSettingsLoading,
     setOnboardingCompleted,
   } = useSettingsContext();
-  const initialPrompt = location.state?.prompt;
-  const [prompt, setPrompt] = useState(initialPrompt || '');
-  const [batchSize, setBatchSize] = useState<DiscoverBatchSize>(5);
-  const [filters, setFilters] = useState<FilterState>({
-    vibe: [],
-    constraints: [],
-  });
-  const [currentBatch, setCurrentBatch] = useState<DiscoverResult[]>([]);
-  const [allGeneratedSuggestions, setAllGeneratedSuggestions] = useState<
-    DiscoverSuggestion[]
-  >([]);
-  const [generationRound, setGenerationRound] = useState(0);
-  const [canLoadMore, setCanLoadMore] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [selectedSuggestionIds, setSelectedSuggestionIds] = useState<string[]>(
-    []
-  );
-  const [error, setError] = useState<string | null>(null);
+  const locationPrompt =
+    typeof location.state?.prompt === 'string'
+      ? location.state.prompt
+      : undefined;
+  const {
+    prompt,
+    setPrompt,
+    batchSize,
+    setBatchSize,
+    filters,
+    setFilters,
+    currentBatch,
+    setCurrentBatch,
+    allGeneratedSuggestions,
+    setAllGeneratedSuggestions,
+    generationRound,
+    setGenerationRound,
+    canLoadMore,
+    setCanLoadMore,
+    isGenerating,
+    setIsGenerating,
+    selectedSuggestionIds,
+    setSelectedSuggestionIds,
+    error,
+    setError,
+    applyLocationPrompt,
+  } = useDiscoverStore();
   const { getDiscoverLabelText, getDiscoverPlaceholderText } = useUtils();
   const { generateDiscoverSuggestions } = useDiscoverSuggestions();
 
   const isPremiumUser = hasTandemPro;
 
   const activeBatchSize: DiscoverBatchSize = isPremiumUser ? batchSize : 5;
+
+  useEffect(() => {
+    if (locationPrompt !== undefined) {
+      applyLocationPrompt(locationPrompt, location.key);
+    }
+  }, [applyLocationPrompt, location.key, locationPrompt]);
 
   const discoverLabel = useMemo(
     () => getDiscoverLabelText(),
