@@ -72,6 +72,7 @@ type DiscoverRequestBody = {
   round?: number;
   requestedCount?: number;
   currency?: string;
+  locale?: string;
   country?: string | null;
   city?: string | null;
 };
@@ -109,6 +110,9 @@ const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 
 const safeString = (value: unknown, maxLength = 240) =>
   typeof value === 'string' ? value.trim().slice(0, maxLength) : undefined;
+
+const getOutputLanguage = (locale?: string) =>
+  locale?.toLowerCase().startsWith('es') ? 'Spanish (Spain)' : 'English';
 
 const safeArray = <T extends string>(
   value: unknown,
@@ -220,6 +224,8 @@ const buildPromptPayload = ({
   round,
   count,
   currency,
+  locale,
+  outputLanguage,
   city,
   country,
 }: {
@@ -228,6 +234,8 @@ const buildPromptPayload = ({
   round: number;
   count: 5 | 10;
   currency: string;
+  locale: string;
+  outputLanguage: string;
   city?: string;
   country?: string;
 }) => ({
@@ -241,6 +249,8 @@ const buildPromptPayload = ({
     constraints: filters.constraints ?? [],
     weather: filters.weather ?? null,
     currency,
+    locale,
+    output_language: outputLanguage,
     city: city ?? null,
     country: country ?? null,
   },
@@ -257,7 +267,11 @@ const buildPromptPayload = ({
   },
 });
 
-const buildSystemInstruction = (count: 5 | 10, round: number) =>
+const buildSystemInstruction = (
+  count: 5 | 10,
+  round: number,
+  outputLanguage: string
+) =>
   `
 You generate couples activity ideas for an app called Tandem.
 Return exactly ${count} unique suggestions.
@@ -276,10 +290,11 @@ Personalization:
 - If the user prompt is empty, infer a balanced and useful set from the filters alone.
 
 Output style:
+- Write all user-facing text fields in ${outputLanguage}: title, description, duration, and estimated_cost.
 - Titles should be short, catchy, and natural.
 - Descriptions should be concrete and enticing, usually 1-2 sentences.
 - Estimated cost should be practical and aligned with the user's currency.
-- Use vibes and setting labels consistently with the schema.
+- Keep setting and vibe as schema enum values exactly. Do not translate those enum values.
 
 Diversity rules:
 - Avoid producing ${count} ideas that all feel like the same category.
@@ -330,6 +345,8 @@ Deno.serve(async req => {
         ? Math.max(2, Math.min(10, Math.floor(body.round)))
         : 1;
     const currency = safeString(body.currency, 10) ?? 'EUR';
+    const locale = safeString(body.locale, 10) ?? 'en-US';
+    const outputLanguage = getOutputLanguage(locale);
     const city = safeString(filters.city ?? body.city, 120);
     const country = safeString(filters.country ?? body.country, 120);
 
@@ -381,12 +398,14 @@ Deno.serve(async req => {
           round,
           count,
           currency,
+          locale,
+          outputLanguage,
           city,
           country,
         })
       ),
       config: {
-        systemInstruction: buildSystemInstruction(count, round),
+        systemInstruction: buildSystemInstruction(count, round, outputLanguage),
         responseMimeType: 'application/json',
         responseJsonSchema: {
           type: 'array',

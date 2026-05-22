@@ -1,7 +1,7 @@
 import { Setting, Vibe } from './discover-filters.types';
 
 export type GetSavedActivitiesPageParams = {
-  coupleId: string;
+  userId: string;
   page: number;
   pageSize?: number;
 };
@@ -17,12 +17,18 @@ export type UpdateSavedActivityParams = {
   description: string;
 };
 
+export type CreateSavedActivityParams = {
+  userId: string;
+  title: string;
+  description: string;
+  tags: string[];
+};
+
 export type SavedActivity = {
   id: string;
   title: string;
   description: string;
   tags: string[];
-  couple_id?: string;
-  saved_by?: string;
+  user_id?: string;
   created_at?: string;
 };

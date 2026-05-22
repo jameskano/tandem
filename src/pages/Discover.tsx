@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Eraser } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import DiscoverResults from '../components/DiscoverResults';
 import OnboardingModal from '../components/OnboardingModal';
@@ -7,6 +8,11 @@ import RefineFilters from '../components/RefineFilters';
 import { useDiscoverSuggestions } from '../hooks/useDiscoverSuggestions';
 import useUtils from '../hooks/useUtils';
 import { supabase } from '../services/supabase';
+import {
+  createSavedActivity,
+  deleteSavedActivity,
+  savedActivitiesQueryKey,
+} from '../services/API/savedActivities';
 import { useI18n } from '../shared/i18n/useI18n';
 import type {
   DiscoverBatchSize,
@@ -17,6 +23,7 @@ import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
 import Chip from '../shared/ui/Chip';
 import Textarea from '../shared/ui/Textarea';
+import { useToast } from '../hooks/useToast';
 import { useAuthContext } from '../store/context/AuthProvider';
 import { useDiscoverStore } from '../store/discoverStore';
 import { useRevenueCatContext } from '../store/context/RevenueCatProvider';
@@ -26,8 +33,11 @@ import {
   userSettingsQueryKey,
 } from '../services/API/userSettings';
 
+const SAVED_ACTIVITY_TOAST_DURATION = 2000;
+
 const Discover: React.FC = () => {
   const { t } = useI18n();
+  const toast = useToast();
   const queryClient = useQueryClient();
   const location = useLocation();
   const { user } = useAuthContext();
@@ -65,9 +75,12 @@ const Discover: React.FC = () => {
     setIsGenerating,
     selectedSuggestionIds,
     setSelectedSuggestionIds,
+    savedSuggestionActivityIds,
+    setSavedSuggestionActivityIds,
     error,
     setError,
     applyLocationPrompt,
+    clearIdeas,
   } = useDiscoverStore();
   const { getDiscoverLabelText, getDiscoverPlaceholderText } = useUtils();
   const { generateDiscoverSuggestions } = useDiscoverSuggestions();
@@ -200,11 +213,70 @@ const Discover: React.FC = () => {
       return;
     }
 
-    setSelectedSuggestionIds(previous =>
-      previous.includes(result.id)
-        ? previous.filter(id => id !== result.id)
-        : [...previous, result.id]
-    );
+    const isSelected = selectedSuggestionIds.includes(result.id);
+
+    if (isSelected) {
+      const savedActivityId = savedSuggestionActivityIds[result.id];
+
+      setSelectedSuggestionIds(previous =>
+        previous.filter(id => id !== result.id)
+      );
+      setSavedSuggestionActivityIds(previous => {
+        const next = { ...previous };
+        delete next[result.id];
+        return next;
+      });
+
+      if (!savedActivityId) {
+        return;
+      }
+
+      try {
+        await deleteSavedActivity(savedActivityId);
+        await queryClient.invalidateQueries({
+          queryKey: savedActivitiesQueryKey(user.id),
+        });
+      } catch (saveError) {
+        console.error('Unable to remove saved activity.', saveError);
+        setSelectedSuggestionIds(previous => [...previous, result.id]);
+        setSavedSuggestionActivityIds(previous => ({
+          ...previous,
+          [result.id]: savedActivityId,
+        }));
+        toast.error(t('savedActivities.removeError'), {
+          duration: SAVED_ACTIVITY_TOAST_DURATION,
+        });
+      }
+
+      return;
+    }
+
+    setSelectedSuggestionIds(previous => [...previous, result.id]);
+
+    try {
+      const savedActivity = await createSavedActivity({
+        userId: user.id,
+        title: result.title,
+        description: result.description,
+        tags: result.tags,
+      });
+
+      setSavedSuggestionActivityIds(previous => ({
+        ...previous,
+        [result.id]: savedActivity.id,
+      }));
+      await queryClient.invalidateQueries({
+        queryKey: savedActivitiesQueryKey(user.id),
+      });
+    } catch (saveError) {
+      console.error('Unable to save activity.', saveError);
+      setSelectedSuggestionIds(previous =>
+        previous.filter(id => id !== result.id)
+      );
+      toast.error(t('savedActivities.saveError'), {
+        duration: SAVED_ACTIVITY_TOAST_DURATION,
+      });
+    }
   };
 
   return (
@@ -285,13 +357,28 @@ const Discover: React.FC = () => {
         </Card>
 
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-lg font-semibold text-text">
               {t('discover.results')}
             </h2>
-            <Chip variant="secondary" size="sm">
-              {t('discover.ideasCount', { count: currentBatch.length })}
-            </Chip>
+            <div className="flex items-center gap-2">
+              <Chip variant="secondary" size="sm">
+                {t('discover.ideasCount', { count: currentBatch.length })}
+              </Chip>
+              {hasGeneratedResults ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outlineSoft"
+                  onClick={clearIdeas}
+                  disabled={isGenerating}
+                  className="gap-1.5 whitespace-nowrap border-appBorder bg-surface px-2.5 text-xs text-textMuted hover:bg-bg hover:text-primary"
+                >
+                  <Eraser size={14} aria-hidden="true" />
+                  <span>{t('discover.cleanIdeas')}</span>
+                </Button>
+              ) : null}
+            </div>
           </div>
 
           {error ? (

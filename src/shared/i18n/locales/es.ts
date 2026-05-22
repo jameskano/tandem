@@ -162,6 +162,7 @@ const es = {
     selectWeather: 'Selecciona clima',
     results: 'Resultados',
     ideasCount: '{{count}} ideas',
+    cleanIdeas: 'Limpiar ideas',
     generationUnavailable: 'Generación no disponible',
     generationErrorMessage:
       'No hemos podido generar ideas ahora mismo. Inténtalo de nuevo más tarde.',
@@ -269,6 +270,7 @@ const es = {
     emptyTitle: 'Todavía no hay actividades guardadas',
     emptyDescription: 'Guarda ideas y aparecerán aquí.',
     loadError: 'No se han podido cargar las actividades guardadas ahora mismo.',
+    saveError: 'No se pudo guardar la actividad. Inténtalo de nuevo.',
     removeError: 'No se pudo eliminar la actividad. Inténtalo de nuevo.',
     removeSuccess: 'Actividad eliminada correctamente.',
     updateError: 'No se pudo actualizar la actividad. Inténtalo de nuevo.',

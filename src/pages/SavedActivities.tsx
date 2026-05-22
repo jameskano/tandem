@@ -39,13 +39,13 @@ const SavedActivities = () => {
     useState<SavedActivity | null>(null);
   const savedActivitiesQuery = useQuery({
     queryKey: savedActivitiesPageQueryKey({
-      coupleId: user?.id ?? '',
+      userId: user?.id ?? '',
       page: currentPage,
       pageSize: PAGE_SIZE,
     }),
     queryFn: () =>
       getSavedActivitiesPage({
-        coupleId: user!.id,
+        userId: user!.id,
         page: currentPage,
         pageSize: PAGE_SIZE,
       }),
@@ -98,7 +98,7 @@ const SavedActivities = () => {
 
       queryClient.setQueryData(
         savedActivitiesPageQueryKey({
-          coupleId: user.id,
+          userId: user.id,
           page: currentPage,
           pageSize: PAGE_SIZE,
         }),

@@ -159,6 +159,7 @@ const en = {
     selectWeather: 'Select weather',
     results: 'Results',
     ideasCount: '{{count}} ideas',
+    cleanIdeas: 'Clean ideas',
     generationUnavailable: 'Generation unavailable',
     generationErrorMessage:
       "We couldn't generate ideas right now. Try again in a moment.",
@@ -266,6 +267,7 @@ const en = {
     emptyTitle: 'No saved activities yet',
     emptyDescription: 'Save ideas and they will appear here.',
     loadError: 'Saved activities could not be loaded right now.',
+    saveError: 'The activity could not be saved. Please try again.',
     removeError: 'The activity could not be removed. Please try again.',
     removeSuccess: 'Activity removed successfully.',
     updateError: 'The activity could not be updated. Please try again.',

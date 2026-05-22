@@ -1,5 +1,10 @@
 import { supabase } from '../services/supabase';
 import { useSettingsContext } from '../store/context/SettingsProvider';
+import {
+  discoverSettingOptions,
+  discoverVibeOptions,
+} from '../shared/constants/text-constants';
+import { useI18n } from '../shared/i18n/useI18n';
 import type {
   DiscoverBatchSize,
   DiscoverFilters,
@@ -7,6 +12,13 @@ import type {
   DiscoverResult,
   DiscoverSuggestion,
 } from '../shared/types/discover-filters.types';
+
+const settingLabelByValue = new Map(
+  discoverSettingOptions.map(option => [option.value, option.label])
+);
+const vibeLabelByValue = new Map(
+  discoverVibeOptions.map(option => [option.value, option.label])
+);
 
 type DiscoverFunctionPayload = Partial<DiscoverGenerationResponse> & {
   results?: DiscoverSuggestion[];
@@ -100,7 +112,8 @@ const readSuggestions = (payload: DiscoverFunctionPayload) => {
 
 const toDiscoverResult = (
   suggestion: DiscoverSuggestion,
-  index: number
+  index: number,
+  translateTag: (tag: string) => string
 ): DiscoverResult => ({
   id: `${suggestion.title}-${index}`.toLowerCase().replace(/\s+/g, '-'),
   title: suggestion.emoji
@@ -110,13 +123,20 @@ const toDiscoverResult = (
   tags: [
     suggestion.estimated_cost,
     suggestion.duration,
-    suggestion.setting,
-    ...(suggestion.vibe ?? []),
+    suggestion.setting ? translateTag(suggestion.setting) : undefined,
+    ...(suggestion.vibe ?? []).map(translateTag),
   ].filter((tag): tag is string => Boolean(tag)),
 });
 
 export const useDiscoverSuggestions = () => {
-  const { currency } = useSettingsContext();
+  const { currency, locale } = useSettingsContext();
+  const { t } = useI18n();
+
+  const translateSuggestionTag = (tag: string) => {
+    const translationKey =
+      settingLabelByValue.get(tag) ?? vibeLabelByValue.get(tag);
+    return translationKey ? t(translationKey) : tag;
+  };
 
   const generateDiscoverSuggestions = async ({
     filters,
@@ -140,6 +160,7 @@ export const useDiscoverSuggestions = () => {
         round,
         requestedCount: requestCount,
         currency,
+        locale,
       },
     });
 
@@ -162,7 +183,9 @@ export const useDiscoverSuggestions = () => {
 
     return {
       suggestions,
-      results: suggestions.map(toDiscoverResult),
+      results: suggestions.map((suggestion, index) =>
+        toDiscoverResult(suggestion, index, translateSuggestionTag)
+      ),
       count:
         payload.count === 10 || payload.count === 5
           ? payload.count
@@ -177,6 +200,7 @@ export const useDiscoverSuggestions = () => {
 
   return {
     generateDiscoverSuggestions,
-    toDiscoverResult,
+    toDiscoverResult: (suggestion: DiscoverSuggestion, index: number) =>
+      toDiscoverResult(suggestion, index, translateSuggestionTag),
   };
 };

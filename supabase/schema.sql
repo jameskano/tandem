@@ -26,13 +26,12 @@ create table if not exists public.saved_activities (
   title text,
   description text,
   tags text[] not null default '{}',
-  couple_id uuid not null references public.couples(id) on delete cascade,
-  saved_by uuid not null references auth.users(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
   created_at timestamptz not null default now()
 );
 
-create index if not exists saved_activities_couple_idx on public.saved_activities(couple_id);
-create index if not exists saved_activities_couple_created_idx on public.saved_activities(couple_id, created_at desc);
+create index if not exists saved_activities_user_idx on public.saved_activities(user_id);
+create index if not exists saved_activities_user_created_idx on public.saved_activities(user_id, created_at desc);
 
 alter table public.saved_activities
   add column if not exists title text;
@@ -41,7 +40,43 @@ alter table public.saved_activities
   add column if not exists description text;
 
 alter table public.saved_activities
+  add column if not exists user_id uuid references auth.users(id) on delete cascade;
+
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'saved_activities'
+      and column_name = 'saved_by'
+  ) then
+    execute '
+      update public.saved_activities
+      set user_id = coalesce(user_id, saved_by)
+      where user_id is null
+    ';
+  end if;
+end
+$$;
+
+alter table public.saved_activities
+  alter column user_id set not null;
+
+alter table public.saved_activities
   drop constraint if exists saved_activities_couple_id_key;
+
+alter table public.saved_activities
+  drop constraint if exists saved_activities_couple_id_fkey;
+
+alter table public.saved_activities
+  drop column if exists couple_id;
+
+alter table public.saved_activities
+  drop column if exists saved_by;
+
+drop index if exists saved_activities_couple_idx;
+drop index if exists saved_activities_couple_created_idx;
 
 -- Create plans table
 create table if not exists public.plans (
@@ -160,25 +195,29 @@ using (public.is_member_of_couple(couple_id));
 
 -- Saved activities
 drop policy if exists "saved_select_members" on public.saved_activities;
-create policy "saved_select_members"
-on public.saved_activities for select
-using (public.is_member_of_couple(couple_id));
-
 drop policy if exists "saved_insert_members" on public.saved_activities;
-create policy "saved_insert_members"
-on public.saved_activities for insert
-with check (public.is_member_of_couple(couple_id) and saved_by = auth.uid());
-
 drop policy if exists "saved_delete_members" on public.saved_activities;
-create policy "saved_delete_members"
-on public.saved_activities for delete
-using (public.is_member_of_couple(couple_id));
-
 drop policy if exists "saved_update_members" on public.saved_activities;
-create policy "saved_update_members"
+drop policy if exists "saved_select_own" on public.saved_activities;
+create policy "saved_select_own"
+on public.saved_activities for select
+using (user_id = auth.uid());
+
+drop policy if exists "saved_insert_own" on public.saved_activities;
+create policy "saved_insert_own"
+on public.saved_activities for insert
+with check (user_id = auth.uid());
+
+drop policy if exists "saved_delete_own" on public.saved_activities;
+create policy "saved_delete_own"
+on public.saved_activities for delete
+using (user_id = auth.uid());
+
+drop policy if exists "saved_update_own" on public.saved_activities;
+create policy "saved_update_own"
 on public.saved_activities for update
-using (public.is_member_of_couple(couple_id))
-with check (public.is_member_of_couple(couple_id));
+using (user_id = auth.uid())
+with check (user_id = auth.uid());
 
 -- Plans
 drop policy if exists "plans_select_members" on public.plans;

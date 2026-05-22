@@ -1,4 +1,5 @@
 import {
+  CreateSavedActivityParams,
   GetSavedActivitiesPageParams,
   GetSavedActivitiesPageResult,
   SavedActivity,
@@ -6,18 +7,18 @@ import {
 } from '../../shared/types/saved-activities';
 import { supabase } from '../supabase';
 
-export const savedActivitiesQueryKey = (coupleId?: string) =>
-  ['saved-activities', coupleId] as const;
+export const savedActivitiesQueryKey = (userId?: string) =>
+  ['saved-activities', userId] as const;
 
 export const savedActivitiesPageQueryKey = ({
-  coupleId,
+  userId,
   page,
   pageSize = 10,
 }: GetSavedActivitiesPageParams) =>
-  [...savedActivitiesQueryKey(coupleId), page, pageSize] as const;
+  [...savedActivitiesQueryKey(userId), page, pageSize] as const;
 
 export const getSavedActivitiesPage = async ({
-  coupleId,
+  userId,
   page,
   pageSize = 10,
 }: GetSavedActivitiesPageParams): Promise<GetSavedActivitiesPageResult> => {
@@ -25,7 +26,7 @@ export const getSavedActivitiesPage = async ({
     throw new Error('Supabase is not configured.');
   }
 
-  if (!coupleId) {
+  if (!userId) {
     return {
       activities: [],
       totalCount: 0,
@@ -37,10 +38,10 @@ export const getSavedActivitiesPage = async ({
 
   const { data, count, error } = await supabase
     .from('saved_activities')
-    .select('id, title, description, tags, couple_id, saved_by, created_at', {
+    .select('id, title, description, tags, user_id, created_at', {
       count: 'exact',
     })
-    .eq('couple_id', coupleId)
+    .eq('user_id', userId)
     .order('created_at', { ascending: false })
     .range(from, to);
 
@@ -54,19 +55,19 @@ export const getSavedActivitiesPage = async ({
   };
 };
 
-export const getAllSavedActivities = async (coupleId: string) => {
+export const getAllSavedActivities = async (userId: string) => {
   if (!supabase) {
     throw new Error('Supabase is not configured.');
   }
 
-  if (!coupleId) {
+  if (!userId) {
     return [];
   }
 
   const { data, error } = await supabase
     .from('saved_activities')
-    .select('id, title, description, tags, couple_id, saved_by, created_at')
-    .eq('couple_id', coupleId)
+    .select('id, title, description, tags, user_id, created_at')
+    .eq('user_id', userId)
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -74,6 +75,34 @@ export const getAllSavedActivities = async (coupleId: string) => {
   }
 
   return (data as SavedActivity[] | null) ?? [];
+};
+
+export const createSavedActivity = async ({
+  userId,
+  title,
+  description,
+  tags,
+}: CreateSavedActivityParams) => {
+  if (!supabase) {
+    throw new Error('Supabase is not configured.');
+  }
+
+  const { data, error } = await supabase
+    .from('saved_activities')
+    .insert({
+      user_id: userId,
+      title: title.trim(),
+      description: description.trim(),
+      tags,
+    })
+    .select('id, title, description, tags, user_id, created_at')
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data as SavedActivity;
 };
 
 export const deleteSavedActivity = async (activityId: string) => {
@@ -107,7 +136,7 @@ export const updateSavedActivity = async ({
       description: description.trim(),
     })
     .eq('id', activityId)
-    .select('id, title, description, tags, couple_id, saved_by, created_at')
+    .select('id, title, description, tags, user_id, created_at')
     .single();
 
   if (error) {
