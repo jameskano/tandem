@@ -8,7 +8,11 @@ import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
 import GradientButton from '../shared/ui/GradientButton';
 import Input from '../shared/ui/Input';
-import { signUpWithEmail, signInWithGoogle } from '../shared/utils/auth';
+import {
+  getAuthErrorMessage,
+  signInWithGoogle,
+  signUpWithEmail,
+} from '../shared/utils/auth';
 import ConfirmEmail from './ConfirmEmail';
 
 const Register: React.FC = () => {
@@ -74,7 +78,7 @@ const Register: React.FC = () => {
       setIsRegistered(true);
     } catch (error: any) {
       console.error('Registration error:', error);
-      toast.error(error?.message || t('auth.registrationFailed'));
+      toast.error(getAuthErrorMessage(error, t, 'auth.registrationFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +90,7 @@ const Register: React.FC = () => {
       await signInWithGoogle();
     } catch (error: any) {
       console.error('Google registration error:', error);
-      toast.error(error?.message || t('auth.googleAuthFailed'));
+      toast.error(getAuthErrorMessage(error, t, 'auth.googleAuthFailed'));
     } finally {
       setIsLoading(false);
     }

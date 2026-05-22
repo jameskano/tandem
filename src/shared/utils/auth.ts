@@ -3,6 +3,55 @@ import { supabase } from '../../services/supabase';
 const buildAuthRedirectUrl = (path: string) =>
   `${window.location.origin}${path.startsWith('/') ? path : `/${path}`}`;
 
+const getErrorMessage = (error: unknown) => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof error.message === 'string'
+  ) {
+    return error.message;
+  }
+
+  return '';
+};
+
+const normalizeErrorMessage = (error: unknown) =>
+  getErrorMessage(error).trim().toLowerCase();
+
+export const isEmailNotConfirmedError = (error: unknown) =>
+  normalizeErrorMessage(error).includes('email not confirmed');
+
+export const getAuthErrorMessage = (
+  error: unknown,
+  t: (key: string) => string,
+  fallbackKey: string
+) => {
+  const normalizedMessage = normalizeErrorMessage(error);
+
+  if (normalizedMessage.includes('email not confirmed')) {
+    return t('auth.emailNotConfirmed');
+  }
+
+  if (normalizedMessage.includes('invalid login credentials')) {
+    return t('auth.invalidCredentials');
+  }
+
+  if (
+    normalizedMessage.includes('user already registered') ||
+    normalizedMessage.includes('already registered') ||
+    normalizedMessage.includes('already exists')
+  ) {
+    return t('auth.emailInUse');
+  }
+
+  return t(fallbackKey);
+};
+
 export async function signOut() {
   const { error } = await supabase!.auth.signOut();
   if (error) {
@@ -43,6 +92,15 @@ export const deleteUserAccount = async (userId: string) => {
 export const resetPassword = async (email: string) => {
   const { data, error } = await supabase!.auth.resetPasswordForEmail(email, {
     redirectTo: buildAuthRedirectUrl('/reset-password'),
+  });
+  if (error) throw error;
+  return data;
+};
+
+export const resendSignupConfirmation = async (email: string) => {
+  const { data, error } = await supabase!.auth.resend({
+    type: 'signup',
+    email,
   });
   if (error) throw error;
   return data;

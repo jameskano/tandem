@@ -6,7 +6,7 @@ import { useI18n } from '../shared/i18n/useI18n';
 import Card from '../shared/ui/Card';
 import GradientButton from '../shared/ui/GradientButton';
 import Input from '../shared/ui/Input';
-import { updatePassword } from '../shared/utils/auth';
+import { getAuthErrorMessage, updatePassword } from '../shared/utils/auth';
 
 const ResetPassword: React.FC = () => {
   const { t } = useI18n();
@@ -34,7 +34,9 @@ const ResetPassword: React.FC = () => {
       await updatePassword(password);
       navigate('/login', { state: { message: t('auth.passwordUpdated') } });
     } catch (err: any) {
-      setErrors({ password: err.message || t('auth.updatePasswordFailed') });
+      setErrors({
+        password: getAuthErrorMessage(err, t, 'auth.updatePasswordFailed'),
+      });
     } finally {
       setIsLoading(false);
     }

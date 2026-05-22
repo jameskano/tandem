@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/useToast';
 import { COLORS } from '../shared/colors';
@@ -8,7 +8,12 @@ import Button from '../shared/ui/Button';
 import Card from '../shared/ui/Card';
 import GradientButton from '../shared/ui/GradientButton';
 import Input from '../shared/ui/Input';
-import { signInWithEmail, signInWithGoogle } from '../shared/utils/auth';
+import {
+  getAuthErrorMessage,
+  isEmailNotConfirmedError,
+  signInWithEmail,
+  signInWithGoogle,
+} from '../shared/utils/auth';
 import ResendEmail from '../components/ResendEmail';
 
 const Login: React.FC = () => {
@@ -22,11 +27,6 @@ const Login: React.FC = () => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isResendEmailVisible, setIsResendEmailVisible] = useState(false);
-
-  useEffect(() => {
-    if (errors.email === 'Email not confirmed') setIsResendEmailVisible(true);
-    else setIsResendEmailVisible(false);
-  }, [errors.email]);
 
   const validateForm = () => {
     const newErrors: typeof errors = {};
@@ -53,11 +53,14 @@ const Login: React.FC = () => {
       navigate('/dashboard');
     } catch (error: any) {
       console.error('Login error:', error);
-      if (error.message === 'Email not confirmed')
-        setErrors({ email: error.message });
-      else if (error.message === 'Invalid login credentials')
-        setErrors({ password: error.message, email: error.message });
-      else setErrors({ email: t('auth.loginFailed') });
+      if (isEmailNotConfirmedError(error)) {
+        setErrors({ email: t('auth.emailNotConfirmed') });
+        setIsResendEmailVisible(true);
+      } else {
+        const message = getAuthErrorMessage(error, t, 'auth.loginFailed');
+        setErrors({ password: message, email: message });
+        setIsResendEmailVisible(false);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +72,7 @@ const Login: React.FC = () => {
       await signInWithGoogle();
     } catch (error: any) {
       console.error('Google login error:', error);
-      toast.error(error?.message || t('auth.googleAuthFailed'));
+      toast.error(getAuthErrorMessage(error, t, 'auth.googleAuthFailed'));
     } finally {
       setIsLoading(false);
     }

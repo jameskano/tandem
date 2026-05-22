@@ -10,7 +10,12 @@ import { useI18n } from '../shared/i18n/useI18n';
 import { useTheme } from '../shared/providers/ThemeProvider';
 import { getAllSavedActivities } from '../services/API/savedActivities';
 import { downloadJsonFile } from '../shared/utils/export';
-import { signOut, updateEmail, updatePassword } from '../shared/utils/auth';
+import {
+  getAuthErrorMessage,
+  signOut,
+  updateEmail,
+  updatePassword,
+} from '../shared/utils/auth';
 import type { AppLocale, Currency } from '../shared/types/user';
 import { useAuthContext } from '../store/context/AuthProvider';
 import { useRevenueCatContext } from '../store/context/RevenueCatProvider';
@@ -149,8 +154,8 @@ const SettingsPanel: React.FC = () => {
     onSuccess: () => {
       toast.success(t('settings.logoutSuccess'));
     },
-    onError: (error: any) => {
-      toast.error(error?.message || t('settings.logoutFailed'));
+    onError: () => {
+      toast.error(t('settings.logoutFailed'));
     },
   });
 
@@ -167,8 +172,8 @@ const SettingsPanel: React.FC = () => {
 
       toast.success(t('settings.deleteAccountSuccess'));
     },
-    onError: (error: any) => {
-      toast.error(error?.message || t('settings.deleteAccountFailed'));
+    onError: () => {
+      toast.error(t('settings.deleteAccountFailed'));
     },
   });
 
@@ -179,8 +184,8 @@ const SettingsPanel: React.FC = () => {
         toast.success(t('settings.subscriptionUpdated'));
       }
     },
-    onError: (error: any) => {
-      toast.error(error?.message || t('settings.subscriptionActionFailed'));
+    onError: () => {
+      toast.error(t('settings.subscriptionActionFailed'));
     },
   });
 
@@ -197,7 +202,7 @@ const SettingsPanel: React.FC = () => {
       if (error?.userCancelled) {
         return;
       }
-      toast.error(error?.message || t('settings.subscriptionActionFailed'));
+      toast.error(t('settings.subscriptionActionFailed'));
     },
   });
 
@@ -210,15 +215,15 @@ const SettingsPanel: React.FC = () => {
           : t('settings.subscriptionNothingToRestore')
       );
     },
-    onError: (error: any) => {
-      toast.error(error?.message || t('settings.subscriptionActionFailed'));
+    onError: () => {
+      toast.error(t('settings.subscriptionActionFailed'));
     },
   });
 
   const customerCenterMutation = useMutation({
     mutationFn: presentCustomerCenter,
-    onError: (error: any) => {
-      toast.error(error?.message || t('settings.subscriptionActionFailed'));
+    onError: () => {
+      toast.error(t('settings.subscriptionActionFailed'));
     },
   });
 
@@ -285,7 +290,7 @@ const SettingsPanel: React.FC = () => {
     try {
       await updateEmailMutation.mutateAsync(normalizedEmail);
     } catch (error: any) {
-      setEmailError(error?.message || t('settings.emailUpdateFailed'));
+      setEmailError(getAuthErrorMessage(error, t, 'settings.emailUpdateFailed'));
     }
   };
 
@@ -318,7 +323,11 @@ const SettingsPanel: React.FC = () => {
       await updatePasswordMutation.mutateAsync(passwordForm.password);
     } catch (error: any) {
       setPasswordErrors({
-        password: error?.message || t('settings.passwordUpdateFailed'),
+        password: getAuthErrorMessage(
+          error,
+          t,
+          'settings.passwordUpdateFailed'
+        ),
       });
     }
   };
@@ -449,7 +458,9 @@ const SettingsPanel: React.FC = () => {
               </p>
             ) : null}
             {subscriptionError ? (
-              <p className="text-sm text-red-600">{subscriptionError}</p>
+              <p className="text-sm text-red-600">
+                {t('settings.subscriptionActionFailed')}
+              </p>
             ) : null}
           </div>
 

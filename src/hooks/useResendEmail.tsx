@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { useI18n } from '../shared/i18n/useI18n';
+import {
+  getAuthErrorMessage,
+  resendSignupConfirmation,
+} from '../shared/utils/auth';
 
 const useResendEmail = () => {
   const { t } = useI18n();
@@ -17,8 +21,7 @@ const useResendEmail = () => {
     setResendLoading(true);
     setResendMessage(null);
     try {
-      const res = await fetch('/api/resend-confirmation');
-
+      await resendSignupConfirmation(email);
       setResendMessage(t('resendEmail.success'));
       setResendCooldown(30);
       const timer = setInterval(() => {
@@ -31,7 +34,7 @@ const useResendEmail = () => {
         });
       }, 1000);
     } catch (error) {
-      setResendMessage(t('resendEmail.error'));
+      setResendMessage(getAuthErrorMessage(error, t, 'resendEmail.error'));
     } finally {
       setResendLoading(false);
       return { resendCooldown, resendLoading, resendMessage };

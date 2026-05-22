@@ -137,6 +137,10 @@ const Discover: React.FC = () => {
     key: K,
     value: FilterState[K]
   ) => {
+    if (!isPremiumUser) {
+      return;
+    }
+
     setFilters(prev => {
       if (!['constraints', 'vibe'].includes(key) && prev[key] === value) {
         const { [key]: _, ...rest } = prev;
@@ -206,11 +210,25 @@ const Discover: React.FC = () => {
     }
   };
 
+  const handleRefineUpgrade = async (
+    event?: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    try {
+      await presentPaywallIfNeeded();
+    } catch (paywallError) {
+      console.error('Unable to present RevenueCat paywall.', paywallError);
+    }
+  };
+
   const expandHadler = () => setExpanded(prev => !prev);
 
   const chipButtonClassName =
     '!p-0 hover:bg-transparent !ring-0 !ring-offset-0';
   const chipClassName = 'cursor-pointer px-3 py-1';
+  const areRefineFiltersDisabled = !isPremiumUser;
 
   const hasFilters =
     Boolean(filters.budget) ||
@@ -337,12 +355,31 @@ const Discover: React.FC = () => {
               className="flex cursor-pointer list-none flex-row items-center justify-between rounded-lg text-sm font-semibold text-text transition-colors hover:text-primary"
               onClick={expandHadler}
             >
-              {t('discover.refine')}
+              <div className="flex items-center gap-3">
+                <span>{t('discover.refine')}</span>
+                {!isPremiumUser ? (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="primaryOutline"
+                    onClick={event => void handleRefineUpgrade(event)}
+                    disabled={isSubscriptionLoading}
+                  >
+                    {t('discover.unlockPro')}
+                  </Button>
+                ) : null}
+              </div>
               <ChevronDown
                 className={`transition-transform ${expanded ? 'rotate-180' : ''}`}
               />
             </summary>
             <div className="mt-4 space-y-4">
+              {!isPremiumUser ? (
+                <p className="text-sm text-textMuted">
+                  {t('discover.refineProHint')}
+                </p>
+              ) : null}
+
               <div className="space-y-2">
                 <p className="text-sm font-medium text-text">
                   {t('discover.budget')}
@@ -356,6 +393,7 @@ const Discover: React.FC = () => {
                       variant="ghost"
                       size="sm"
                       className={chipButtonClassName}
+                      disabled={areRefineFiltersDisabled}
                     >
                       <Chip
                         variant={
@@ -386,6 +424,7 @@ const Discover: React.FC = () => {
                       variant="ghost"
                       size="sm"
                       className={chipButtonClassName}
+                      disabled={areRefineFiltersDisabled}
                     >
                       <Chip
                         variant={
@@ -414,6 +453,7 @@ const Discover: React.FC = () => {
                       variant="ghost"
                       size="sm"
                       className={chipButtonClassName}
+                      disabled={areRefineFiltersDisabled}
                     >
                       <Chip
                         variant={
@@ -440,6 +480,7 @@ const Discover: React.FC = () => {
                   value={filters.vibe}
                   multiple
                   placeholder={t('discover.selectVibe')}
+                  disabled={areRefineFiltersDisabled}
                   onChange={value =>
                     setFilter(
                       'vibe',
@@ -462,6 +503,7 @@ const Discover: React.FC = () => {
                       variant="ghost"
                       size="sm"
                       className={chipButtonClassName}
+                      disabled={areRefineFiltersDisabled}
                     >
                       <Chip
                         variant={
@@ -488,6 +530,7 @@ const Discover: React.FC = () => {
                   value={filters.constraints}
                   multiple
                   placeholder={t('discover.selectConstraints')}
+                  disabled={areRefineFiltersDisabled}
                   onChange={value =>
                     setFilter(
                       'constraints',
@@ -505,6 +548,7 @@ const Discover: React.FC = () => {
                   options={translatedDiscoverManualWeatherOptions}
                   value={filters.weather}
                   placeholder={t('discover.selectWeather')}
+                  disabled={areRefineFiltersDisabled}
                   onChange={value =>
                     setFilter(
                       'weather',

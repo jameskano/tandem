@@ -41,7 +41,7 @@ const ErrorPage: React.FC = () => {
           <Card className="w-full max-w-md space-y-6">
             <div>
               <p className="mb-4 text-sm" style={{ color: COLORS.muted }}>
-                {error?.message ?? t('common.unknownError')}
+                {t('common.unknownError')}
               </p>
               <div className="flex gap-3">
                 <Button

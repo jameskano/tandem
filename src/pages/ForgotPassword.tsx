@@ -7,7 +7,7 @@ import { useI18n } from '../shared/i18n/useI18n';
 import Card from '../shared/ui/Card';
 import GradientButton from '../shared/ui/GradientButton';
 import Input from '../shared/ui/Input';
-import { resetPassword } from '../shared/utils/auth';
+import { getAuthErrorMessage, resetPassword } from '../shared/utils/auth';
 
 const ForgotPassword: React.FC = () => {
   const { t } = useI18n();
@@ -31,7 +31,7 @@ const ForgotPassword: React.FC = () => {
       setEmail('');
       toast.success(t('forgotPassword.success'));
     } catch (err: any) {
-      setError(err.message || t('auth.resetEmailFailed'));
+      setError(getAuthErrorMessage(err, t, 'auth.resetEmailFailed'));
     } finally {
       setIsLoading(false);
     }

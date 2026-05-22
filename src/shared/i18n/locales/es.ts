@@ -82,6 +82,9 @@ const es = {
     confirmPasswordRequired: 'Por favor, confirma tu contraseña',
     confirmPasswordMissing: 'Debes confirmar la contraseña',
     passwordsDoNotMatch: 'Las contraseñas no coinciden',
+    emailNotConfirmed: 'Confirma tu correo antes de iniciar sesión.',
+    invalidCredentials: 'El correo o la contraseña no son correctos.',
+    emailInUse: 'Ya existe una cuenta con este correo.',
     loginFailed: 'No se pudo iniciar sesión. Inténtalo de nuevo.',
     registrationFailed: 'No se pudo completar el registro. Inténtalo de nuevo.',
     googleAuthFailed:
@@ -145,6 +148,8 @@ const es = {
     generatingMoreCount: 'Generando {{count}} más...',
     batchSizeOption: '{{count}} ideas',
     refine: 'Refinar',
+    unlockPro: 'Desbloquear Pro',
+    refineProHint: 'Los filtros están disponibles con Tandem Pro.',
     budget: 'Presupuesto',
     timeAvailable: 'Tiempo disponible',
     setting: 'Entorno',
